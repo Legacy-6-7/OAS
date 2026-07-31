@@ -1,0 +1,469 @@
+{% extends 'myadmin/adminlayout.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    :root {
+        --primary: #4f46e5;
+        --primary-hover: #4338ca;
+        --primary-soft: #eef2ff;
+        --success: #059669;
+        --success-soft: #ecfdf5;
+        --warning: #d97706;
+        --warning-soft: #fffbeb;
+        --danger: #dc2626;
+        --danger-soft: #fef2f2;
+        --info: #0284c7;
+        --info-soft: #f0f9ff;
+        --text: #1e293b;
+        --muted: #64748b;
+        --border: #e2e8f0;
+        --bg: #f8fafc;
+        --card: #ffffff;
+        --radius: 14px;
+        --shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+    }
+
+    .fee-page {
+        max-width: 1400px;
+        margin: 28px auto;
+        padding: 0 16px;
+        animation: fadeUp 0.45s ease both;
+    }
+
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .fee-card {
+        background: var(--card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        border: 1px solid var(--border);
+    }
+
+    .fee-header {
+        background: linear-gradient(135deg, var(--primary), #6366f1);
+        color: #fff;
+        padding: 20px 28px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .fee-header h3 {
+        margin: 0;
+        font-weight: 700;
+        font-size: 1.35rem;
+        letter-spacing: -0.02em;
+    }
+
+    .fee-header i {
+        font-size: 1.4rem;
+        opacity: 0.9;
+    }
+
+    .fee-body {
+        padding: 24px 28px;
+    }
+
+    /* ---------- Table ---------- */
+    .fee-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .fee-table thead {
+        background: linear-gradient(180deg, #f1f5f9, #e2e8f0);
+    }
+
+    .fee-table th {
+        padding: 13px 14px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--muted);
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+        text-align: left;
+    }
+
+    .fee-table td {
+        padding: 14px;
+        color: var(--text);
+        font-size: 0.92rem;
+        border-bottom: 1px solid var(--border);
+        vertical-align: middle;
+        transition: background 0.15s ease;
+    }
+
+    .fee-table tbody tr {
+        transition: background 0.15s ease;
+        animation: rowFade 0.4s ease both;
+    }
+
+    .fee-table tbody tr:nth-child(1) { animation-delay: 0.04s; }
+    .fee-table tbody tr:nth-child(2) { animation-delay: 0.08s; }
+    .fee-table tbody tr:nth-child(3) { animation-delay: 0.12s; }
+    .fee-table tbody tr:nth-child(4) { animation-delay: 0.16s; }
+    .fee-table tbody tr:nth-child(5) { animation-delay: 0.20s; }
+    .fee-table tbody tr:nth-child(6) { animation-delay: 0.24s; }
+
+    @keyframes rowFade {
+        from { opacity: 0; transform: translateX(-6px); }
+        to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .fee-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .fee-table tbody tr:hover td {
+        background: #f8fafc;
+    }
+
+    /* ---------- Student photo ---------- */
+    .student-photo {
+        width: 52px;
+        height: 52px;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 2px solid var(--border);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .student-photo:hover {
+        transform: scale(1.08);
+        box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
+
+    /* ---------- Screenshot thumbnail ---------- */
+    .screenshot-thumb {
+        width: 72px;
+        height: 48px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1.5px solid var(--border);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+    }
+
+    .screenshot-thumb:hover {
+        transform: scale(1.12);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    }
+
+    /* ---------- Student info ---------- */
+    .student-name {
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 2px;
+    }
+
+    .student-meta {
+        font-size: 0.8rem;
+        color: var(--muted);
+        line-height: 1.45;
+    }
+
+    /* ---------- Badges ---------- */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 11px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+    }
+
+    .badge-pending {
+        background: var(--warning-soft);
+        color: var(--warning);
+    }
+
+    .badge-verified {
+        background: var(--success-soft);
+        color: var(--success);
+    }
+
+    .badge-rejected {
+        background: var(--danger-soft);
+        color: var(--danger);
+    }
+
+    .badge-submitted {
+        background: var(--info-soft);
+        color: var(--info);
+    }
+
+    .badge-admission {
+        background: var(--primary-soft);
+        color: var(--primary);
+    }
+
+    /* ---------- Fees ---------- */
+    .fees-cell {
+        font-weight: 700;
+        color: var(--success);
+        white-space: nowrap;
+    }
+
+    /* ---------- Action buttons ---------- */
+    .action-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-width: 120px;
+    }
+
+    .btn-verify,
+    .btn-reject {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 7px 14px;
+        border-radius: 9px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: none;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .btn-verify {
+        background: linear-gradient(135deg, #059669, #10b981);
+        color: #fff;
+        box-shadow: 0 3px 10px rgba(5, 150, 105, 0.3);
+    }
+
+    .btn-verify:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(5, 150, 105, 0.4);
+        color: #fff;
+    }
+
+    .btn-reject {
+        background: linear-gradient(135deg, #dc2626, #ef4444);
+        color: #fff;
+        box-shadow: 0 3px 10px rgba(220, 38, 38, 0.3);
+    }
+
+    .btn-reject:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(220, 38, 38, 0.4);
+        color: #fff;
+    }
+
+    .verified-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--success);
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+
+    .no-action {
+        color: var(--muted);
+        font-size: 0.9rem;
+    }
+
+    /* ---------- Empty state ---------- */
+    .empty-state {
+        text-align: center;
+        padding: 56px 20px !important;
+        color: var(--muted);
+    }
+
+    .empty-state i {
+        font-size: 2.4rem;
+        margin-bottom: 14px;
+        opacity: 0.35;
+        display: block;
+    }
+
+    .empty-state span {
+        font-size: 1rem;
+    }
+
+    /* ---------- Not uploaded ---------- */
+    .not-uploaded {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: var(--danger);
+        font-size: 0.82rem;
+        font-weight: 500;
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 992px) {
+        .fee-body {
+            padding: 16px;
+        }
+
+        .fee-table {
+            display: block;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+    }
+</style>
+
+<div class="fee-page">
+    <div class="fee-card">
+        <div class="fee-header">
+            <i class="fa-solid fa-wallet"></i>
+            <h3>Student Fee Status</h3>
+        </div>
+
+        <div class="fee-body">
+            <div class="table-responsive">
+                <table class="fee-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Photo</th>
+                            <th>Student</th>
+                            <th>Course</th>
+                            <th>Fees</th>
+                            <th>Payment</th>
+                            <th>Admission</th>
+                            <th>Screenshot</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+
+                            <!-- Photo -->
+                            <td>
+                                {% if student.student_photo %}
+                                    <img src="{{ student.student_photo.url }}"
+                                         alt="{{ student.name }}"
+                                         class="student-photo"
+                                         width="52" height="52"
+                                         loading="lazy">
+                                {% else %}
+                                    <img src="{% static 'admissionapp/student.jpeg' %}"
+                                         alt="No photo"
+                                         class="student-photo"
+                                         width="52" height="52"
+                                         loading="lazy">
+                                {% endif %}
+                            </td>
+
+                            <!-- Student info -->
+                            <td>
+                                <div class="student-name">{{ student.name }}</div>
+                                <div class="student-meta">
+                                    {{ student.email }}<br>
+                                    {{ student.mobile }}
+                                </div>
+                            </td>
+
+                            <!-- Course -->
+                            <td>{{ student.course }}</td>
+
+                            <!-- Fees -->
+                            <td class="fees-cell">₹{{ student.course_fees }}</td>
+
+                            <!-- Payment Status -->
+                            <td>
+                                {% if student.payment_status == 'pending' %}
+                                    <span class="status-badge badge-pending">
+                                        <i class="fa-solid fa-clock"></i> Pending
+                                    </span>
+                                {% elif student.payment_status == 'submitted' %}
+                                    <span class="status-badge badge-submitted">
+                                        <i class="fa-solid fa-paper-plane"></i> Submitted
+                                    </span>
+                                {% elif student.payment_status == 'verified' %}
+                                    <span class="status-badge badge-verified">
+                                        <i class="fa-solid fa-circle-check"></i> Verified
+                                    </span>
+                                {% elif student.payment_status == 'rejected' %}
+                                    <span class="status-badge badge-rejected">
+                                        <i class="fa-solid fa-circle-xmark"></i> Rejected
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge badge-pending">{{ student.payment_status }}</span>
+                                {% endif %}
+                            </td>
+
+                            <!-- Admission Status -->
+                            <td>
+                                <span class="status-badge badge-admission">
+                                    {{ student.application_status }}
+                                </span>
+                            </td>
+
+                            <!-- Screenshot -->
+                            <td>
+                                {% if student.payment_screenshot %}
+                                    <a href="{{ student.payment_screenshot.url }}" target="_blank" rel="noopener">
+                                        <img src="{{ student.payment_screenshot.url }}"
+                                             alt="Payment screenshot"
+                                             class="screenshot-thumb"
+                                             width="72" height="48"
+                                             loading="lazy">
+                                    </a>
+                                {% else %}
+                                    <span class="not-uploaded">
+                                        <i class="fa-solid fa-cloud-arrow-up"></i> Not uploaded
+                                    </span>
+                                {% endif %}
+                            </td>
+
+                            <!-- Action -->
+                            <td>
+                                {% if student.payment_status == 'submitted' %}
+                                    <div class="action-stack">
+                                        <a href="{% url 'verify_payment' student.student_id %}"
+                                           class="btn-verify"
+                                           onclick="return confirm('Mark this payment as Verified?');">
+                                            <i class="fa-solid fa-check"></i> Verify
+                                        </a>
+                                        <a href="{% url 'rejected_payment' student.student_id %}"
+                                           class="btn-reject"
+                                           onclick="return confirm('Reject this payment?');">
+                                            <i class="fa-solid fa-xmark"></i> Reject
+                                        </a>
+                                    </div>
+                                {% elif student.payment_status == 'verified' %}
+                                    <span class="verified-label">
+                                        <i class="fa-solid fa-circle-check"></i> Verified
+                                    </span>
+                                {% else %}
+                                    <span class="no-action">—</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="9" class="empty-state">
+                                <i class="fa-solid fa-wallet"></i>
+                                <span>No fee records found.</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

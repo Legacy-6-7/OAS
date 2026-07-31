@@ -1,0 +1,393 @@
+{% extends 'myadmin/adminlayout.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    :root {
+        --primary: #4f46e5;
+        --primary-hover: #4338ca;
+        --primary-soft: #eef2ff;
+        --danger: #dc2626;
+        --danger-soft: #fef2f2;
+        --text: #1e293b;
+        --muted: #64748b;
+        --border: #e2e8f0;
+        --bg: #f8fafc;
+        --card: #ffffff;
+        --radius: 14px;
+        --shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+    }
+
+    .records-page {
+        max-width: 100%;
+        margin: 28px 20px;
+        animation: fadeUp 0.4s ease both;
+    }
+
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(14px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .records-card {
+        background: var(--card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
+        overflow: hidden;
+    }
+
+    /* Header */
+    .records-header {
+        background: linear-gradient(135deg, var(--primary), #6366f1);
+        color: #fff;
+        padding: 18px 26px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .records-header h3 {
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .records-header h3 i {
+        opacity: 0.9;
+    }
+
+    .count-badge {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 7px 14px;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    /* Scroll container */
+    .table-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 0;
+    }
+
+    .table-scroll::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .table-scroll::-webkit-scrollbar-track {
+        background: #f1f5f9;
+    }
+
+    .table-scroll::-webkit-scrollbar-thumb {
+        background: #c7d2fe;
+        border-radius: 8px;
+    }
+
+    .table-scroll::-webkit-scrollbar-thumb:hover {
+        background: var(--primary);
+    }
+
+    .table-scroll {
+        scrollbar-width: thin;
+        scrollbar-color: #c7d2fe #f1f5f9;
+    }
+
+    /* Table */
+    .student-table {
+        width: 100%;
+        min-width: 1700px;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .student-table thead {
+        background: linear-gradient(180deg, #f1f5f9, #e8eef5);
+    }
+
+    .student-table th {
+        padding: 13px 14px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--muted);
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+        text-align: left;
+    }
+
+    .student-table td {
+        padding: 13px 14px;
+        font-size: 0.88rem;
+        color: var(--text);
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+    .student-table tbody tr {
+        transition: background 0.12s ease;
+        animation: rowIn 0.35s ease both;
+    }
+
+    .student-table tbody tr:nth-child(1) { animation-delay: 0.03s; }
+    .student-table tbody tr:nth-child(2) { animation-delay: 0.06s; }
+    .student-table tbody tr:nth-child(3) { animation-delay: 0.09s; }
+    .student-table tbody tr:nth-child(4) { animation-delay: 0.12s; }
+    .student-table tbody tr:nth-child(5) { animation-delay: 0.15s; }
+
+    @keyframes rowIn {
+        from { opacity: 0; transform: translateY(6px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .student-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .student-table tbody tr:hover td {
+        background: #f8fafc;
+    }
+
+    /* Cells */
+    .name-cell {
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .muted-cell {
+        color: var(--muted);
+        font-size: 0.85rem;
+    }
+
+    .course-badge {
+        display: inline-block;
+        background: var(--primary-soft);
+        color: var(--primary);
+        font-size: 0.78rem;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 999px;
+    }
+
+    .percent-cell {
+        font-weight: 600;
+        color: #059669;
+    }
+
+    /* Images */
+    .doc-thumb {
+        width: 56px;
+        height: 56px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 2px solid var(--border);
+        transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+        cursor: pointer;
+    }
+
+    .doc-thumb:hover {
+        border-color: var(--primary);
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+        transform: scale(1.06);
+    }
+
+    .no-img {
+        font-size: 0.8rem;
+        color: var(--muted);
+    }
+
+    /* Delete button */
+    .btn-delete {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 7px 14px;
+        border-radius: 9px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-decoration: none;
+        background: var(--danger-soft);
+        color: var(--danger);
+        border: none;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
+    }
+
+    .btn-delete:hover {
+        background: var(--danger);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 12px rgba(220, 38, 38, 0.28);
+    }
+
+    /* Empty */
+    .empty-state {
+        text-align: center;
+        padding: 56px 20px !important;
+        color: var(--muted);
+        white-space: normal !important;
+    }
+
+    .empty-state i {
+        font-size: 2.2rem;
+        margin-bottom: 12px;
+        opacity: 0.35;
+        display: block;
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+            animation-duration: 0.01ms !important;
+            transition-duration: 0.01ms !important;
+        }
+        .btn-delete:hover,
+        .doc-thumb:hover {
+            transform: none;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .records-page {
+            margin: 12px 0;
+        }
+
+        .records-card {
+            border-radius: 0;
+            border-left: none;
+            border-right: none;
+        }
+
+        .records-header {
+            padding: 14px 18px;
+        }
+
+        .records-header h3 {
+            font-size: 1.15rem;
+        }
+    }
+</style>
+
+<div class="records-page">
+    <div class="records-card">
+
+        <div class="records-header">
+            <h3>
+                <i class="fa-solid fa-users"></i>
+                Student Records
+            </h3>
+            <span class="count-badge">
+                Total: {{ students|length }}
+            </span>
+        </div>
+
+        <div class="table-scroll">
+            <table class="student-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Password</th>
+                        <th>Date of Birth</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                        <th>Email</th>
+                        <th>Mobile</th>
+                        <th>Blood Group</th>
+                        <th>Father's Name</th>
+                        <th>Father's Mobile</th>
+                        <th>Class 10th %</th>
+                        <th>Class 12th %</th>
+                        <th>Course</th>
+                        <th>Aadhaar No.</th>
+                        <th>Aadhaar Card</th>
+                        <th>Student Photo</th>
+                        <th>Address</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td class="name-cell">{{ student.name }}</td>
+                        <td class="muted-cell">{{ student.password }}</td>
+                        <td>{{ student.dob }}</td>
+                        <td>{{ student.age }}</td>
+                        <td>{{ student.gender }}</td>
+                        <td class="muted-cell">{{ student.email }}</td>
+                        <td>{{ student.mobile }}</td>
+                        <td>{{ student.blood_group }}</td>
+                        <td>{{ student.father_name }}</td>
+                        <td>{{ student.father_mobile }}</td>
+                        <td class="percent-cell">{{ student.class10 }}%</td>
+                        <td class="percent-cell">{{ student.class12 }}%</td>
+                        <td>
+                            <span class="course-badge">{{ student.course }}</span>
+                        </td>
+                        <td>{{ student.aadhaar }}</td>
+
+                        <td>
+                            {% if student.aadhaar_photo %}
+                            <a href="{{ student.aadhaar_photo.url }}" target="_blank" rel="noopener">
+                                <img src="{{ student.aadhaar_photo.url }}"
+                                     alt="Aadhaar"
+                                     class="doc-thumb"
+                                     width="56" height="56"
+                                     loading="lazy">
+                            </a>
+                            {% else %}
+                            <span class="no-img">No image</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if student.student_photo %}
+                            <a href="{{ student.student_photo.url }}" target="_blank" rel="noopener">
+                                <img src="{{ student.student_photo.url }}"
+                                     alt="{{ student.name }}"
+                                     class="doc-thumb"
+                                     width="56" height="56"
+                                     loading="lazy">
+                            </a>
+                            {% else %}
+                            <span class="no-img">No image</span>
+                            {% endif %}
+                        </td>
+
+                        <td class="muted-cell" style="max-width:180px; white-space:normal; line-height:1.4;">
+                            {{ student.address }}
+                        </td>
+
+                        <td>
+                            <a href="{% url 'adminapplication_delete' student.student_id %}"
+                               class="btn-delete"
+                               onclick="return confirm('Delete this student record?');">
+                                <i class="fa-solid fa-trash"></i> Delete
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="18" class="empty-state">
+                            <i class="fa-solid fa-user-slash"></i>
+                            No students found.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

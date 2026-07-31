@@ -1,0 +1,568 @@
+{% extends 'myadmin/adminlayout.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    :root {
+        --primary: #4f46e5;
+        --primary-hover: #4338ca;
+        --primary-soft: #eef2ff;
+        --danger: #dc2626;
+        --danger-soft: #fff1f2;
+        --success: #059669;
+        --text: #1e293b;
+        --muted: #64748b;
+        --border: #e2e8f0;
+        --bg: #f8fafc;
+        --card: #ffffff;
+        --radius: 14px;
+        --shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+    }
+
+    /* ---------- Container ---------- */
+    .table-container {
+        width: 95%;
+        max-width: 1200px;
+        margin: 32px auto;
+        background: var(--card);
+        padding: 28px 32px;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        animation: fadeUp 0.4s ease both;
+        contain: layout style;
+    }
+
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(14px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---------- Header ---------- */
+    .table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .table-header h3 {
+        margin: 0;
+        font-weight: 700;
+        font-size: 1.4rem;
+        color: var(--text);
+        letter-spacing: -0.02em;
+    }
+
+    .table-header h3::after {
+        content: "";
+        display: block;
+        width: 36px;
+        height: 3px;
+        background: var(--primary);
+        border-radius: 2px;
+        margin-top: 6px;
+    }
+
+    /* ---------- Add button ---------- */
+    .add-btn {
+        background: linear-gradient(135deg, var(--primary), #6366f1);
+        color: #fff;
+        border: none;
+        padding: 11px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.93rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+        cursor: pointer;
+    }
+
+    .add-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+        color: #fff;
+    }
+
+    .add-btn:active {
+        transform: translateY(0);
+    }
+
+    /* ---------- Table ---------- */
+    .course-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        overflow: hidden;
+    }
+
+    .course-table thead {
+        background: linear-gradient(180deg, #f1f5f9, #e8eef5);
+    }
+
+    .course-table th {
+        padding: 13px 16px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--muted);
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+        text-align: left;
+    }
+
+    .course-table td {
+        padding: 15px 16px;
+        color: var(--text);
+        font-size: 0.93rem;
+        border-bottom: 1px solid var(--border);
+        vertical-align: middle;
+    }
+
+    .course-table tbody tr {
+        transition: background 0.12s ease;
+        animation: rowIn 0.35s ease both;
+    }
+
+    .course-table tbody tr:nth-child(1) { animation-delay: 0.03s; }
+    .course-table tbody tr:nth-child(2) { animation-delay: 0.06s; }
+    .course-table tbody tr:nth-child(3) { animation-delay: 0.09s; }
+    .course-table tbody tr:nth-child(4) { animation-delay: 0.12s; }
+    .course-table tbody tr:nth-child(5) { animation-delay: 0.15s; }
+    .course-table tbody tr:nth-child(6) { animation-delay: 0.18s; }
+
+    @keyframes rowIn {
+        from { opacity: 0; transform: translateY(6px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .course-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .course-table tbody tr:hover td {
+        background: #f8fafc;
+    }
+
+    /* ID badge */
+    .id-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 34px;
+        height: 26px;
+        padding: 0 8px;
+        background: var(--primary-soft);
+        color: var(--primary);
+        font-weight: 700;
+        font-size: 0.82rem;
+        border-radius: 7px;
+    }
+
+    /* Fees */
+    .fees-cell {
+        font-weight: 600;
+        color: var(--success);
+        white-space: nowrap;
+    }
+
+    /* Action buttons */
+    .action-group {
+        display: flex;
+        gap: 8px;
+    }
+
+    .edit-btn,
+    .delete-btn {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 9px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
+    }
+
+    .edit-btn {
+        background: var(--primary-soft);
+        color: var(--primary);
+    }
+
+    .edit-btn:hover {
+        background: var(--primary);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 12px rgba(79, 70, 229, 0.28);
+    }
+
+    .delete-btn {
+        background: var(--danger-soft);
+        color: var(--danger);
+    }
+
+    .delete-btn:hover {
+        background: var(--danger);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 12px rgba(220, 38, 38, 0.28);
+    }
+
+    /* Empty state */
+    .empty-state {
+        text-align: center;
+        padding: 52px 20px !important;
+        color: var(--muted);
+    }
+
+    .empty-state i {
+        font-size: 2.1rem;
+        margin-bottom: 12px;
+        opacity: 0.35;
+        display: block;
+    }
+
+    /* ---------- Modals ---------- */
+    .modal-content {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 24px 48px rgba(15, 23, 42, 0.14);
+        overflow: hidden;
+    }
+
+    .modal.fade .modal-dialog {
+        transition: transform 0.25s ease, opacity 0.25s ease;
+        transform: scale(0.96) translateY(10px);
+        opacity: 0;
+    }
+
+    .modal.show .modal-dialog {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+        border-bottom: 1px solid var(--border);
+        padding: 16px 22px;
+    }
+
+    .modal-header h5 {
+        margin: 0;
+        font-weight: 700;
+        color: var(--text);
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .modal-header h5 i {
+        color: var(--primary);
+    }
+
+    .modal-body {
+        padding: 22px;
+    }
+
+    .modal-footer {
+        border-top: 1px solid var(--border);
+        padding: 14px 22px;
+        background: #fafbfc;
+    }
+
+    .modal-body label {
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: var(--text);
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .modal-body .form-control,
+    .modal-body .form-select {
+        border-radius: 9px;
+        border: 1.5px solid var(--border);
+        padding: 9px 13px;
+        font-size: 0.93rem;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .modal-body .form-control:focus,
+    .modal-body .form-select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+        outline: none;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary), #6366f1);
+        border: none;
+        border-radius: 9px;
+        padding: 9px 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        box-shadow: 0 3px 10px rgba(79, 70, 229, 0.25);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 14px rgba(79, 70, 229, 0.35);
+        background: linear-gradient(135deg, var(--primary-hover), #4f46e5);
+    }
+
+    .btn-secondary {
+        border-radius: 9px;
+        padding: 9px 18px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        background: #f1f5f9;
+        border: 1px solid var(--border);
+        color: var(--muted);
+        transition: background 0.12s ease, color 0.12s ease;
+    }
+
+    .btn-secondary:hover {
+        background: #e2e8f0;
+        color: var(--text);
+    }
+
+    .modal-backdrop.show {
+        opacity: 0.4;
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            transition-duration: 0.01ms !important;
+        }
+        .add-btn:hover,
+        .edit-btn:hover,
+        .delete-btn:hover,
+        .btn-primary:hover {
+            transform: none;
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .table-container {
+            width: 100%;
+            margin: 12px 0;
+            padding: 18px 14px;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        .course-table {
+            display: block;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .add-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+
+<div class="table-container">
+
+    <div class="table-header">
+        <h3>Course Management</h3>
+        <button type="button" class="add-btn" data-bs-toggle="modal" data-bs-target="#courseModal">
+            <i class="fa-solid fa-plus"></i> Add Course
+        </button>
+    </div>
+
+    <table class="course-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Course Name</th>
+                <th>Session</th>
+                <th>Duration</th>
+                <th>Fees</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in courses %}
+            <tr>
+                <td><span class="id-badge">{{ course.course_id }}</span></td>
+                <td><strong>{{ course.coursename }}</strong></td>
+                <td>{{ course.session }}</td>
+                <td>{{ course.duration }}</td>
+                <td class="fees-cell">₹{{ course.fees }}</td>
+                <td>
+                    <div class="action-group">
+                        <button type="button" class="edit-btn"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editCourseModal{{ course.course_id }}"
+                                title="Edit">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <a href="{% url 'addcourse_delete' course.course_id %}"
+                           class="delete-btn"
+                           onclick="return confirm('Delete this course?');"
+                           title="Delete">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="empty-state">
+                    <i class="fa-solid fa-book-open"></i>
+                    No courses found. Click “Add Course” to get started.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Add Course Modal -->
+<div class="modal fade" id="courseModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5><i class="fa-solid fa-plus-circle"></i> Add Course</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="{% url 'addcourse' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="add-coursename">Course Name</label>
+                        <select name="coursename" id="add-coursename" class="form-select" required>
+                            <option value="" selected disabled>Select Course</option>
+                            <option value="Java">Java</option>
+                            <option value="C++">C++</option>
+                            <option value="Python">Python</option>
+                            <option value="JavaScript">JavaScript</option>
+                            <option value="HTML">Full Stack Web Development</option>
+                            <option value="Data Structures">Data Structures</option>
+                            <option value="Algorithms">Algorithms</option>
+                            <option value="Machine Learning">Machine Learning</option>
+                            <option value="Artificial Intelligence">Artificial Intelligence</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="add-session">Session</label>
+                        <select name="session" id="add-session" class="form-select" required>
+                            <option value="" selected disabled>Select Session</option>
+                            <option value="2025-2026">2025-2026</option>
+                            <option value="2026-2027">2026-2027</option>
+                            <option value="2027-2028">2027-2028</option>
+                            <option value="2028-2029">2028-2029</option>
+                            <option value="2029-2030">2029-2030</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="add-duration">Duration</label>
+                        <select name="duration" id="add-duration" class="form-select" required>
+                            <option value="" selected disabled>Select Duration</option>
+                            <option value="1 Month">1 Month</option>
+                            <option value="2 Months">2 Months</option>
+                            <option value="6 Months">6 Months</option>
+                            <option value="8 Months">8 Months</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="add-fees">Fees (₹)</label>
+                        <input type="number" name="fees" id="add-fees" class="form-control"
+                               placeholder="e.g. 15000" min="0" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-check me-1"></i> Save Course
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Course Modals -->
+{% for course in courses %}
+<div class="modal fade" id="editCourseModal{{ course.course_id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5><i class="fa-solid fa-pen-to-square"></i> Edit Course</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="{% url 'addcourse_edit' course.course_id %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label>Course Name</label>
+                        <select name="coursename" class="form-select" required>
+                            <option value="Java" {% if course.coursename == "Java" %}selected{% endif %}>Java</option>
+                            <option value="C++" {% if course.coursename == "C++" %}selected{% endif %}>C++</option>
+                            <option value="Python" {% if course.coursename == "Python" %}selected{% endif %}>Python</option>
+                            <option value="JavaScript" {% if course.coursename == "JavaScript" %}selected{% endif %}>JavaScript</option>
+                            <option value="HTML" {% if course.coursename == "HTML" %}selected{% endif %}>Full Stack Web Development</option>
+                            <option value="Data Structures" {% if course.coursename == "Data Structures" %}selected{% endif %}>Data Structures</option>
+                            <option value="Algorithms" {% if course.coursename == "Algorithms" %}selected{% endif %}>Algorithms</option>
+                            <option value="Machine Learning" {% if course.coursename == "Machine Learning" %}selected{% endif %}>Machine Learning</option>
+                            <option value="Artificial Intelligence" {% if course.coursename == "Artificial Intelligence" %}selected{% endif %}>Artificial Intelligence</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label>Session</label>
+                        <select name="session" class="form-select" required>
+                            <option value="2025-2026" {% if course.session == "2025-2026" %}selected{% endif %}>2025-2026</option>
+                            <option value="2026-2027" {% if course.session == "2026-2027" %}selected{% endif %}>2026-2027</option>
+                            <option value="2027-2028" {% if course.session == "2027-2028" %}selected{% endif %}>2027-2028</option>
+                            <option value="2028-2029" {% if course.session == "2028-2029" %}selected{% endif %}>2028-2029</option>
+                            <option value="2029-2030" {% if course.session == "2029-2030" %}selected{% endif %}>2029-2030</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label>Duration</label>
+                        <select name="duration" class="form-select" required>
+                            <option value="1 Month" {% if course.duration == "1 Month" %}selected{% endif %}>1 Month</option>
+                            <option value="2 Months" {% if course.duration == "2 Months" %}selected{% endif %}>2 Months</option>
+                            <option value="6 Months" {% if course.duration == "6 Months" %}selected{% endif %}>6 Months</option>
+                            <option value="8 Months" {% if course.duration == "8 Months" %}selected{% endif %}>8 Months</option>
+                            <option value="1 Year" {% if course.duration == "1 Year" %}selected{% endif %}>1 Year</option>
+                            <option value="2 Years" {% if course.duration == "2 Years" %}selected{% endif %}>2 Years</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label>Fees (₹)</label>
+                        <input type="number" name="fees" class="form-control" value="{{ course.fees }}" min="0" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-floppy-disk me-1"></i> Update Course
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}

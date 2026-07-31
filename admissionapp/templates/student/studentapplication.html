@@ -1,0 +1,310 @@
+{% extends 'student/studentlayout.html' %}
+
+{% block content %}
+<style>
+    /* Custom Styling for a Modern Look */
+    .admission-card {
+        border-radius: 1rem;
+        border: none;
+        overflow: hidden;
+    }
+    .admission-header {
+        background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+        padding: 1.5rem 2rem;
+    }
+    .form-label {
+        font-weight: 600;
+        color: #475569;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+    .input-group-text {
+        background-color: #f8fafc;
+        border-color: #e2e8f0;
+        color: #64748b;
+        border-right: none;
+    }
+    .form-control, .form-select {
+        border-color: #e2e8f0;
+        padding: 0.75rem 1rem;
+        border-left: none;
+    }
+    .form-control:focus, .form-select:focus {
+        border-color: #3b82f6;
+        box-shadow: none;
+    }
+    /* Restores left border for focus state naturally */
+    .input-group:focus-within .input-group-text,
+    .input-group:focus-within .form-control,
+    .input-group:focus-within .form-select {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.15);
+    }
+    .file-input-wrapper .form-control {
+        border-left: 1px solid #e2e8f0; /* Keep border for file inputs */
+    }
+</style>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="container mt-4 mb-5">
+        <div class="card admission-card shadow-lg">
+            <!-- Header -->
+            <div class="card-header admission-header text-white d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                <div class="mb-3 mb-md-0">
+                    <h3 class="mb-1 fw-bold"><i class="fa-solid fa-user-graduate me-2"></i>Admission Form</h3>
+                    <p class="mb-0 text-white-50 small">Please fill out your personal and academic details accurately.</p>
+                </div>
+                {% if student.application_status %}
+                    <span class="badge bg-white text-primary shadow-sm fw-bold px-4 py-2 rounded-pill fs-6">
+                        <i class="fa-solid fa-circle-info me-1"></i> {{ student.application_status }}
+                    </span>
+                {% endif %}
+            </div>
+
+            <div class="card-body p-4 p-md-5">
+                
+                <!-- Alert Info Box when the form is locked -->
+                {% if student.application_status == 'Document Verified' or student.application_status == 'Fees Submitted' or student.application_status == 'Enrolled' %}
+                    <div class="alert alert-primary d-flex align-items-center mb-5 border-0 shadow-sm rounded-3" role="alert" style="background-color: #eff6ff; color: #1e40af;">
+                        <i class="fa-solid fa-lock me-3 fs-3"></i>
+                        <div>
+                            <h5 class="alert-heading fw-bold mb-1">Application Locked</h5>
+                            <span class="small">Your form has been submitted and is currently being processed. Modifications are disabled.</span>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="row g-4">
+
+                    <!-- Student Name -->
+                    <div class="col-md-6">
+                        <label class="form-label">Student Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
+                            <input type="text" class="form-control" name="name" value="{{ student.name }}" placeholder="Full Name" required
+                                {% if student.application_status == 'Document Verified' or student.application_status == 'Fees Submitted' or student.application_status == 'Enrolled' %}disabled{% endif %}>
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="col-md-6">
+                        <label class="form-label">Portal Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-key"></i></span>
+                            <input type="password" class="form-control" name="password" value="{{ student.password }}" placeholder="••••••••" required
+                                {% if student.application_status == 'Document Verified' or student.application_status == 'Fees Submitted' or student.application_status == 'Enrolled' %}disabled{% endif %}>
+                        </div>
+                    </div>
+
+                    <!-- Date of Birth -->
+                    <div class="col-md-6">
+                        <label class="form-label">Date of Birth</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-calendar-days"></i></span>
+                            <input type="date" class="form-control" name="dob" value="{{ student.dob|date:'Y-m-d' }}" required
+                                {% if student.application_status == 'Document Verified' or student.application_status == 'Fees Submitted' or student.application_status == 'Enrolled' %}disabled{% endif %}>
+                        </div>
+                    </div>
+
+                    <!-- Age -->
+                    <div class="col-md-6">
+                        <label class="form-label">Age</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-hashtag"></i></span>
+                            <input type="number" class="form-control" name="age" min="15" max="100" value="{{ student.age }}" placeholder="e.g. 18"
+                                {% if student.application_status == 'Document Verified' or student.application_status == 'Fees Submitted' or student.application_status == 'Enrolled' %}disabled{% endif %}>
+                        </div>
+                    </div>
+
+                    <!-- Gender -->
+                    <div class="col-md-6">
+                        <label class="form-label">Gender</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-venus-mars"></i></span>
+                            <select class="form-select" name="gender" {% if student.application_status == 'Document Verified' or student.application_status == 'Fees Submitted' or student.application_status == 'Enrolled' %}disabled{% endif %}>
+                                <option disabled {% if not student.gender %}selected{% endif %}>Select Gender</option>
+                                <option {% if student.gender == 'Male' %}selected{% endif %}>Male</option>
+                                <option {% if student.gender == 'Female' %}selected{% endif %}>Female</option>
+                                <option {% if student.gender == 'Other' %}selected{% endif %}>Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="col-md-6">
+                        <label class="form-label">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+                            <input type="email" class="form-control" value="{{ student.email }}" name="email" placeholder="student@example.com"
+                                {% if student.application_status == 'Document Verified' or student.application_status == 'Fees Submitted' or student.application_status == 'Enrolled' %}disabled{% endif %}>
+                        </div>
+                    </div>
+
+                    <!-- Mobile -->
+                    <div class="col-md-6">
+                        <label class="form-label">Mobile Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-phone"></i></span>
+                            <input type="tel" class="form-control" name="mobile" value="{{ student.mobile }}" maxlength="10" placeholder="10-digit number"
+                                {% if student.application_status == 'Document Verified' or student.application_status == 'Fees Submitted' or student.application_status == 'Enrolled' %}disabled{% endif %}>
+                        </div>
+                    </div>
+
+                    <!-- Blood Group -->
+                    <div class="col-md-6">
+                        <label class="form-label">Blood Group</label>
+                        <div class="input-group">
+                            <span class="input-group-text text-danger"><i class="fa-solid fa-droplet"></i></span>
+                            <select class="form-select" name="blood_group" {% if student.application_status == 'Document Verified' or student.application_status == 'Fees Submitted' or student.application_status == 'Enrolled' %}disabled{% endif %}>
+                                <option disabled {% if not student.blood_group %}selected{% endif %}>Select Type</option>
+                                <option {% if student.blood_group == 'A+' %}selected{% endif %}>A+</option>
+                                <option {% if student.blood_group == 'A-' %}selected{% endif %}>A-</option>
+                                <option {% if student.blood_group == 'B+' %}selected{% endif %}>B+</option>
+                                <option {% if student.blood_group == 'B-' %}selected{% endif %}>B-</option>
+                                <option {% if student.blood_group == 'AB+' %}selected{% endif %}>AB+</option>
+                                <option {% if student.blood_group == 'AB-' %}selected{% endif %}>AB-</option>
+                                <option {% if student.blood_group == 'O+' %}selected{% endif %}>O+</option>
+                                <option {% if student.blood_group == 'O-' %}selected{% endif %}>O-</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Section Divider -->
+                    <div class="col-12 mt-4">
+                        <h5 class="border-bottom pb-2 text-muted fw-bold">Academic & Family Details</h5>
+                    </div>
+
+                    <!-- Father's Name -->
+                    <div class="col-md-6">
+                        <label class="form-label">Father's Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-user-tie"></i></span>
+                            <input type="text" class="form-control" name="father_name" value="{{ student.father_name }}" placeholder="Parent/Guardian Name"
+                                {% if student.application_status == 'Document Verified' or student.application_status == 'Fees Submitted' or student.application_status == 'Enrolled' %}disabled{% endif %}>
+                        </div>
+                    </div>
+
+                    <!-- Father's Mobile -->
+                    <div class="col-md-6">
+                        <label class="form-label">Father's Mobile</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-phone"></i></span>
+                            <input type="tel" class="form-control" name="father_mobile" value="{{ student.father_mobile }}" maxlength="10" placeholder="Contact Number"
+                                {% if student.application_status == 'Document Verified' or student.application_status == 'Fees Submitted' or student.application_status == 'Enrolled' %}disabled{% endif %}>
+                        </div>
+                    </div>
+
+                    <!-- 10th Percentage -->
+                    <div class="col-md-6">
+                        <label class="form-label">Class 10th Percentage</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-percent"></i></span>
+                            <input type="number" class="form-control" name="class10" value="{{ student.class10 }}" step="0.01" min="0" max="100" placeholder="0.00"
+                                {% if student.application_status == 'Document Verified' or student.application_status == 'Fees Submitted' or student.application_status == 'Enrolled' %}disabled{% endif %}>
+                        </div>
+                    </div>
+
+                    <!-- 12th Percentage -->
+                    <div class="col-md-6">
+                        <label class="form-label">Class 12th Percentage</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-percent"></i></span>
+                            <input type="number" class="form-control" name="class12" value="{{ student.class12 }}" step="0.01" min="0" max="100" placeholder="0.00"
+                                {% if student.application_status == 'Document Verified' or student.application_status == 'Fees Submitted' or student.application_status == 'Enrolled' %}disabled{% endif %}>
+                        </div>
+                    </div>
+
+                    <!-- Course -->
+                    <div class="col-md-6">
+                        <label class="form-label">Course Selection</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-book-open"></i></span>
+                            <select class="form-select" name="course" required {% if student.application_status == 'Document Verified' or student.application_status == 'Fees Submitted' or student.application_status == 'Enrolled' %}disabled{% endif %}>
+                                <option disabled {% if not student.course %}selected{% endif %}>Select Course</option>
+                                <option value="Java" {% if student.course == 'Java' %}selected{% endif %}>Java</option>
+                                <option value="C++" {% if student.course == 'C++' %}selected{% endif %}>C++</option>
+                                <option value="Python" {% if student.course == 'Python' %}selected{% endif %}>Python</option>
+                                <option value="JavaScript" {% if student.course == 'JavaScript' %}selected{% endif %}>JavaScript</option>
+                                <option value="HTML" {% if student.course == 'HTML' %}selected{% endif %}>Full Stack Web Development</option>
+                                <option value="Data Structures" {% if student.course == 'Data Structures' %}selected{% endif %}>Data Structures</option>
+                                <option value="Algorithms" {% if student.course == 'Algorithms' %}selected{% endif %}>Algorithms</option>
+                                <option value="Machine Learning" {% if student.course == 'Machine Learning' %}selected{% endif %}>Machine Learning</option>
+                                <option value="Artificial Intelligence" {% if student.course == 'Artificial Intelligence' %}selected{% endif %}>Artificial Intelligence</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Section Divider -->
+                    <div class="col-12 mt-4">
+                        <h5 class="border-bottom pb-2 text-muted fw-bold">Documents & Address</h5>
+                    </div>
+
+                    <!-- Identification Number -->
+                    <div class="col-md-6">
+                        <label class="form-label">Aadhaar Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-id-card"></i></span>
+                            <input type="text" class="form-control" name="aadhaar" value="{{ student.aadhaar }}" placeholder="Enter ID Number"
+                                {% if student.application_status == 'Document Verified' or student.application_status == 'Fees Submitted' or student.application_status == 'Enrolled' %}disabled{% endif %}>
+                        </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="col-md-6">
+                        <label class="form-label">Residential Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-location-dot"></i></span>
+                            <textarea class="form-control" rows="1" name="address" placeholder="Full Address"
+                                {% if student.application_status == 'Document Verified' or student.application_status == 'Fees Submitted' or student.application_status == 'Enrolled' %}disabled{% endif %}>{{ student.address }}</textarea>
+                        </div>
+                    </div>
+
+                    <!-- ID Upload -->
+                    <div class="col-md-6 file-input-wrapper">
+                        <label class="form-label d-flex justify-content-between">
+                            <span>ID Document Upload</span>
+                            {% if student.aadhaar_photo %}
+                                <span class="small text-success"><i class="fa-solid fa-circle-check"></i> Uploaded</span>
+                            {% endif %}
+                        </label>
+                        <input type="file" class="form-control" name="aadhaar_photo" accept=".jpg,.jpeg,.png,.pdf"
+                            {% if student.application_status == 'Document Verified' or student.application_status == 'Fees Submitted' or student.application_status == 'Enrolled' %}disabled{% endif %}>
+                    </div>
+
+                    <!-- Student Photo -->
+                    <div class="col-md-6 file-input-wrapper">
+                        <label class="form-label d-flex justify-content-between">
+                            <span>Student Passport Photo</span>
+                            {% if student.student_photo %}
+                                <span class="small text-success"><i class="fa-solid fa-circle-check"></i> Uploaded</span>
+                            {% endif %}
+                        </label>
+                        <input type="file" class="form-control" name="student_photo" accept=".jpg,.jpeg,.png"
+                            {% if student.application_status == 'Document Verified' or student.application_status == 'Fees Submitted' or student.application_status == 'Enrolled' %}disabled{% endif %}>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Footer Buttons -->
+            <div class="card-footer bg-light p-4 text-end border-0">
+                {% if student.application_status != 'Document Verified' and student.application_status != 'Fees Submitted' and student.application_status != 'Enrolled' %}
+                    <button type="reset" class="btn btn-outline-secondary me-2 rounded-pill px-4">
+                        <i class="fa-solid fa-rotate-left me-1"></i> Reset
+                    </button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm" style="background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%); border: none;">
+                        <i class="fa-solid fa-paper-plane me-1"></i> Submit Application
+                    </button>
+                {% else %}
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" disabled>
+                        <i class="fa-solid fa-lock me-1"></i> Form Locked
+                    </button>
+                {% endif %}
+            </div>
+            
+        </div>
+    </div>
+</form>
+{% endblock %}

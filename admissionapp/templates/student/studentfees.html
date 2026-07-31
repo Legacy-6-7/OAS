@@ -1,0 +1,157 @@
+{% extends 'student/studentlayout.html' %}
+{% load static %}
+{% block content %}
+<div class="card-body p-4">
+
+    <h4 class="mb-4 text-primary">
+        <i class="fa-solid fa-user-graduate me-2"></i>
+        Student Information
+    </h4>
+
+    <table class="table table-bordered align-middle">
+        <tbody>
+            <tr>
+                <th width="35%">Name</th>
+                <td>{{ student.name }}</td>
+            </tr>
+
+            <tr>
+                <th>Mobile</th>
+                <td>{{ student.mobile }}</td>
+            </tr>
+
+            <tr>
+                <th>Email</th>
+                <td>{{ student.email }}</td>
+            </tr>
+
+            <tr>
+                <th>Course</th>
+                <td>{{ student.course }}</td>
+            </tr>
+
+            <tr>
+                <th>Course Fee</th>
+                <td><strong class="text-success">₹{{ course.fees }}</strong></td>
+            </tr>
+
+            <tr>
+                <th>Payment Status</th>
+                <td>
+
+                    {% if student.payment_status == 'pending' %}
+                    <span class="badge bg-warning text-dark px-3 py-2">
+                        Pending
+                    </span>
+
+                    {% elif student.payment_status == 'submitted' %}
+                    <span class="badge bg-info px-3 py-2">
+                        Submitted
+                    </span>
+
+                    {% elif student.payment_status == 'verified' %}
+                    <span class="badge bg-success px-3 py-2">
+                        Verified
+                    </span>
+
+                    {% elif student.payment_status == 'rejected' %}
+                    <span class="badge bg-danger px-3 py-2">
+                        Rejected
+                    </span>
+
+                    {% endif %}
+
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    {% if student.payment_status == 'pending' %}
+
+    <div class="text-center mt-4">
+
+        <h4 class="text-primary">
+            Scan QR Code
+        </h4>
+
+        <img src="{% static 'admissionapp/payment.jpeg' %}"
+             class="img-fluid rounded shadow"
+             style="max-width:250px;">
+
+        <h4 class="text-success mt-3">
+            Amount: ₹{{ course.fees }}
+        </h4>
+
+        <p class="text-muted">
+            Scan the QR code using any UPI app and complete the payment.
+        </p>
+
+    </div>
+
+    <hr>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">
+                Upload Payment Screenshot
+            </label>
+
+            <input type="file"
+                   name="payment_screenshot"
+                   class="form-control"
+                   accept=".jpg,.jpeg,.png"
+                   required>
+        </div>
+
+        <div class="text-center">
+            <button class="btn btn-primary px-4">
+                <i class="fa-solid fa-upload me-2"></i>
+                Submit Payment
+            </button>
+        </div>
+
+    </form>
+
+    {% elif student.payment_status == 'submitted' %}
+
+    <div class="alert alert-info text-center mt-4">
+        <h5>
+            <i class="fa-solid fa-clock me-2"></i>
+            Payment Submitted
+        </h5>
+
+        Your payment screenshot has been uploaded successfully.
+        <br>
+        Please wait for admin verification.
+    </div>
+
+    {% elif student.payment_status == 'verified' %}
+
+    <div class="alert alert-success text-center mt-4">
+        <h5>
+            <i class="fa-solid fa-circle-check me-2"></i>
+            Payment Verified
+        </h5>
+
+        Your payment has been verified successfully.
+    </div>
+
+    {% elif student.payment_status == 'rejected' %}
+
+    <div class="alert alert-danger text-center mt-4">
+        <h5>
+            <i class="fa-solid fa-circle-xmark me-2"></i>
+            Payment Rejected
+        </h5>
+
+        Your payment was rejected.
+        Please upload a valid payment screenshot again.
+    </div>
+
+    {% endif %}
+
+</div>
+{% endblock %}

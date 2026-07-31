@@ -1,0 +1,165 @@
+{% load static %}
+<style>
+    :root {
+        --nav-bg: rgba(255, 255, 255, 0.04);
+        --nav-bg-strong: rgba(255, 255, 255, 0.10);
+        --nav-border: rgba(255, 255, 255, 0.18);
+        --nav-ink: #F2F4FA;
+        --nav-ink-muted: rgba(242, 244, 250, .68);
+        --nav-accent-gold: #FFE401;
+        --nav-active-bg: rgba(255, 228, 1, .12);
+    }
+
+.navbar-wrap {
+    display: inline-flex;
+
+    max-width: 1400px;
+    margin-top: 28px;
+
+    border: 1px solid var(--nav-border);
+    border-radius: 999px;
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    background: linear-gradient(
+        135deg,
+        rgba(255,255,255,.06),
+        rgba(255,255,255,.02)
+    );
+    box-shadow: 0 12px 32px rgba(0,0,0,.25);
+}
+
+.custom-navbar{
+    width: auto;
+}
+
+.navbar-collapse{
+    flex-grow: 0;
+}
+
+.navbar-nav{
+    width: auto;
+    white-space: nowrap;
+    align-items: center;
+}
+
+    /* Logo – no background plate */
+    .logo-plate {
+        background: transparent;
+        border-radius: 0;
+        padding: 0;
+        margin-right: 20px;
+        box-shadow: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .logo-plate .logo {
+        display: block;
+        width: 100px;
+        height: 50px;
+        object-fit: contain;
+    }
+
+    .navbar-nav .nav-link {
+        position: relative;
+        color: var(--nav-ink-muted) !important;
+        font-weight: 600;
+        margin: 0 4px;
+        padding: 8px 16px !important;
+        border-radius: 999px;
+        transition: color .2s ease, background .2s ease;
+    }
+
+    .navbar-nav .nav-link:hover {
+        color: var(--nav-ink) !important;
+        background: var(--nav-bg-strong);
+    }
+
+    .navbar-nav .nav-link.active {
+        color: var(--nav-ink) !important;
+        background: var(--nav-active-bg);
+    }
+
+    .navbar-nav .nav-link::after {
+        content: "";
+        position: absolute;
+        left: 16px;
+        right: 16px;
+        bottom: 2px;
+        height: 2px;
+        background: var(--nav-accent-gold);
+        border-radius: 2px;
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: transform .2s ease;
+    }
+
+    .navbar-nav .nav-link:hover::after,
+    .navbar-nav .nav-link.active::after {
+        transform: scaleX(1);
+    }
+
+    /* Login button – dark background */
+    .nav-login-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #1a0a4a;          /* dark navy */
+        color: #F2F4FA !important;    /* light text for contrast */
+        font-weight: 700;
+        padding: 8px 22px !important;
+        border-radius: 999px;
+        margin-left: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: none;
+        transition: background .2s ease, transform .18s ease;
+    }
+
+    .nav-login-btn:hover {
+        background: #2a1690;          /* slightly lighter navy on hover */
+        color: #F2F4FA !important;
+        transform: translateY(-1px);
+        box-shadow: none;
+    }
+
+    .nav-login-btn::after { display: none; }
+
+    @media (max-width: 991px) {
+        .navbar-nav { gap: 4px; }
+        .navbar-wrap { margin-top: 16px; }
+        .logo-plate { margin-right: 12px; }
+        .logo-plate .logo { width: 80px; height: 40px; }
+    }
+</style>
+
+<div class="container d-flex justify-content-center rounded-5 navbar-wrap py-2 px-3">
+    <nav class="navbar navbar-expand-lg custom-navbar">
+        <div class="collapse navbar-collapse show">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <div class="logo-plate">
+                        <img src="{% static 'admissionapp/SipherWebLogo.png' %}" alt="Sipher Web" class="logo">
+                    </div>
+                </li>
+                <li class="nav-item fs-5">
+                    <a class="nav-link active" href="{% url 'home' %}">Home</a>
+                </li>
+                <li class="nav-item fs-5">
+                    <a class="nav-link" href="#aboutus">About</a>
+                </li>
+                <li class="nav-item fs-5">
+                    <a class="nav-link" href="#">Courses</a>
+                </li>
+                <li class="nav-item fs-5">
+                    <a class="nav-link" href="{% url 'enquiry' %}">Enquiry</a>
+                </li>
+                <li class="nav-item fs-5">
+                    <a class="nav-link nav-login-btn" href="{% url 'studentlogin' %}">
+                        Login <i class="fa-solid fa-circle-user"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>

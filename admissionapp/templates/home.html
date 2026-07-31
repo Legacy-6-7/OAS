@@ -1,0 +1,973 @@
+{% extends 'app.html' %}
+{% load static %}
+
+{% block content %}
+<title>Sipher Web Institution</title>
+
+<style>
+    :root {
+        --ink: #F2F4FA;
+        --ink-muted: rgba(242, 244, 250, .68);
+        --accent-gold: #FFE401;
+        --accent-gold-soft: rgba(255, 228, 1, .12);
+        --accent-navy: #100563;
+        --accent-navy-soft: rgba(16, 5, 99, .4);
+        --accent-blue: #8EA0F0;
+        --accent-blue-soft: rgba(142, 160, 240, .14);
+        --glass-bg: rgba(255, 255, 255, .07);
+        --glass-bg-strong: rgba(255, 255, 255, .11);
+        --glass-border: rgba(255, 255, 255, .14);
+        --radius-lg: 24px;
+        --radius-md: 16px;
+        --shadow-sm: 0 8px 24px rgba(0, 0, 0, .28);
+        --shadow-md: 0 14px 36px rgba(0, 0, 0, .35);
+    }
+
+    /* Performance: promote a single layer for the whole page background */
+    body {
+        background:
+            #09071A;
+        background-attachment: fixed;
+        color: var(--ink);
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        overflow-x: hidden;
+        /* Helps with scrolling smoothness */
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* Cheap glass – only use blur on the most important panels */
+    .glass {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+    }
+
+    .glass-blur {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    /* ---------- Hero ---------- */
+    .hero-panel {
+        background: linear-gradient(135deg, rgba(255, 255, 255, .09), rgba(255, 255, 255, .03));
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        box-shadow: var(--shadow-md);
+        border: 1px solid rgba(255, 255, 255, .12);
+        position: relative;
+        overflow: hidden;
+        contain: layout paint;
+    }
+
+    .hero-panel::before {
+        content: "";
+        position: absolute;
+        inset: -40% -20% auto auto;
+        width: 60%;
+        height: 140%;
+        background: radial-gradient(circle, var(--accent-navy-soft), transparent 65%);
+        pointer-events: none;
+        will-change: transform;
+    }
+
+    .eyebrow-badge {
+        width: fit-content;
+        background: var(--accent-blue-soft);
+        border: 1px solid rgba(142, 160, 240, .3);
+        color: var(--accent-blue);
+        font-size: 14px;
+        letter-spacing: .03em;
+    }
+
+    .hero-title {
+        font-weight: 700;
+        line-height: 1.05;
+    }
+
+    .hero-title .accent-gold {
+        color: var(--accent-gold);
+    }
+
+    .hero-title .accent-navy {
+        color: var(--accent-blue);
+    }
+
+    .tech-pill {
+        padding: .45rem .9rem;
+        border-radius: 999px;
+        font-size: .875rem;
+        color: var(--ink);
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        transition: background .18s ease, border-color .18s ease;
+        will-change: background, border-color;
+    }
+
+    .tech-pill:hover {
+        background: var(--glass-bg-strong);
+        border-color: rgba(255, 255, 255, .25);
+    }
+
+    .btn-primary-glass {
+        background: linear-gradient(135deg, var(--accent-navy), #2A1690);
+        color: #fff;
+        border: none;
+        box-shadow: 0 6px 18px rgba(16, 5, 99, .4);
+        transition: transform .18s ease, box-shadow .18s ease;
+        will-change: transform;
+    }
+
+    .btn-primary-glass:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 26px rgba(16, 5, 99, .5);
+        color: #fff;
+        background: linear-gradient(135deg, #1a0a7a, #3218a8);
+    }
+
+    .btn-outline-glass {
+        background: var(--glass-bg);
+        border: 1px solid rgba(255, 255, 255, .22);
+        color: var(--ink);
+        transition: background .18s ease, border-color .18s ease, transform .18s ease;
+        will-change: transform;
+    }
+
+    .btn-outline-glass:hover {
+        background: var(--glass-bg-strong);
+        border-color: rgba(255, 255, 255, .35);
+        color: #fff;
+        transform: translateY(-2px);
+    }
+
+    .stat-block {
+        border-radius: 14px;
+        padding: 14px 8px;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+    }
+
+    .stat-num {
+        color: var(--accent-gold);
+        font-weight: 700;
+    }
+
+    .carousel-frame {
+        border: 1px solid rgba(255, 255, 255, .12);
+        box-shadow: var(--shadow-sm);
+        contain: layout paint;
+    }
+
+    .carousel-frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        /* Prevent layout shift + improve decode */
+        content-visibility: auto;
+    }
+
+    /* ---------- Steps ---------- */
+    .step-row {
+        position: relative;
+        contain: layout;
+    }
+
+    .step-row::before {
+        content: "";
+        position: absolute;
+        top: 32px;
+        left: 20%;
+        right: 20%;
+        height: 2px;
+        background: repeating-linear-gradient(90deg, var(--accent-blue) 0 8px, transparent 8px 16px);
+        opacity: .4;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .step-circle {
+        position: relative;
+        z-index: 1;
+        border: 2px solid var(--accent-blue);
+        color: var(--accent-blue);
+        border-radius: 50%;
+        width: 64px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.25rem;
+        background: var(--glass-bg);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, .22);
+    }
+
+    .step-label {
+        text-align: center;
+        color: var(--ink-muted);
+        font-weight: 600;
+        margin-top: 10px;
+        font-size: .9rem;
+    }
+
+    /* ---------- Sections ---------- */
+    .section-panel {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-sm);
+        position: relative;
+        overflow: hidden;
+        contain: layout paint;
+    }
+
+    .section-panel::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--accent-blue);
+    }
+
+    .section-title {
+        color: var(--ink);
+        font-size: 2.5rem;
+        letter-spacing: .02em;
+    }
+
+    .section-title .underline {
+        display: block;
+        width: 72px;
+        height: 3px;
+        background: var(--accent-blue);
+        margin: 12px auto 0;
+        border-radius: 2px;
+    }
+
+    .section-kicker {
+        display: inline-block;
+        color: var(--accent-blue);
+        background: var(--accent-blue-soft);
+        border: 1px solid rgba(142, 160, 240, .3);
+        font-size: .75rem;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        padding: 5px 14px;
+        border-radius: 999px;
+        margin-bottom: 12px;
+    }
+
+    /* ---------- Mode cards ---------- */
+    .image-card {
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        max-width: 650px;
+        margin: auto;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--shadow-sm);
+        transition: transform .2s ease, box-shadow .2s ease;
+        will-change: transform;
+        contain: layout paint;
+    }
+
+    .image-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .image-container {
+        position: relative;
+        overflow: hidden;
+        height: 400px;
+    }
+
+    .image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        /* Critical for performance */
+        loading: lazy;
+        decoding: async;
+        content-visibility: auto;
+    }
+
+    .overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 40%, rgba(7, 2, 32, .78) 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 22px;
+        text-align: left;
+        pointer-events: none;
+    }
+
+    .overlay h2 {
+        font-size: 1.85rem;
+        font-weight: 700;
+        margin: 0;
+        color: #fff;
+    }
+
+    .overlay .tagline {
+        color: rgba(255, 255, 255, .8);
+        font-size: .8rem;
+        font-weight: 600;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+    }
+
+    .para {
+        color: var(--ink-muted);
+        padding: 18px 22px 24px;
+        line-height: 1.7;
+        border-top: 1px solid var(--glass-border);
+        font-size: .95rem;
+    }
+
+    /* ---------- Why choose ---------- */
+    .why-wrap {
+        position: relative;
+        width: 260px;
+        height: 260px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .why-wrap::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: radial-gradient(circle, var(--accent-navy-soft) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+    #whyBtn {
+        position: relative;
+        z-index: 1;
+        width: 220px;
+        height: 220px;
+        background: var(--glass-bg-strong);
+        border: 2px solid var(--accent-blue);
+        box-shadow: var(--shadow-sm);
+        color: var(--ink);
+        transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+        will-change: transform;
+    }
+
+    #whyBtn:hover {
+        transform: scale(1.04);
+        box-shadow: var(--shadow-md);
+    }
+
+    #whyBtn p {
+        margin-top: 8px;
+        font-weight: 600;
+        font-size: .95rem;
+    }
+
+    .logo-wrapper {
+        background: #fff;
+        border-radius: 50%;
+        width: 84px;
+        height: 84px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, .18);
+        margin-bottom: 6px;
+    }
+
+    .logo-wrapper img {
+        max-width: 70%;
+        height: auto;
+        /* Logo is critical – load eagerly */
+        loading: eager;
+        decoding: async;
+    }
+
+    .why-flank {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        justify-content: center;
+        height: 100%;
+    }
+
+    .why-flank.align-left {
+        align-items: flex-end;
+        text-align: right;
+    }
+
+    .why-flank.align-right {
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .why-highlight {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        max-width: 220px;
+    }
+
+    .why-flank.align-left .why-highlight {
+        flex-direction: row-reverse;
+    }
+
+    .why-highlight .why-icon {
+        flex: 0 0 auto;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--accent-blue-soft);
+        color: var(--accent-blue);
+        font-size: 1rem;
+        border: 1px solid rgba(142, 160, 240, .28);
+    }
+
+    .why-highlight h6 {
+        margin: 0 0 2px;
+        font-weight: 700;
+        color: var(--ink);
+        font-size: .9rem;
+    }
+
+    .why-highlight p {
+        margin: 0;
+        color: var(--ink-muted);
+        font-size: .8rem;
+        line-height: 1.4;
+    }
+
+    @media (max-width: 991px) {
+        .why-flank {
+            display: none;
+        }
+    }
+
+    /* ---------- Feature cards ---------- */
+    .feature-card {
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--shadow-sm);
+        transition: transform .2s ease, box-shadow .2s ease;
+        will-change: transform;
+        contain: layout paint;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .feature-icon-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 140px;
+        background: var(--accent-blue-soft);
+    }
+
+    .feature-card .card-title {
+        color: var(--ink);
+        font-weight: 700;
+    }
+
+    .feature-card .card-text {
+        color: var(--ink-muted);
+        font-size: .9rem;
+    }
+
+    /* ---------- CTA ---------- */
+    .cta-strip {
+        border-radius: var(--radius-lg);
+        background: linear-gradient(120deg, rgba(255, 255, 255, .1), rgba(255, 255, 255, .04));
+        box-shadow: var(--shadow-md);
+        border: 1px solid rgba(255, 255, 255, .12);
+        color: #fff;
+        overflow: hidden;
+        position: relative;
+        contain: layout paint;
+    }
+
+    .cta-strip .btn-gold {
+        background: linear-gradient(135deg, var(--accent-gold), #F2CE00);
+        color: var(--accent-navy);
+        border: none;
+        box-shadow: 0 6px 16px rgba(255, 228, 1, .25);
+        transition: transform .18s ease, box-shadow .18s ease;
+        will-change: transform;
+    }
+
+    .cta-strip .btn-gold:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 22px rgba(255, 228, 1, .35);
+        color: var(--accent-navy);
+    }
+
+    /* ---------- Footer ---------- */
+    .site-footer {
+        border-top-left-radius: var(--radius-lg);
+        border-top-right-radius: var(--radius-lg);
+    }
+
+    .footer-link {
+        color: var(--ink-muted);
+        text-decoration: none;
+        transition: color .15s ease;
+    }
+
+    .footer-link:hover {
+        color: var(--accent-gold);
+    }
+
+    .social-btn {
+        width: 38px;
+        height: 38px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        background: var(--glass-bg-strong);
+        border: 1px solid var(--glass-border);
+        color: var(--ink);
+        transition: background .15s ease, border-color .15s ease, color .15s ease, transform .15s ease;
+        will-change: transform;
+    }
+
+    .social-btn:hover {
+        background: var(--accent-blue);
+        border-color: var(--accent-blue);
+        color: #fff;
+        transform: translateY(-2px);
+    }
+
+    /* Reduced motion – prevents lag / discomfort */
+    @media (prefers-reduced-motion: reduce) {
+
+        *,
+        *::before,  
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+
+        .image-card:hover,
+        .feature-card:hover,
+        .btn-primary-glass:hover,
+        .btn-outline-glass:hover,
+        .cta-strip .btn-gold:hover,
+        #whyBtn:hover,
+        .social-btn:hover {
+            transform: none;
+        }
+    }
+
+    /* Content visibility for below-the-fold sections */
+    .section-panel,
+    #bag,
+    .cta-strip,
+    .site-footer {
+        content-visibility: auto;
+        contain-intrinsic-size: 800px;
+    }
+</style>
+
+<div class="container-fluid py-5 pb-0">
+    <div class="row justify-content-center">
+        <div class="col-lg-11">
+            <div class="row rounded-5 overflow-hidden hero-panel">
+
+                <div class="col-lg-7 p-5 d-flex flex-column justify-content-center" style="z-index:1;">
+                    <span class="badge rounded-pill px-3 py-2 mb-3 eyebrow-badge">
+                        Learn · Build · Get Hired
+                    </span>
+
+                    <h1 class="hero-title display-3 mb-0">
+                        <span class="accent-gold">Learn</span>
+                        <span style="color:var(--ink);">Code.</span>
+                    </h1>
+                    <h1 class="hero-title display-3">
+                        <span class="accent-navy">Build</span>
+                        <span style="color:var(--ink);">Success.</span>
+                    </h1>
+
+                    <p class="mt-4 fs-5" style="color:var(--ink-muted); line-height:1.75;">
+                        Master programming with expert-led training at
+                        <strong style="color:var(--ink);">Sipher Web Institution</strong>.
+                        Learn Python, Java, Web Development, Data Science,
+                        C, C++, React, Node.js and more through live classes,
+                        hands-on projects, coding challenges and industry-level
+                        mentorship.
+                    </p>
+
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        <span class="tech-pill"><i class="fab fa-python" style="color:var(--accent-gold);"></i>
+                            Python</span>
+                        <span class="tech-pill"><i class="fab fa-java" style="color:#A0522D;"></i> Java</span>
+                        <span class="tech-pill"><i class="fab fa-html5" style="color:var(--accent-gold);"></i>
+                            HTML</span>
+                        <span class="tech-pill"><i class="fab fa-css3-alt" style="color:var(--accent-blue);"></i>
+                            CSS</span>
+                        <span class="tech-pill"><i class="fab fa-react" style="color:#61DAFB;"></i> React</span>
+                    </div>
+
+                    <div class="mt-5 d-flex gap-3 flex-wrap">
+                        <a href="#" class="btn btn-lg px-5 rounded-pill fw-bold btn-primary-glass">Enroll Now</a>
+                        <a href="#" class="btn btn-lg px-5 rounded-pill btn-outline-glass">Explore Courses</a>
+                    </div>
+
+                    <div class="row mt-5 text-center g-3">
+                        <div class="col-4">
+                            <div class="stat-block">
+                                <h2 class="stat-num mb-0">500+</h2>
+                                <small style="color:var(--ink-muted);">Students</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stat-block">
+                                <h2 class="stat-num mb-0">20+</h2>
+                                <small style="color:var(--ink-muted);">Courses</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stat-block">
+                                <h2 class="stat-num mb-0">95%</h2>
+                                <small style="color:var(--ink-muted);">Success Rate</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5 p-4">
+                    <div class="rounded-5 overflow-hidden carousel-frame h-100">
+                        <div id="verticalCarousel" class="carousel slide h-100" data-bs-ride="carousel"
+                            data-bs-interval="4500" data-bs-pause="hover">
+                            <div class="carousel-inner h-100">
+                                <div class="carousel-item active h-100">
+                                    <img src="{% static 'admissionapp/1.jpg' %}" class="w-100 h-100"
+                                        style="object-fit:cover;" alt="Campus" width="600" height="700" loading="eager"
+                                        decoding="async">
+                                </div>
+                                <div class="carousel-item h-100">
+                                    <img src="{% static 'admissionapp/2.jpg' %}" class="w-100 h-100"
+                                        style="object-fit:cover;" alt="Classroom" width="600" height="700"
+                                        loading="lazy" decoding="async">
+                                </div>
+                                <div class="carousel-item h-100">
+                                    <img src="{% static 'admissionapp/3.jpg' %}" class="w-100 h-100"
+                                        style="object-fit:cover;" alt="Students" width="600" height="700" loading="lazy"
+                                        decoding="async">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Steps -->
+    <div class="row mx-auto g-4 mt-4 step-row" style="justify-content:center; align-items:start;">
+        <div class="col-sm-3 d-flex flex-column align-items-center"><br>
+            <div class="step-circle">1</div>
+            <div class="step-label">Enroll &amp; Onboard</div>
+        </div>
+        <div class="col-sm-3 d-flex flex-column align-items-center"><br>
+            <div class="step-circle">2</div>
+            <div class="step-label">Learn &amp; Build</div>
+        </div>
+        <div class="col-sm-3 d-flex flex-column align-items-center"><br>
+            <div class="step-circle">3</div>
+            <div class="step-label">Get Hired</div>
+        </div>
+    </div>
+
+    <!-- Modes -->
+    <div class="row m-0 p-5 mt-4">
+        <div class="col-sm-12 text-center section-panel mx-auto p-5">
+            <span class="section-kicker">Flexible learning</span>
+            <span class="section-title d-block">
+                Modes We Train
+                <span class="underline"></span>
+            </span>
+
+            <div class="row text-center pt-5 g-4">
+                <div class="col-sm-6">
+                    <div class="image-card">
+                        <div class="image-container">
+                            <img src="{% static 'admissionapp/offline.png' %}" class="img-fluid" alt="Offline training"
+                                width="650" height="400" loading="lazy" decoding="async">
+                            <div class="overlay">
+                                <span class="tagline">In-person</span>
+                                <h2 style="color:var(--accent-gold);">Offline</h2>
+                            </div>
+                        </div>
+                        <p class="para">
+                            At <strong style="color:var(--ink);">Sipher Web Institution</strong>, our offline mode
+                            provides
+                            classroom-based training with experienced mentors, practical lab
+                            sessions, live interaction, personalized guidance, doubt-clearing
+                            sessions, and real-world projects to help students develop
+                            industry-ready skills.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="image-card">
+                        <div class="image-container">
+                            <img src="{% static 'admissionapp/online.png' %}" class="img-fluid" alt="Online training"
+                                width="650" height="400" loading="lazy" decoding="async">
+                            <div class="overlay">
+                                <span class="tagline">Remote</span>
+                                <h2 style="color:var(--accent-blue);">Online</h2>
+                            </div>
+                        </div>
+                        <p class="para">
+                            At <strong style="color:var(--ink);">Sipher Web Institution</strong>, our online program
+                            offers
+                            the flexibility to study from anywhere while maintaining high standards.
+                            Attend live classes, access recorded lectures, download materials,
+                            complete assignments, and receive personalized mentorship.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Why Choose -->
+        <div id="bag">
+            <div class="container mt-5 pt-5">
+                <div class="row align-items-center justify-content-center g-4">
+                    <div class="col-lg-3 d-none d-lg-flex">
+                        <div class="why-flank align-left">
+                            <div class="why-highlight">
+                                <div class="why-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+                                <div>
+                                    <h6>Certified Curriculum</h6>
+                                    <p>Structured, industry-aligned course tracks.</p>
+                                </div>
+                            </div>
+                            <div class="why-highlight">
+                                <div class="why-icon"><i class="fa-solid fa-clock"></i></div>
+                                <div>
+                                    <h6>Flexible Timings</h6>
+                                    <p>Weekday and weekend batches available.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 text-center">
+                        <div class="why-wrap">
+                            <button id="whyBtn"
+                                class="btn rounded-circle mx-auto d-flex flex-column align-items-center justify-content-center"
+                                type="button" data-bs-toggle="collapse" data-bs-target="#courseCards"
+                                aria-expanded="false" aria-controls="courseCards">
+                                <div class="logo-wrapper">
+                                    <img src="{% static 'admissionapp/SipherWebLogo.png' %}" alt="Sipher Web Logo"
+                                        width="60" height="60" loading="eager" decoding="async">
+                                </div>
+                                <p>Why Choose<br>Sipher Web?</p>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 d-none d-lg-flex">
+                        <div class="why-flank align-right">
+                            <div class="why-highlight">
+                                <div class="why-icon"><i class="fa-solid fa-people-group"></i></div>
+                                <div>
+                                    <h6>Small Batch Sizes</h6>
+                                    <p>More one-on-one time with mentors.</p>
+                                </div>
+                            </div>
+                            <div class="why-highlight">
+                                <div class="why-icon"><i class="fa-solid fa-award"></i></div>
+                                <div>
+                                    <h6>Proven Track Record</h6>
+                                    <p>95% success rate across all programs.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="collapse mt-4" id="courseCards">
+                <div class="row justify-content-center pt-4 g-4">
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="card feature-card h-100">
+                            <div class="feature-icon-box">
+                                <i class="fa-solid fa-user-tie fa-3x" style="color:var(--accent-blue);"></i>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Expert Mentors</h5>
+                                <p class="card-text text-center">
+                                    Learn from industry professionals with real project
+                                    experience and personalized guidance.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="card feature-card h-100">
+                            <div class="feature-icon-box">
+                                <i class="fa-solid fa-laptop-code fa-3x" style="color:var(--accent-blue);"></i>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Hands-on Projects</h5>
+                                <p class="card-text text-center">
+                                    Build real applications and a portfolio you can show
+                                    employers—not just theory.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="card feature-card h-100">
+                            <div class="feature-icon-box">
+                                <i class="fa-solid fa-briefcase fa-3x" style="color:var(--accent-blue);"></i>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Career Support</h5>
+                                <p class="card-text text-center">
+                                    Placement guidance, interview prep, and mentorship
+                                    through to your first job.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="card feature-card h-100">
+                            <div class="feature-icon-box">
+                                <i class="fa-solid fa-book-open fa-3x" style="color:var(--accent-blue);"></i>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Industry-Aligned Curriculum</h5>
+                                <p class="card-text text-center">
+                                    Courses updated to match current, in-demand skills
+                                    in the tech industry.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="card feature-card h-100">
+                            <div class="feature-icon-box">
+                                <i class="fa-solid fa-headset fa-3x" style="color:var(--accent-blue);"></i>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title text-center">24/7 Doubt Resolution</h5>
+                                <p class="card-text text-center">
+                                    Dedicated community channels so coding queries
+                                    get resolved quickly.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="card feature-card h-100">
+                            <div class="feature-icon-box">
+                                <i class="fa-solid fa-network-wired fa-3x" style="color:var(--accent-blue);"></i>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Alumni Network</h5>
+                                <p class="card-text text-center">
+                                    A growing community of developers ready to
+                                    refer and support your journey.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="col-12 mt-5 mb-5">
+            <div class="cta-strip p-5 text-center">
+                <h3 class="fw-bold mb-2">Ready to start your journey with Sipher Web?</h3>
+                <p class="mb-4" style="color:rgba(255,255,255,.8);">
+                    Talk to our team and find the track that fits your goals.
+                </p>
+                <a href="#" class="btn btn-lg px-5 rounded-pill fw-bold btn-gold">Book a Seat</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section id="aboutus">
+    <footer class="glass site-footer pt-5 pb-4 mt-4">
+        <div class="container">
+            <div class="row g-4 px-3">
+                <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                    <h4 class="fw-bold mb-3" style="color:var(--accent-gold);">Sipher Web Institution</h4>
+                    <p style="color:var(--ink-muted); line-height:1.6;">
+                        Empowering the next generation of tech leaders through industry-focused
+                        programming and development courses.
+                    </p>
+                    <div class="d-flex gap-3 mt-4">
+                        <a href="#" class="social-btn" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-btn" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-btn" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-btn" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                    <h5 class="fw-bold mb-4" style="color:var(--ink);">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-3"><a href="#" class="footer-link"><i class="fa-solid fa-angle-right me-2"
+                                    style="color:var(--accent-blue);"></i>Home</a></li>
+                        <li class="mb-3"><a href="#" class="footer-link"><i class="fa-solid fa-angle-right me-2"
+                                    style="color:var(--accent-blue);"></i>About Us</a></li>
+                        <li class="mb-3"><a href="#" class="footer-link"><i class="fa-solid fa-angle-right me-2"
+                                    style="color:var(--accent-blue);"></i>Our Courses</a></li>
+                        <li class="mb-3"><a href="#" class="footer-link"><i class="fa-solid fa-angle-right me-2"
+                                    style="color:var(--accent-blue);"></i>Admissions</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                    <h5 class="fw-bold mb-4" style="color:var(--ink);">Contact Us</h5>
+                    <div class="d-flex align-items-start mb-3" style="color:var(--ink-muted);">
+                        <i class="fa-solid fa-location-dot mt-1 me-3 fs-5" style="color:var(--accent-blue);"></i>
+                        <span>123 Innovation Park, Tech Sector<br>City Name, State, 123456</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-3" style="color:var(--ink-muted);">
+                        <i class="fa-solid fa-phone me-3 fs-5" style="color:var(--accent-blue);"></i>
+                        <span>+91 98765 43210</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-3" style="color:var(--ink-muted);">
+                        <i class="fa-solid fa-envelope me-3 fs-5" style="color:var(--accent-blue);"></i>
+                        <span>hello@sipherweb.com</span>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-5 mb-4" style="border-color:var(--glass-border);">
+            <div class="text-center" style="color:var(--ink-muted); font-size:0.9rem;">
+                &copy; 2026 Sipher Web Institution. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+</section>
+
+{% endblock %}site is laggy near the carousel optimize this site

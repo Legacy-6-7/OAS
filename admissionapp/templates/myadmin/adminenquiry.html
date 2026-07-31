@@ -1,0 +1,305 @@
+{% extends 'myadmin/adminlayout.html' %}
+{% block content %}
+
+<style>
+    :root {
+        --primary: #4f46e5;
+        --primary-hover: #4338ca;
+        --primary-soft: #eef2ff;
+        --danger: #dc2626;
+        --danger-soft: #fef2f2;
+        --text: #1e293b;
+        --muted: #64748b;
+        --border: #e2e8f0;
+        --bg: #f8fafc;
+        --card: #ffffff;
+        --radius: 14px;
+        --shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+    }
+
+    .enquiry-page {
+        max-width: 1300px;
+        margin: 28px auto;
+        padding: 0 16px;
+        animation: fadeUp 0.45s ease both;
+    }
+
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .enquiry-card {
+        background: var(--card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        border: 1px solid var(--border);
+    }
+
+    .enquiry-header {
+        background: linear-gradient(135deg, var(--primary), #6366f1);
+        color: #fff;
+        padding: 20px 28px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .enquiry-header h3 {
+        margin: 0;
+        font-weight: 700;
+        font-size: 1.35rem;
+        letter-spacing: -0.02em;
+    }
+
+    .enquiry-header i {
+        font-size: 1.35rem;
+        opacity: 0.9;
+    }
+
+    .enquiry-body {
+        padding: 24px 28px;
+    }
+
+    /* ---------- Table ---------- */
+    .enquiry-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .enquiry-table thead {
+        background: linear-gradient(180deg, #f1f5f9, #e2e8f0);
+    }
+
+    .enquiry-table th {
+        padding: 13px 14px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--muted);
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+        text-align: left;
+    }
+
+    .enquiry-table td {
+        padding: 14px;
+        color: var(--text);
+        font-size: 0.92rem;
+        border-bottom: 1px solid var(--border);
+        vertical-align: middle;
+        transition: background 0.15s ease;
+    }
+
+    .enquiry-table tbody tr {
+        transition: background 0.15s ease;
+        animation: rowFade 0.4s ease both;
+    }
+
+    .enquiry-table tbody tr:nth-child(1) { animation-delay: 0.04s; }
+    .enquiry-table tbody tr:nth-child(2) { animation-delay: 0.08s; }
+    .enquiry-table tbody tr:nth-child(3) { animation-delay: 0.12s; }
+    .enquiry-table tbody tr:nth-child(4) { animation-delay: 0.16s; }
+    .enquiry-table tbody tr:nth-child(5) { animation-delay: 0.20s; }
+
+    @keyframes rowFade {
+        from { opacity: 0; transform: translateX(-6px); }
+        to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .enquiry-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .enquiry-table tbody tr:hover td {
+        background: #f8fafc;
+    }
+
+    /* ---------- Cells ---------- */
+    .id-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 34px;
+        height: 28px;
+        padding: 0 8px;
+        background: var(--primary-soft);
+        color: var(--primary);
+        font-weight: 700;
+        font-size: 0.85rem;
+        border-radius: 8px;
+    }
+
+    .student-name {
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .email-cell {
+        color: var(--muted);
+        font-size: 0.88rem;
+    }
+
+    .mobile-cell {
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    .course-badge {
+        display: inline-block;
+        background: var(--primary-soft);
+        color: var(--primary);
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 999px;
+    }
+
+    .message-cell {
+        max-width: 220px;
+        color: var(--muted);
+        font-size: 0.88rem;
+        line-height: 1.45;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .date-cell {
+        font-size: 0.85rem;
+        color: var(--muted);
+        white-space: nowrap;
+    }
+
+    /* ---------- Delete button ---------- */
+    .btn-delete {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 7px 14px;
+        border-radius: 9px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        text-decoration: none;
+        background: var(--danger-soft);
+        color: var(--danger);
+        border: none;
+        transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, color 0.18s ease;
+    }
+
+    .btn-delete:hover {
+        background: var(--danger);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgba(220, 38, 38, 0.3);
+    }
+
+    /* ---------- Empty state ---------- */
+    .empty-state {
+        text-align: center;
+        padding: 56px 20px !important;
+        color: var(--muted);
+    }
+
+    .empty-state i {
+        font-size: 2.4rem;
+        margin-bottom: 14px;
+        opacity: 0.35;
+        display: block;
+    }
+
+    .empty-state span {
+        font-size: 1rem;
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 992px) {
+        .enquiry-body {
+            padding: 16px;
+        }
+
+        .enquiry-table {
+            display: block;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+    }
+</style>
+
+<div class="enquiry-page">
+    <div class="enquiry-card">
+        <div class="enquiry-header">
+            <i class="fa-solid fa-envelope-open-text"></i>
+            <h3>Enquiry Management</h3>
+        </div>
+
+        <div class="enquiry-body">
+            <div class="table-responsive">
+                <table class="enquiry-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Mobile</th>
+                            <th>Course</th>
+                            <th>Message</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for enquiry in enquiries %}
+                        <tr>
+                            <td>
+                                <span class="id-badge">{{ enquiry.id }}</span>
+                            </td>
+                            <td>
+                                <span class="student-name">{{ enquiry.name }}</span>
+                            </td>
+                            <td class="email-cell">{{ enquiry.email }}</td>
+                            <td class="mobile-cell">{{ enquiry.mobile }}</td>
+                            <td>
+                                <span class="course-badge">{{ enquiry.course }}</span>
+                            </td>
+                            <td>
+                                <div class="message-cell" title="{{ enquiry.message }}">
+                                    {{ enquiry.message }}
+                                </div>
+                            </td>
+                            <td class="date-cell">
+                                {{ enquiry.created_at|date:"d M Y" }}<br>
+                                <small>{{ enquiry.created_at|date:"h:i A" }}</small>
+                            </td>
+                            <td>
+                                <a href="{% url 'adminenquiry_delete' enquiry.id %}"
+                                   class="btn-delete"
+                                   onclick="return confirm('Delete this enquiry?');">
+                                    <i class="fa-solid fa-trash"></i> Delete
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="empty-state">
+                                <i class="fa-solid fa-inbox"></i>
+                                <span>No enquiries found.</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

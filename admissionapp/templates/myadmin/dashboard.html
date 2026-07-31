@@ -1,0 +1,308 @@
+{% extends 'myadmin/adminlayout.html' %}
+
+{% block content %}
+
+<style>
+    :root {
+        --primary: #4f46e5;
+        --primary-dark: #3730a3;
+        --primary-light: #eef2ff;
+        --ink: #1f2430;
+        --muted: #6b7280;
+        --border: #edeef2;
+        --bg-soft: #f7f8fc;
+    }
+
+    .dash-wrap {
+        animation: fadeUp .5s ease both;
+    }
+
+    @keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ---------- Stat cards ---------- */
+
+    .stat-card {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        box-shadow: 0 6px 18px rgba(17, 24, 39, .05);
+        transition: transform .2s, box-shadow .2s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 4px;
+        background: var(--accent, var(--primary));
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 32px rgba(17, 24, 39, .1);
+    }
+
+    .stat-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        flex-shrink: 0;
+        background: var(--accent-light, var(--primary-light));
+        color: var(--accent, var(--primary));
+    }
+
+    .stat-card h2 {
+        font-size: 26px;
+        font-weight: 800;
+        color: var(--ink);
+        margin: 0;
+        letter-spacing: -.02em;
+        line-height: 1.1;
+    }
+
+    .stat-card .stat-label {
+        color: var(--muted);
+        font-size: 13.5px;
+        font-weight: 600;
+        margin-top: 2px;
+    }
+
+    .stat-students {
+        --accent: #4f46e5;
+        --accent-light: #eef2ff;
+    }
+
+    .stat-teachers {
+        --accent: #0891b2;
+        --accent-light: #e6f8fb;
+    }
+
+    .stat-courses {
+        --accent: #d97706;
+        --accent-light: #fff3e0;
+    }
+
+    .stat-revenue {
+        --accent: #15803d;
+        --accent-light: #e9f9ee;
+    }
+
+    /* ---------- Table card ---------- */
+
+    .table-card {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 6px 18px rgba(17, 24, 39, .05);
+    }
+
+    .table-card .card-header {
+        background: #fff;
+        border-bottom: 1px solid var(--border);
+        padding: 18px 22px;
+        font-weight: 700;
+        font-size: 16px;
+        color: var(--ink);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .table-card .card-header .view-all {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--primary);
+        text-decoration: none;
+    }
+
+    .table-card .card-header .view-all:hover {
+        text-decoration: underline;
+    }
+
+    .dash-table {
+        margin-bottom: 0;
+    }
+
+    .dash-table thead th {
+        background: var(--bg-soft);
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        border-bottom: 1px solid var(--border);
+        padding: 13px 22px;
+    }
+
+    .dash-table tbody td {
+        padding: 15px 22px;
+        vertical-align: middle;
+        border-bottom: 1px solid var(--border);
+        font-size: 14.5px;
+        color: #374151;
+    }
+
+    .dash-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .dash-table tbody tr {
+        transition: background .2s;
+    }
+
+    .dash-table tbody tr:hover {
+        background: #fafbff;
+    }
+
+    .student-cell {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--primary-light);
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 13.5px;
+        flex-shrink: 0;
+    }
+
+    .student-name {
+        font-weight: 600;
+        color: var(--ink);
+    }
+
+    .badge {
+        font-weight: 600;
+        font-size: 11.5px;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        padding: 6px 11px;
+        border-radius: 999px;
+    }
+
+    .bg-success {
+        background: #e9f9ee !important;
+        color: #157347 !important;
+    }
+
+    .bg-warning {
+        background: #fff7e6 !important;
+        color: #b45309 !important;
+    }
+</style>
+
+<!-- Cards -->
+<div class="container mt-4 dash-wrap">
+
+    <div class="row g-4">
+
+        <div class="col-md-3">
+            <div class="card p-3 stat-card stat-students">
+                <div class="stat-icon"><i class="fa-solid fa-user-graduate"></i></div>
+                <div>
+                    <h2>125</h2>
+                    <div class="stat-label">Students</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card p-3 stat-card stat-teachers">
+                <div class="stat-icon"><i class="fa-solid fa-chalkboard-user"></i></div>
+                <div>
+                    <h2>52</h2>
+                    <div class="stat-label">Teachers</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card p-3 stat-card stat-courses">
+                <div class="stat-icon"><i class="fa-solid fa-book-open"></i></div>
+                <div>
+                    <h2>23</h2>
+                    <div class="stat-label">Courses</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card p-3 stat-card stat-revenue">
+                <div class="stat-icon"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+                <div>
+                    <h2>₹50K</h2>
+                    <div class="stat-label">Revenue</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Table -->
+
+    <div class="card mt-5 table-card">
+
+        <div class="card-header">
+            Recent Students
+            <a href="#" class="view-all">View all <i class="fa-solid fa-arrow-right ms-1"></i></a>
+        </div>
+
+        <table class="table dash-table">
+
+            <thead>
+                <tr>
+                    <th>Profile</th>
+                    <th>Name</th>
+                    <th>Course</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+{% for student in students %}
+                <tr>
+                    <td>
+                        <div class="student-cell">
+                            <div class="profile-photo"><img src="{{ student.student_photo.url }}" alt="{{ student.name }}" style="height: 50px; width: 50px;"></div>
+                            <span class="student-name">{{ student.name }}</span>
+                        </div>
+                    <td>{{ student.course }}</td>
+                    <td><span class="badge bg-success">{{ student.application_status }}</span></td>
+                </tr>
+{% endfor %}
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}
