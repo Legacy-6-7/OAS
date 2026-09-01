@@ -1,54 +1,80 @@
 {% load static %}
+
 <style>
     :root {
-        --nav-bg: rgba(255, 255, 255, 0.04);
-        --nav-bg-strong: rgba(255, 255, 255, 0.10);
-        --nav-border: rgba(255, 255, 255, 0.18);
-        --nav-ink: #F2F4FA;
-        --nav-ink-muted: rgba(242, 244, 250, .68);
-        --nav-accent-gold: #FFE401;
-        --nav-active-bg: rgba(255, 228, 1, .12);
+        --nav-bg: rgba(20, 15, 45, 0.72);
+        --nav-border: rgba(255, 255, 255, 0.12);
+        --nav-ink: #F5F5FA;
+        --nav-ink-muted: rgba(245, 245, 250, 0.68);
+        --nav-accent: #FFE401;
+        --nav-purple: #1a0a4a;
     }
 
-.navbar-wrap {
-    display: inline-flex;
+    /* =========================
+       NAVBAR CONTAINER
+    ========================== */
 
-    max-width: 1400px;
-    margin-top: 28px;
+    .navbar-wrap {
+        display: inline-flex;
+        width: auto;
+        height:80px;
+        max-width: 1300px;
+        margin-top: 20px;
 
-    border: 1px solid var(--nav-border);
-    border-radius: 999px;
-    backdrop-filter: blur(16px) saturate(140%);
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
-    background: linear-gradient(
-        135deg,
-        rgba(255,255,255,.06),
-        rgba(255,255,255,.02)
-    );
-    box-shadow: 0 12px 32px rgba(0,0,0,.25);
-}
+        padding: 6px 10px !important;
 
-.custom-navbar{
-    width: auto;
-}
+        border: 1px solid var(--nav-border);
+        border-radius: 50px;
 
-.navbar-collapse{
-    flex-grow: 0;
-}
+        background: linear-gradient(
+            135deg,
+            rgba(255,255,255,0.09),
+            rgba(255,255,255,0.035)
+        );
 
-.navbar-nav{
-    width: auto;
-    white-space: nowrap;
-    align-items: center;
-}
+        backdrop-filter: blur(18px) saturate(150%);
+        -webkit-backdrop-filter: blur(18px) saturate(150%);
 
-    /* Logo – no background plate */
+        box-shadow:
+            0 12px 35px rgba(0,0,0,0.30),
+            inset 0 1px 0 rgba(255,255,255,0.08);
+
+        transition: all .3s ease;
+    }
+
+    .navbar-wrap:hover {
+        border-color: rgba(255,228,1,0.22);
+
+        box-shadow:
+            0 15px 40px rgba(0,0,0,0.35),
+            0 0 25px rgba(255,228,1,0.04);
+    }
+
+    .custom-navbar {
+        padding: 0 !important;
+    }
+
+    .navbar-collapse {
+        flex-grow: 0;
+    }
+
+    .navbar-nav {
+        width: auto;
+        white-space: nowrap;
+        align-items: center;
+        gap: 2px;
+    }
+
+
+    /* =========================
+       LOGO
+    ========================== */
+
     .logo-plate {
         background: transparent;
-        border-radius: 0;
         padding: 0;
-        margin-right: 20px;
-        box-shadow: none;
+        margin-right: 12px;
+
         display: flex;
         align-items: center;
         justify-content: center;
@@ -56,43 +82,81 @@
 
     .logo-plate .logo {
         display: block;
-        width: 100px;
-        height: 50px;
+
+        width: 82px;
+        height: 42px;
+
         object-fit: contain;
+
+        transition: transform .25s ease;
     }
+
+    .logo-plate:hover .logo {
+        transform: scale(1.04);
+    }
+
+
+    /* =========================
+       NAV LINKS
+    ========================== */
 
     .navbar-nav .nav-link {
         position: relative;
+
         color: var(--nav-ink-muted) !important;
+
+        font-size: 14px;
         font-weight: 600;
-        margin: 0 4px;
-        padding: 8px 16px !important;
-        border-radius: 999px;
-        transition: color .2s ease, background .2s ease;
+
+        margin: 0 1px;
+        padding: 7px 12px !important;
+
+        border-radius: 30px;
+
+        transition:
+            color .2s ease,
+            background .2s ease,
+            transform .2s ease;
     }
 
     .navbar-nav .nav-link:hover {
         color: var(--nav-ink) !important;
-        background: var(--nav-bg-strong);
+
+        background: rgba(255,255,255,0.07);
+
+        transform: translateY(-1px);
     }
+
+
+    /* =========================
+       ACTIVE LINK
+    ========================== */
 
     .navbar-nav .nav-link.active {
         color: var(--nav-ink) !important;
-        background: var(--nav-active-bg);
+
+        background: rgba(255,228,1,0.10);
     }
 
     .navbar-nav .nav-link::after {
         content: "";
+
         position: absolute;
-        left: 16px;
-        right: 16px;
+
+        left: 13px;
+        right: 13px;
         bottom: 2px;
+
         height: 2px;
-        background: var(--nav-accent-gold);
-        border-radius: 2px;
+
+        background: var(--nav-accent);
+
+        border-radius: 10px;
+
         transform: scaleX(0);
         transform-origin: center;
-        transition: transform .2s ease;
+
+        transition: transform .25s ease;
     }
 
     .navbar-nav .nav-link:hover::after,
@@ -100,66 +164,202 @@
         transform: scaleX(1);
     }
 
-    /* Login button – dark background */
+
+    /* =========================
+       LOGIN BUTTON
+    ========================== */
+
     .nav-login-btn {
-        display: inline-flex;
+        display: inline-flex !important;
+
         align-items: center;
-        gap: 8px;
-        background: #1a0a4a;          /* dark navy */
-        color: #F2F4FA !important;    /* light text for contrast */
-        font-weight: 700;
-        padding: 8px 22px !important;
-        border-radius: 999px;
-        margin-left: 10px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: none;
-        transition: background .2s ease, transform .18s ease;
+        justify-content: center;
+
+        gap: 7px;
+
+        margin-left: 6px !important;
+
+        padding: 7px 15px !important;
+
+        color: #F5F5FA !important;
+
+        background: linear-gradient(
+            135deg,
+            #1a0a4a,
+            #29127a
+        );
+
+        border: 1px solid rgba(255,255,255,0.14);
+
+        border-radius: 30px;
+
+        font-size: 14px !important;
+        font-weight: 700 !important;
+
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.08),
+            0 5px 15px rgba(0,0,0,0.18);
+
+        transition:
+            background .25s ease,
+            transform .2s ease,
+            box-shadow .25s ease;
     }
 
     .nav-login-btn:hover {
-        background: #2a1690;          /* slightly lighter navy on hover */
-        color: #F2F4FA !important;
+        color: #fff !important;
+
+        background: linear-gradient(
+            135deg,
+            #29127a,
+            #3920a0
+        );
+
         transform: translateY(-1px);
-        box-shadow: none;
+
+        box-shadow:
+            0 7px 18px rgba(0,0,0,0.25),
+            0 0 15px rgba(255,228,1,0.08);
     }
 
-    .nav-login-btn::after { display: none; }
+    .nav-login-btn::after {
+        display: none !important;
+    }
+
+    .nav-login-btn i {
+        font-size: 14px;
+    }
+
+
+    /* =========================
+       MOBILE
+    ========================== */
 
     @media (max-width: 991px) {
-        .navbar-nav { gap: 4px; }
-        .navbar-wrap { margin-top: 16px; }
-        .logo-plate { margin-right: 12px; }
-        .logo-plate .logo { width: 80px; height: 40px; }
+
+        .navbar-wrap {
+            margin-top: 14px;
+            padding: 6px 8px !important;
+        }
+
+        .logo-plate {
+            margin-right: 7px;
+        }
+
+        .logo-plate .logo {
+            width: 70px;
+            height: 36px;
+        }
+
+        .navbar-nav {
+            gap: 0;
+        }
+
+        .navbar-nav .nav-link {
+            font-size: 13px;
+            padding: 6px 9px !important;
+        }
+
+        .nav-login-btn {
+            padding: 6px 12px !important;
+        }
     }
 </style>
 
-<div class="container d-flex justify-content-center rounded-5 navbar-wrap py-2 px-3">
+
+<div class="container d-flex justify-content-center navbar-wrap">
+
     <nav class="navbar navbar-expand-lg custom-navbar">
+
         <div class="collapse navbar-collapse show">
+
             <ul class="navbar-nav mx-auto">
+
+                <!-- Logo -->
                 <li class="nav-item">
+
                     <div class="logo-plate">
-                        <img src="{% static 'admissionapp/SipherWebLogo.png' %}" alt="Sipher Web" class="logo">
+
+                        <img
+                            src="{% static 'admissionapp/SipherWebLogo.png' %}"
+                            alt="Sipher Web"
+                            class="logo"
+                        >
+
                     </div>
+
                 </li>
-                <li class="nav-item fs-5">
-                    <a class="nav-link active" href="{% url 'home' %}">Home</a>
-                </li>
-                <li class="nav-item fs-5">
-                    <a class="nav-link" href="#aboutus">About</a>
-                </li>
-                <li class="nav-item fs-5">
-                    <a class="nav-link" href="#">Courses</a>
-                </li>
-                <li class="nav-item fs-5">
-                    <a class="nav-link" href="{% url 'enquiry' %}">Enquiry</a>
-                </li>
-                <li class="nav-item fs-5">
-                    <a class="nav-link nav-login-btn" href="{% url 'studentlogin' %}">
-                        Login <i class="fa-solid fa-circle-user"></i>
+
+
+                <!-- Home -->
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link active"
+                        href="{% url 'home' %}"
+                    >
+                        Home
                     </a>
+
                 </li>
+
+
+                <!-- About -->
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link"
+                        href="#aboutus"
+                    >
+                        About
+                    </a>
+
+                </li>
+
+
+                <!-- Courses -->
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link"
+                        href="{% url 'courses' %}"
+                    >
+                        Courses
+                    </a>
+
+                </li>
+
+
+                <!-- Enquiry -->
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link"
+                        href="{% url 'enquiry' %}"
+                    >
+                        Enquiry
+                    </a>
+
+                </li>
+
+
+                <!-- Login -->
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link nav-login-btn"
+                        href="{% url 'studentlogin' %}"
+                    >
+                        Login
+                        <i class="fa-solid fa-circle-user"></i>
+                    </a>
+
+                </li>
+
             </ul>
+
         </div>
+
     </nav>
+
 </div>

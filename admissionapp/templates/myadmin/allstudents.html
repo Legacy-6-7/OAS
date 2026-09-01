@@ -364,9 +364,9 @@
                         <td class="student-profile">
                             <div class="avatar">
                                 {% if student.student_photo %}
-                                    <img src="{{ student.student_photo.url }}" alt="{{ student.name }}" style="width:70px;height:70px;">
+                                    <img src="{{ student.student_photo.url }}" alt="img" style="width:70px;height:70px;">
                                 {% else %}
-                                    {{ student.name|slice:":1"|upper }}
+                                    {{ student.name|slice:":0"|upper }}
                                 {% endif %}
                             </div>
                         </td>

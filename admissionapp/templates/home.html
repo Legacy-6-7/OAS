@@ -23,36 +23,30 @@
         --shadow-md: 0 14px 36px rgba(0, 0, 0, .35);
     }
 
-    /* Performance: promote a single layer for the whole page background */
+    /* Flat solid background — no fixed attachment needed, it only forces
+       extra repaint work on scroll for a color with no parallax effect. */
     body {
-        background:
-            #09071A;
-        background-attachment: fixed;
+        background: #09071A;
         color: var(--ink);
         font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         overflow-x: hidden;
-        /* Helps with scrolling smoothness */
         -webkit-font-smoothing: antialiased;
     }
 
-    /* Cheap glass – only use blur on the most important panels */
+    /* Cheap glass – no blur, safe to use anywhere */
     .glass {
         background: var(--glass-bg);
         border: 1px solid var(--glass-border);
     }
 
-    .glass-blur {
-        background: var(--glass-bg);
-        border: 1px solid var(--glass-border);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-    }
-
     /* ---------- Hero ---------- */
+    /* NOTE: backdrop-filter blur intentionally removed here. This panel
+       directly wraps the auto-sliding carousel, and a blurred backdrop
+       forces the browser to recompute the blur region on every carousel
+       transition — that was the main source of the lag near the carousel.
+       The gradient + border still reads as "glass" without the repaint cost. */
     .hero-panel {
-        background: linear-gradient(135deg, rgba(255, 255, 255, .09), rgba(255, 255, 255, .03));
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        background: linear-gradient(135deg, rgba(255, 255, 255, .10), rgba(255, 255, 255, .04));
         box-shadow: var(--shadow-md);
         border: 1px solid rgba(255, 255, 255, .12);
         position: relative;
@@ -68,7 +62,6 @@
         height: 140%;
         background: radial-gradient(circle, var(--accent-navy-soft), transparent 65%);
         pointer-events: none;
-        will-change: transform;
     }
 
     .eyebrow-badge {
@@ -101,7 +94,6 @@
         background: var(--glass-bg);
         border: 1px solid var(--glass-border);
         transition: background .18s ease, border-color .18s ease;
-        will-change: background, border-color;
     }
 
     .tech-pill:hover {
@@ -115,7 +107,6 @@
         border: none;
         box-shadow: 0 6px 18px rgba(16, 5, 99, .4);
         transition: transform .18s ease, box-shadow .18s ease;
-        will-change: transform;
     }
 
     .btn-primary-glass:hover {
@@ -130,7 +121,6 @@
         border: 1px solid rgba(255, 255, 255, .22);
         color: var(--ink);
         transition: background .18s ease, border-color .18s ease, transform .18s ease;
-        will-change: transform;
     }
 
     .btn-outline-glass:hover {
@@ -162,8 +152,6 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        /* Prevent layout shift + improve decode */
-        content-visibility: auto;
     }
 
     /* ---------- Steps ---------- */
@@ -183,6 +171,10 @@
         opacity: .4;
         z-index: 0;
         pointer-events: none;
+    }
+
+    .step-item {
+        margin-top: 1rem;
     }
 
     .step-circle {
@@ -270,7 +262,6 @@
         border: 1px solid var(--glass-border);
         box-shadow: var(--shadow-sm);
         transition: transform .2s ease, box-shadow .2s ease;
-        will-change: transform;
         contain: layout paint;
     }
 
@@ -289,10 +280,6 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        /* Critical for performance */
-        loading: lazy;
-        decoding: async;
-        content-visibility: auto;
     }
 
     .overlay {
@@ -361,7 +348,6 @@
         box-shadow: var(--shadow-sm);
         color: var(--ink);
         transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
-        will-change: transform;
     }
 
     #whyBtn:hover {
@@ -390,9 +376,6 @@
     .logo-wrapper img {
         max-width: 70%;
         height: auto;
-        /* Logo is critical – load eagerly */
-        loading: eager;
-        decoding: async;
     }
 
     .why-flank {
@@ -466,7 +449,6 @@
         border: 1px solid var(--glass-border);
         box-shadow: var(--shadow-sm);
         transition: transform .2s ease, box-shadow .2s ease;
-        will-change: transform;
         contain: layout paint;
     }
 
@@ -512,7 +494,6 @@
         border: none;
         box-shadow: 0 6px 16px rgba(255, 228, 1, .25);
         transition: transform .18s ease, box-shadow .18s ease;
-        will-change: transform;
     }
 
     .cta-strip .btn-gold:hover {
@@ -548,7 +529,6 @@
         border: 1px solid var(--glass-border);
         color: var(--ink);
         transition: background .15s ease, border-color .15s ease, color .15s ease, transform .15s ease;
-        will-change: transform;
     }
 
     .social-btn:hover {
@@ -562,7 +542,7 @@
     @media (prefers-reduced-motion: reduce) {
 
         *,
-        *::before,  
+        *::before,
         *::after {
             animation-duration: 0.01ms !important;
             animation-iteration-count: 1 !important;
@@ -581,13 +561,27 @@
         }
     }
 
-    /* Content visibility for below-the-fold sections */
-    .section-panel,
-    #bag,
-    .cta-strip,
+    /* Content visibility for below-the-fold sections. Sized per-section
+       instead of one flat 800px guess, to cut down on layout jumps as
+       each section resolves into view. */
+    .section-panel {
+        content-visibility: auto;
+        contain-intrinsic-size: 1300px;
+    }
+
+    #bag {
+        content-visibility: auto;
+        contain-intrinsic-size: 900px;
+    }
+
+    .cta-strip {
+        content-visibility: auto;
+        contain-intrinsic-size: 320px;
+    }
+
     .site-footer {
         content-visibility: auto;
-        contain-intrinsic-size: 800px;
+        contain-intrinsic-size: 480px;
     }
 </style>
 
@@ -631,8 +625,8 @@
                     </div>
 
                     <div class="mt-5 d-flex gap-3 flex-wrap">
-                        <a href="#" class="btn btn-lg px-5 rounded-pill fw-bold btn-primary-glass">Enroll Now</a>
-                        <a href="#" class="btn btn-lg px-5 rounded-pill btn-outline-glass">Explore Courses</a>
+                        <a href="{% url 'enquiry' %}" class="btn btn-lg px-5 rounded-pill fw-bold btn-primary-glass">Enroll Now</a>
+                        <a href="{% url 'courses' %}" class="btn btn-lg px-5 rounded-pill btn-outline-glass">Explore Courses</a>
                     </div>
 
                     <div class="row mt-5 text-center g-3">
@@ -664,8 +658,8 @@
                             <div class="carousel-inner h-100">
                                 <div class="carousel-item active h-100">
                                     <img src="{% static 'admissionapp/1.jpg' %}" class="w-100 h-100"
-                                        style="object-fit:cover;" alt="Campus" width="600" height="700" loading="eager"
-                                        decoding="async">
+                                        style="object-fit:cover;" alt="Campus" width="600" height="700"
+                                        loading="eager" decoding="async" fetchpriority="high">
                                 </div>
                                 <div class="carousel-item h-100">
                                     <img src="{% static 'admissionapp/2.jpg' %}" class="w-100 h-100"
@@ -674,8 +668,8 @@
                                 </div>
                                 <div class="carousel-item h-100">
                                     <img src="{% static 'admissionapp/3.jpg' %}" class="w-100 h-100"
-                                        style="object-fit:cover;" alt="Students" width="600" height="700" loading="lazy"
-                                        decoding="async">
+                                        style="object-fit:cover;" alt="Students" width="600" height="700"
+                                        loading="lazy" decoding="async">
                                 </div>
                             </div>
                         </div>
@@ -688,15 +682,15 @@
 
     <!-- Steps -->
     <div class="row mx-auto g-4 mt-4 step-row" style="justify-content:center; align-items:start;">
-        <div class="col-sm-3 d-flex flex-column align-items-center"><br>
+        <div class="col-sm-3 d-flex flex-column align-items-center step-item pt-5">
             <div class="step-circle">1</div>
             <div class="step-label">Enroll &amp; Onboard</div>
         </div>
-        <div class="col-sm-3 d-flex flex-column align-items-center"><br>
+        <div class="col-sm-3 d-flex flex-column align-items-center step-item pt-5">
             <div class="step-circle">2</div>
             <div class="step-label">Learn &amp; Build</div>
         </div>
-        <div class="col-sm-3 d-flex flex-column align-items-center"><br>
+        <div class="col-sm-3 d-flex flex-column align-items-center step-item pt-5">
             <div class="step-circle">3</div>
             <div class="step-label">Get Hired</div>
         </div>
@@ -910,7 +904,7 @@
                 <p class="mb-4" style="color:rgba(255,255,255,.8);">
                     Talk to our team and find the track that fits your goals.
                 </p>
-                <a href="#" class="btn btn-lg px-5 rounded-pill fw-bold btn-gold">Book a Seat</a>
+                <a href="{% url 'enquiry' %}" class="btn btn-lg px-5 rounded-pill fw-bold btn-gold">Book a Seat</a>
             </div>
         </div>
     </div>
@@ -970,4 +964,4 @@
     </footer>
 </section>
 
-{% endblock %}site is laggy near the carousel optimize this site
+{% endblock %}

@@ -70,6 +70,7 @@ class Student(models.Model):
 
 
 class Courses(models.Model):
+    courseimg = models.ImageField(upload_to='courses/', blank=True, null=True)
     course_id = models.AutoField(primary_key=True)
     coursename = models.CharField(max_length=100)
     session = models.CharField(max_length=100)

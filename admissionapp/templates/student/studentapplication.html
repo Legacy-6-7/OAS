@@ -218,20 +218,17 @@
 
                     <!-- Course -->
                     <div class="col-md-6">
+
                         <label class="form-label">Course Selection</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fa-solid fa-book-open"></i></span>
                             <select class="form-select" name="course" required {% if student.application_status == 'Document Verified' or student.application_status == 'Fees Submitted' or student.application_status == 'Enrolled' %}disabled{% endif %}>
-                                <option disabled {% if not student.course %}selected{% endif %}>Select Course</option>
-                                <option value="Java" {% if student.course == 'Java' %}selected{% endif %}>Java</option>
-                                <option value="C++" {% if student.course == 'C++' %}selected{% endif %}>C++</option>
-                                <option value="Python" {% if student.course == 'Python' %}selected{% endif %}>Python</option>
-                                <option value="JavaScript" {% if student.course == 'JavaScript' %}selected{% endif %}>JavaScript</option>
-                                <option value="HTML" {% if student.course == 'HTML' %}selected{% endif %}>Full Stack Web Development</option>
-                                <option value="Data Structures" {% if student.course == 'Data Structures' %}selected{% endif %}>Data Structures</option>
-                                <option value="Algorithms" {% if student.course == 'Algorithms' %}selected{% endif %}>Algorithms</option>
-                                <option value="Machine Learning" {% if student.course == 'Machine Learning' %}selected{% endif %}>Machine Learning</option>
-                                <option value="Artificial Intelligence" {% if student.course == 'Artificial Intelligence' %}selected{% endif %}>Artificial Intelligence</option>
+                                <option value="disabled">Select Course</option>
+                                {% for course in courses %}
+                                    <option value="{{ course.coursename }}" {% if student.course == course.coursename %}selected{% endif %}>
+                                        {{ course.coursename }}
+                                    </option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>

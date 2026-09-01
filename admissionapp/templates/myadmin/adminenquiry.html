@@ -3,303 +3,1761 @@
 
 <style>
     :root {
-        --primary: #4f46e5;
-        --primary-hover: #4338ca;
+        --primary: #6366f1;
+        --primary-hover: #4f46e5;
         --primary-soft: #eef2ff;
-        --danger: #dc2626;
+        --primary-glow: rgba(99, 102, 241, 0.18);
+        --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+        --danger: #ef4444;
         --danger-soft: #fef2f2;
-        --text: #1e293b;
+        --success: #10b981;
+        --success-soft: #ecfdf5;
+        --warning: #f59e0b;
+        --warning-soft: #fffbeb;
+        --info: #0ea5e9;
+        --info-soft: #f0f9ff;
+        --text: #0f172a;
+        --text-secondary: #334155;
         --muted: #64748b;
         --border: #e2e8f0;
+        --border-light: #f1f5f9;
         --bg: #f8fafc;
         --card: #ffffff;
-        --radius: 14px;
-        --shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+        --radius: 18px;
+        --radius-sm: 12px;
+        --shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 8px 32px rgba(15, 23, 42, 0.06);
+        --shadow-hover: 0 12px 48px rgba(15, 23, 42, 0.12);
+        --transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .enquiry-page {
-        max-width: 1300px;
-        margin: 28px auto;
-        padding: 0 16px;
-        animation: fadeUp 0.45s ease both;
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 28px 20px 48px;
+        animation: pageIn 0.5s ease both;
     }
 
-    @keyframes fadeUp {
-        from { opacity: 0; transform: translateY(16px); }
+    @keyframes pageIn {
+        from { opacity: 0; transform: translateY(20px); }
         to   { opacity: 1; transform: translateY(0); }
     }
 
-    .enquiry-card {
-        background: var(--card);
+    /* ---------- Hero Header ---------- */
+    .page-hero {
+        position: relative;
         border-radius: var(--radius);
-        box-shadow: var(--shadow);
+        padding: 28px 32px;
+        margin-bottom: 24px;
+        background: var(--primary-gradient);
+        color: #fff;
         overflow: hidden;
-        border: 1px solid var(--border);
+        box-shadow: 0 16px 48px rgba(99, 102, 241, 0.28);
     }
 
-    .enquiry-header {
-        background: linear-gradient(135deg, var(--primary), #6366f1);
-        color: #fff;
-        padding: 20px 28px;
+    .page-hero::before,
+    .page-hero::after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        pointer-events: none;
+    }
+
+    .page-hero::before {
+        width: 280px;
+        height: 280px;
+        top: -120px;
+        right: -60px;
+    }
+
+    .page-hero::after {
+        width: 160px;
+        height: 160px;
+        bottom: -80px;
+        left: 10%;
+    }
+
+    .hero-inner {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .hero-text h2 {
+        margin: 0 0 6px;
+        font-size: 1.75rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
         display: flex;
         align-items: center;
         gap: 12px;
     }
 
-    .enquiry-header h3 {
+    .hero-text h2 i {
+        font-size: 1.4rem;
+        opacity: 0.95;
+    }
+
+    .hero-text p {
         margin: 0;
-        font-weight: 700;
-        font-size: 1.35rem;
-        letter-spacing: -0.02em;
+        opacity: 0.88;
+        font-size: 0.95rem;
+        max-width: 420px;
     }
 
-    .enquiry-header i {
-        font-size: 1.35rem;
-        opacity: 0.9;
+    .hero-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
     }
 
-    .enquiry-body {
-        padding: 24px 28px;
+    .btn-hero {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 18px;
+        border-radius: var(--radius-sm);
+        font-size: 0.88rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        transition: var(--transition);
     }
 
-    /* ---------- Table ---------- */
-    .enquiry-table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
+    .btn-hero-light {
+        background: rgba(255, 255, 255, 0.18);
+        color: #fff;
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .btn-hero-light:hover {
+        background: rgba(255, 255, 255, 0.28);
+        transform: translateY(-2px);
+        color: #fff;
+    }
+
+    .btn-hero-solid {
+        background: #fff;
+        color: var(--primary-hover);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .btn-hero-solid:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+        color: var(--primary-hover);
+    }
+
+    /* ---------- Stats ---------- */
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .stat-card {
+        background: var(--card);
         border: 1px solid var(--border);
-        border-radius: 12px;
+        border-radius: var(--radius-sm);
+        padding: 20px 22px;
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+        animation: fadeUp 0.45s ease both;
+        position: relative;
         overflow: hidden;
     }
 
+    .stat-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        opacity: 0;
+        transition: opacity var(--transition);
+    }
+
+    .stat-card.total::after { background: var(--primary); }
+    .stat-card.today::after  { background: var(--success); }
+    .stat-card.week::after   { background: var(--warning); }
+    .stat-card.courses::after { background: var(--info); }
+
+    .stat-card:nth-child(1) { animation-delay: 0.05s; }
+    .stat-card:nth-child(2) { animation-delay: 0.1s; }
+    .stat-card:nth-child(3) { animation-delay: 0.15s; }
+    .stat-card:nth-child(4) { animation-delay: 0.2s; }
+
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(14px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-hover);
+        border-color: transparent;
+    }
+
+    .stat-card:hover::after { opacity: 1; }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    .stat-icon.total   { background: var(--primary-soft); color: var(--primary); }
+    .stat-icon.today   { background: var(--success-soft); color: var(--success); }
+    .stat-icon.week    { background: var(--warning-soft); color: var(--warning); }
+    .stat-icon.courses { background: var(--info-soft); color: var(--info); }
+
+    .stat-info h4 {
+        margin: 0 0 2px;
+        font-size: 1.65rem;
+        font-weight: 800;
+        color: var(--text);
+        line-height: 1.1;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .stat-info span {
+        font-size: 0.76rem;
+        color: var(--muted);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .stat-info small {
+        display: block;
+        margin-top: 6px;
+        font-size: 0.78rem;
+        color: var(--muted);
+    }
+
+    /* ---------- Main Card ---------- */
+    .enquiry-card {
+        background: var(--card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
+        overflow: hidden;
+    }
+
+    /* Toolbar */
+    .toolbar {
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border);
+        background: linear-gradient(180deg, #fafbfc 0%, #f8fafc 100%);
+    }
+
+    .toolbar-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-bottom: 14px;
+    }
+
+    .toolbar-row:last-child {
+        margin-bottom: 0;
+    }
+
+    .search-box {
+        position: relative;
+        flex: 1;
+        min-width: 240px;
+        max-width: 400px;
+    }
+
+    .search-box i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+        font-size: 0.9rem;
+        pointer-events: none;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 11px 42px 11px 42px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        font-size: 0.9rem;
+        color: var(--text);
+        background: #fff;
+        outline: none;
+        transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .search-box input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px var(--primary-glow);
+    }
+
+    .search-clear {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 26px;
+        height: 26px;
+        border: none;
+        background: var(--border-light);
+        border-radius: 8px;
+        color: var(--muted);
+        cursor: pointer;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        transition: var(--transition);
+    }
+
+    .search-clear.visible { display: flex; }
+    .search-clear:hover { background: var(--danger-soft); color: var(--danger); }
+
+    .toolbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .filter-select {
+        padding: 10px 36px 10px 14px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        font-size: 0.88rem;
+        color: var(--text-secondary);
+        background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E") no-repeat right 12px center;
+        appearance: none;
+        outline: none;
+        cursor: pointer;
+        transition: border-color var(--transition);
+    }
+
+    .filter-select:focus { border-color: var(--primary); }
+
+    .btn-tool {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 16px;
+        border-radius: var(--radius-sm);
+        font-size: 0.86rem;
+        font-weight: 600;
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--text-secondary);
+        text-decoration: none;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .btn-tool:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        transform: translateY(-1px);
+    }
+
+    .btn-tool.primary {
+        background: var(--primary-soft);
+        border-color: transparent;
+        color: var(--primary);
+    }
+
+    .btn-tool.primary:hover {
+        background: var(--primary);
+        color: #fff;
+    }
+
+    /* Quick filter chips */
+    .filter-chips {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .filter-chips-label {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-right: 4px;
+    }
+
+    .chip {
+        padding: 6px 14px;
+        border-radius: 999px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: var(--transition);
+        white-space: nowrap;
+    }
+
+    .chip:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    .chip.active {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+
+    .chip .chip-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 6px;
+        margin-left: 6px;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        background: rgba(0, 0, 0, 0.08);
+    }
+
+    .chip.active .chip-count {
+        background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* ---------- Table ---------- */
+    .table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .enquiry-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 980px;
+    }
+
     .enquiry-table thead {
-        background: linear-gradient(180deg, #f1f5f9, #e2e8f0);
+        background: #f8fafc;
+        position: sticky;
+        top: 0;
+        z-index: 2;
     }
 
     .enquiry-table th {
-        padding: 13px 14px;
-        font-size: 0.75rem;
+        padding: 14px 16px;
+        font-size: 0.7rem;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.04em;
+        letter-spacing: 0.06em;
         color: var(--muted);
         border-bottom: 1px solid var(--border);
-        white-space: nowrap;
         text-align: left;
+        white-space: nowrap;
+        user-select: none;
+    }
+
+    .enquiry-table th.sortable {
+        cursor: pointer;
+        transition: color var(--transition);
+    }
+
+    .enquiry-table th.sortable:hover { color: var(--primary); }
+
+    .enquiry-table th .sort-icon {
+        margin-left: 4px;
+        opacity: 0.35;
+        font-size: 0.65rem;
+    }
+
+    .enquiry-table th.sort-asc .sort-icon,
+    .enquiry-table th.sort-desc .sort-icon {
+        opacity: 1;
+        color: var(--primary);
     }
 
     .enquiry-table td {
-        padding: 14px;
-        color: var(--text);
-        font-size: 0.92rem;
-        border-bottom: 1px solid var(--border);
+        padding: 16px;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        border-bottom: 1px solid var(--border-light);
         vertical-align: middle;
-        transition: background 0.15s ease;
     }
 
     .enquiry-table tbody tr {
-        transition: background 0.15s ease;
-        animation: rowFade 0.4s ease both;
+        transition: background var(--transition), box-shadow var(--transition);
+        animation: rowIn 0.35s ease both;
     }
 
-    .enquiry-table tbody tr:nth-child(1) { animation-delay: 0.04s; }
-    .enquiry-table tbody tr:nth-child(2) { animation-delay: 0.08s; }
-    .enquiry-table tbody tr:nth-child(3) { animation-delay: 0.12s; }
-    .enquiry-table tbody tr:nth-child(4) { animation-delay: 0.16s; }
-    .enquiry-table tbody tr:nth-child(5) { animation-delay: 0.20s; }
+    .enquiry-table tbody tr:nth-child(1) { animation-delay: 0.02s; }
+    .enquiry-table tbody tr:nth-child(2) { animation-delay: 0.04s; }
+    .enquiry-table tbody tr:nth-child(3) { animation-delay: 0.06s; }
+    .enquiry-table tbody tr:nth-child(4) { animation-delay: 0.08s; }
+    .enquiry-table tbody tr:nth-child(5) { animation-delay: 0.1s; }
 
-    @keyframes rowFade {
+    @keyframes rowIn {
         from { opacity: 0; transform: translateX(-6px); }
         to   { opacity: 1; transform: translateX(0); }
     }
 
-    .enquiry-table tbody tr:last-child td {
-        border-bottom: none;
-    }
+    .enquiry-table tbody tr:last-child td { border-bottom: none; }
 
     .enquiry-table tbody tr:hover td {
-        background: #f8fafc;
+        background: linear-gradient(90deg, var(--primary-soft) 0%, transparent 100%);
     }
+
+    .enquiry-table tbody tr.is-new td:first-child {
+        box-shadow: inset 3px 0 0 var(--success);
+    }
+
+    .enquiry-table tbody tr.hidden-row { display: none; }
 
     /* ---------- Cells ---------- */
     .id-badge {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        min-width: 34px;
-        height: 28px;
-        padding: 0 8px;
+        min-width: 38px;
+        height: 30px;
+        padding: 0 10px;
         background: var(--primary-soft);
         color: var(--primary);
         font-weight: 700;
+        font-size: 0.82rem;
+        border-radius: 9px;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .new-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        margin-left: 8px;
+        padding: 2px 8px;
+        background: var(--success-soft);
+        color: var(--success);
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        border-radius: 999px;
+    }
+
+    .new-badge i { font-size: 0.55rem; }
+
+    .student-cell {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: var(--primary-gradient);
+        color: #fff;
+        font-weight: 700;
         font-size: 0.85rem;
-        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        text-transform: uppercase;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
     }
 
     .student-name {
         font-weight: 700;
         color: var(--text);
+        display: block;
+        line-height: 1.3;
     }
 
     .email-cell {
         color: var(--muted);
-        font-size: 0.88rem;
+        font-size: 0.84rem;
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: color var(--transition);
+    }
+
+    .email-cell:hover { color: var(--primary); }
+
+    .contact-cell {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
     }
 
     .mobile-cell {
-        font-weight: 500;
+        font-weight: 600;
+        color: var(--text-secondary);
         white-space: nowrap;
+        font-variant-numeric: tabular-nums;
     }
+
+    .mobile-cell a {
+        color: inherit;
+        text-decoration: none;
+        transition: color var(--transition);
+    }
+
+    .mobile-cell a:hover { color: var(--primary); }
+
+    .quick-contact {
+        display: flex;
+        gap: 6px;
+        margin-top: 2px;
+    }
+
+    .quick-btn {
+        width: 26px;
+        height: 26px;
+        border-radius: 7px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.72rem;
+        text-decoration: none;
+        transition: var(--transition);
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--muted);
+    }
+
+    .quick-btn:hover { transform: scale(1.08); }
+    .quick-btn.wa:hover  { background: #dcfce7; color: #16a34a; border-color: #bbf7d0; }
+    .quick-btn.mail:hover { background: var(--primary-soft); color: var(--primary); border-color: transparent; }
 
     .course-badge {
         display: inline-block;
         background: var(--primary-soft);
         color: var(--primary);
-        font-size: 0.8rem;
+        font-size: 0.78rem;
         font-weight: 600;
-        padding: 4px 10px;
+        padding: 6px 13px;
         border-radius: 999px;
+        white-space: nowrap;
     }
 
     .message-cell {
         max-width: 220px;
         color: var(--muted);
-        font-size: 0.88rem;
+        font-size: 0.86rem;
         line-height: 1.45;
         display: -webkit-box;
-        -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
+        cursor: pointer;
+        transition: color var(--transition);
     }
 
+    .message-cell:hover { color: var(--primary); }
+
     .date-cell {
-        font-size: 0.85rem;
+        font-size: 0.84rem;
         color: var(--muted);
+        white-space: nowrap;
+        line-height: 1.45;
+    }
+
+    .date-cell strong {
+        color: var(--text-secondary);
+        font-weight: 600;
+        display: block;
+    }
+
+    .date-cell .relative {
+        font-size: 0.76rem;
+        color: var(--primary);
+        font-weight: 500;
+    }
+
+    /* ---------- Actions ---------- */
+    .actions-cell {
+        display: flex;
+        align-items: center;
+        gap: 6px;
         white-space: nowrap;
     }
 
-    /* ---------- Delete button ---------- */
-    .btn-delete {
+    .btn-action {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 6px;
-        padding: 7px 14px;
-        border-radius: 9px;
-        font-size: 0.82rem;
-        font-weight: 600;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        font-size: 0.85rem;
         text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .btn-view {
+        background: var(--primary-soft);
+        color: var(--primary);
+    }
+
+    .btn-view:hover {
+        background: var(--primary);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(99, 102, 241, 0.35);
+    }
+
+    .btn-copy {
+        background: var(--info-soft);
+        color: var(--info);
+    }
+
+    .btn-copy:hover {
+        background: var(--info);
+        color: #fff;
+        transform: translateY(-2px);
+    }
+
+    .btn-delete {
         background: var(--danger-soft);
         color: var(--danger);
-        border: none;
-        transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, color 0.18s ease;
     }
 
     .btn-delete:hover {
         background: var(--danger);
         color: #fff;
         transform: translateY(-2px);
-        box-shadow: 0 6px 14px rgba(220, 38, 38, 0.3);
+        box-shadow: 0 6px 16px rgba(239, 68, 68, 0.35);
     }
 
-    /* ---------- Empty state ---------- */
-    .empty-state {
+    /* ---------- Empty / No results ---------- */
+    .empty-state,
+    .no-results-state {
         text-align: center;
-        padding: 56px 20px !important;
-        color: var(--muted);
+        padding: 72px 24px !important;
     }
 
-    .empty-state i {
-        font-size: 2.4rem;
-        margin-bottom: 14px;
-        opacity: 0.35;
+    .empty-state i,
+    .no-results-state i {
+        font-size: 3rem;
+        color: #cbd5e1;
+        margin-bottom: 16px;
         display: block;
     }
 
-    .empty-state span {
+    .empty-state h4,
+    .no-results-state h4 {
+        margin: 0 0 8px;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .empty-state p,
+    .no-results-state p {
+        margin: 0 0 16px;
+        color: var(--muted);
+        font-size: 0.92rem;
+    }
+
+    .no-results-state { display: none; }
+
+    /* ---------- Footer / Pagination ---------- */
+    .table-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 14px;
+        padding: 16px 24px;
+        border-top: 1px solid var(--border);
+        background: #fafbfc;
+        font-size: 0.85rem;
+        color: var(--muted);
+    }
+
+    .table-footer strong { color: var(--text); }
+
+    .pagination {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .page-btn {
+        min-width: 36px;
+        height: 36px;
+        padding: 0 10px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: #fff;
+        color: var(--text-secondary);
+        font-size: 0.84rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .page-btn:hover:not(:disabled) {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    .page-btn.active {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: #fff;
+    }
+
+    .page-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    .per-page-select {
+        padding: 8px 12px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        font-size: 0.84rem;
+        background: #fff;
+        cursor: pointer;
+    }
+
+    /* ---------- Modal ---------- */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.5);
+        backdrop-filter: blur(6px);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        animation: fadeIn 0.2s ease;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+    .modal-box {
+        background: #fff;
+        border-radius: var(--radius);
+        width: 100%;
+        max-width: 520px;
+        box-shadow: 0 32px 80px rgba(0, 0, 0, 0.2);
+        animation: modalUp 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+        overflow: hidden;
+    }
+
+    @keyframes modalUp {
+        from { opacity: 0; transform: translateY(24px) scale(0.96); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border);
+        background: linear-gradient(180deg, #fafbfc, #f8fafc);
+    }
+
+    .modal-header-left {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .modal-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        background: var(--primary-gradient);
+        color: #fff;
+        font-weight: 800;
         font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-transform: uppercase;
+    }
+
+    .modal-header h4 {
+        margin: 0;
+        font-size: 1.08rem;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .modal-header h4 small {
+        display: block;
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: var(--muted);
+        margin-top: 2px;
+    }
+
+    .modal-close {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        border: none;
+        background: transparent;
+        color: var(--muted);
+        font-size: 1.1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: var(--transition);
+    }
+
+    .modal-close:hover {
+        background: var(--danger-soft);
+        color: var(--danger);
+    }
+
+    .modal-body { padding: 24px; }
+
+    .modal-actions-bar {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .modal-action-btn {
+        flex: 1;
+        min-width: 120px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 11px 16px;
+        border-radius: var(--radius-sm);
+        font-size: 0.86rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .modal-action-btn:hover { transform: translateY(-1px); }
+    .modal-action-btn.call:hover  { background: var(--success-soft); color: var(--success); border-color: transparent; }
+    .modal-action-btn.email:hover { background: var(--primary-soft); color: var(--primary); border-color: transparent; }
+    .modal-action-btn.wa:hover    { background: #dcfce7; color: #16a34a; border-color: transparent; }
+
+    .modal-meta {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 20px;
+    }
+
+    .meta-item label {
+        display: block;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--muted);
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .meta-item span {
+        font-size: 0.92rem;
+        font-weight: 600;
+        color: var(--text);
+        word-break: break-word;
+    }
+
+    .modal-message-label {
+        display: block;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--muted);
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .modal-message {
+        background: #f8fafc;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 18px;
+        font-size: 0.93rem;
+        line-height: 1.65;
+        color: var(--text-secondary);
+        max-height: 220px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+    }
+
+    /* ---------- Toast ---------- */
+    .toast-container {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 2000;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .toast {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 18px;
+        background: var(--text);
+        color: #fff;
+        border-radius: var(--radius-sm);
+        font-size: 0.88rem;
+        font-weight: 500;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        animation: toastIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        max-width: 320px;
+    }
+
+    .toast.success { background: var(--success); }
+    .toast.error   { background: var(--danger); }
+
+    .toast i { font-size: 1rem; opacity: 0.9; }
+
+    @keyframes toastIn {
+        from { opacity: 0; transform: translateX(40px); }
+        to   { opacity: 1; transform: translateX(0); }
     }
 
     /* ---------- Responsive ---------- */
-    @media (max-width: 992px) {
-        .enquiry-body {
-            padding: 16px;
-        }
+    @media (max-width: 1024px) {
+        .stats-row { grid-template-columns: repeat(2, 1fr); }
+    }
 
-        .enquiry-table {
-            display: block;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
+    @media (max-width: 768px) {
+        .enquiry-page { padding: 16px 14px 36px; }
+
+        .page-hero { padding: 22px 20px; }
+
+        .hero-text h2 { font-size: 1.35rem; }
+
+        .stats-row { grid-template-columns: 1fr; }
+
+        .toolbar-row { flex-direction: column; align-items: stretch; }
+
+        .search-box { max-width: none; }
+
+        .toolbar-actions { justify-content: stretch; }
+        .toolbar-actions > * { flex: 1; }
+
+        .table-footer { flex-direction: column; align-items: stretch; text-align: center; }
+
+        .pagination { justify-content: center; }
+
+        .modal-meta { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+        .toolbar, .hero-actions, .actions-cell, .toast-container, .pagination { display: none !important; }
+        .enquiry-page { padding: 0; }
+        .page-hero { background: #6366f1 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
 </style>
 
 <div class="enquiry-page">
-    <div class="enquiry-card">
-        <div class="enquiry-header">
-            <i class="fa-solid fa-envelope-open-text"></i>
-            <h3>Enquiry Management</h3>
-        </div>
 
-        <div class="enquiry-body">
-            <div class="table-responsive">
-                <table class="enquiry-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Mobile</th>
-                            <th>Course</th>
-                            <th>Message</th>
-                            <th>Date</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for enquiry in enquiries %}
-                        <tr>
-                            <td>
-                                <span class="id-badge">{{ enquiry.id }}</span>
-                            </td>
-                            <td>
-                                <span class="student-name">{{ enquiry.name }}</span>
-                            </td>
-                            <td class="email-cell">{{ enquiry.email }}</td>
-                            <td class="mobile-cell">{{ enquiry.mobile }}</td>
-                            <td>
-                                <span class="course-badge">{{ enquiry.course }}</span>
-                            </td>
-                            <td>
-                                <div class="message-cell" title="{{ enquiry.message }}">
-                                    {{ enquiry.message }}
-                                </div>
-                            </td>
-                            <td class="date-cell">
-                                {{ enquiry.created_at|date:"d M Y" }}<br>
-                                <small>{{ enquiry.created_at|date:"h:i A" }}</small>
-                            </td>
-                            <td>
-                                <a href="{% url 'adminenquiry_delete' enquiry.id %}"
-                                   class="btn-delete"
-                                   onclick="return confirm('Delete this enquiry?');">
-                                    <i class="fa-solid fa-trash"></i> Delete
-                                </a>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="8" class="empty-state">
-                                <i class="fa-solid fa-inbox"></i>
-                                <span>No enquiries found.</span>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+    <!-- Hero Header -->
+    <div class="page-hero">
+        <div class="hero-inner">
+            <div class="hero-text">
+                <h2><i class="fa-solid fa-envelope-open-text"></i> Enquiry Management</h2>
+                <p>Track, filter, and respond to student course enquiries — all in one place.</p>
+            </div>
+            <div class="hero-actions">
+                <button type="button" class="btn-hero btn-hero-solid" onclick="exportCSV()">
+                    <i class="fa-solid fa-file-export"></i> Export CSV
+                </button>
+                <a href="{% url 'adminenquiry' %}" class="btn-hero btn-hero-light">
+                    <i class="fa-solid fa-arrows-rotate"></i> Refresh
+                </a>
             </div>
         </div>
     </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+        <div class="stat-card total">
+            <div class="stat-icon total"><i class="fa-solid fa-inbox"></i></div>
+            <div class="stat-info">
+                <h4 id="totalCount">{{ enquiries|length }}</h4>
+                <span>Total Enquiries</span>
+                <small>All time submissions</small>
+            </div>
+        </div>
+        <div class="stat-card today">
+            <div class="stat-icon today"><i class="fa-solid fa-calendar-day"></i></div>
+            <div class="stat-info">
+                <h4 id="todayCount">—</h4>
+                <span>Today</span>
+                <small>Received today</small>
+            </div>
+        </div>
+        <div class="stat-card week">
+            <div class="stat-icon week"><i class="fa-solid fa-calendar-week"></i></div>
+            <div class="stat-info">
+                <h4 id="weekCount">—</h4>
+                <span>This Week</span>
+                <small>Last 7 days</small>
+            </div>
+        </div>
+        <div class="stat-card courses">
+            <div class="stat-icon courses"><i class="fa-solid fa-graduation-cap"></i></div>
+            <div class="stat-info">
+                <h4 id="courseCount">—</h4>
+                <span>Courses</span>
+                <small>Unique courses enquired</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Card -->
+    <div class="enquiry-card">
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <div class="toolbar-row">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="searchInput" placeholder="Search name, email, mobile, course, message..." autocomplete="off">
+                    <button type="button" class="search-clear" id="searchClear" onclick="clearSearch()" title="Clear search">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="toolbar-actions">
+                    <select class="filter-select" id="dateFilter">
+                        <option value="all">All Dates</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                    </select>
+                    <select class="filter-select" id="courseFilter">
+                        <option value="">All Courses</option>
+                    </select>
+                    <select class="per-page-select" id="perPage" title="Rows per page">
+                        <option value="10">10 / page</option>
+                        <option value="25" selected>25 / page</option>
+                        <option value="50">50 / page</option>
+                        <option value="9999">Show all</option>
+                    </select>
+                    <button type="button" class="btn-tool" onclick="clearAllFilters()" title="Reset filters">
+                        <i class="fa-solid fa-filter-circle-xmark"></i> Clear
+                    </button>
+                    <button type="button" class="btn-tool primary" onclick="window.print()" title="Print table">
+                        <i class="fa-solid fa-print"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="toolbar-row">
+                <div class="filter-chips" id="courseChips">
+                    <span class="filter-chips-label">Quick:</span>
+                    <button type="button" class="chip active" data-course="">All <span class="chip-count" id="chipAllCount">0</span></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-wrap">
+            <table class="enquiry-table" id="enquiryTable">
+                <thead>
+                    <tr>
+                        <th class="sortable" data-sort="id">ID <i class="fa-solid fa-sort sort-icon"></i></th>
+                        <th class="sortable" data-sort="name">Student <i class="fa-solid fa-sort sort-icon"></i></th>
+                        <th>Contact</th>
+                        <th class="sortable" data-sort="course">Course <i class="fa-solid fa-sort sort-icon"></i></th>
+                        <th>Message</th>
+                        <th class="sortable sort-desc" data-sort="date">Date <i class="fa-solid fa-sort-down sort-icon"></i></th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    {% for enquiry in enquiries %}
+                    <tr data-id="{{ enquiry.id }}"
+                        data-name="{{ enquiry.name|lower }}"
+                        data-course="{{ enquiry.course|lower }}"
+                        data-date="{{ enquiry.created_at|date:'Y-m-d' }}"
+                        data-timestamp="{{ enquiry.created_at|date:'U' }}"
+                        data-email="{{ enquiry.email|escapejs }}"
+                        data-mobile="{{ enquiry.mobile|escapejs }}"
+                        data-message="{{ enquiry.message|escapejs }}"
+                        data-display-date="{{ enquiry.created_at|date:'d M Y, h:i A' }}">
+                        <td>
+                            <span class="id-badge">{{ enquiry.id }}</span>
+                            <span class="new-badge is-new-label" style="display:none;"><i class="fa-solid fa-circle"></i> New</span>
+                        </td>
+                        <td>
+                            <div class="student-cell">
+                                <div class="avatar" data-initials="{{ enquiry.name }}">
+                                    {{ enquiry.name|make_list|first }}
+                                </div>
+                                <div>
+                                    <span class="student-name">{{ enquiry.name }}</span>
+                                    <div class="email-cell" title="Click to copy" onclick="copyText('{{ enquiry.email|escapejs }}', 'Email copied!')">{{ enquiry.email }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="contact-cell">
+                                <div class="mobile-cell">
+                                    <a href="tel:{{ enquiry.mobile }}">
+                                        <i class="fa-solid fa-phone" style="font-size:0.72rem;opacity:0.55;margin-right:4px;"></i>
+                                        {{ enquiry.mobile }}
+                                    </a>
+                                </div>
+                                <div class="quick-contact">
+                                    <a href="https://wa.me/{{ enquiry.mobile }}" target="_blank" rel="noopener" class="quick-btn wa" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+                                    <a href="mailto:{{ enquiry.email }}" class="quick-btn mail" title="Email"><i class="fa-solid fa-envelope"></i></a>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="course-badge">{{ enquiry.course }}</span></td>
+                        <td>
+                            <div class="message-cell" onclick="openModalFromRow(this.closest('tr'))" title="Click to view full message">
+                                {{ enquiry.message|default:"—" }}
+                            </div>
+                        </td>
+                        <td class="date-cell">
+                            <strong>{{ enquiry.created_at|date:"d M Y" }}</strong>
+                            {{ enquiry.created_at|date:"h:i A" }}
+                            <span class="relative" data-date="{{ enquiry.created_at|date:'Y-m-d' }}"></span>
+                        </td>
+                        <td>
+                            <div class="actions-cell">
+                                <button type="button" class="btn-action btn-view" title="View details" onclick="openModalFromRow(this.closest('tr'))">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                                <button type="button" class="btn-action btn-copy" title="Copy contact" onclick="copyContact(this.closest('tr'))">
+                                    <i class="fa-solid fa-copy"></i>
+                                </button>
+                                <a href="{% url 'adminenquiry_delete' enquiry.id %}"
+                                   class="btn-action btn-delete"
+                                   title="Delete"
+                                   onclick="return confirm('Delete enquiry from {{ enquiry.name|escapejs }}?');">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr id="emptyRow">
+                        <td colspan="7" class="empty-state">
+                            <i class="fa-solid fa-inbox"></i>
+                            <h4>No enquiries yet</h4>
+                            <p>When students submit enquiries they will appear here.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- No results (shown via JS when filters match nothing) -->
+        <div class="no-results-state" id="noResults" style="display:none;padding:72px 24px;text-align:center;">
+            <i class="fa-solid fa-magnifying-glass" style="font-size:3rem;color:#cbd5e1;display:block;margin-bottom:16px;"></i>
+            <h4 style="margin:0 0 8px;font-size:1.15rem;font-weight:700;color:var(--text);">No matching enquiries</h4>
+            <p style="margin:0 0 16px;color:var(--muted);">Try adjusting your search or filters.</p>
+            <button type="button" class="btn-tool primary" onclick="clearAllFilters()">Clear all filters</button>
+        </div>
+
+        <!-- Footer -->
+        {% if enquiries %}
+        <div class="table-footer" id="tableFooter">
+            <span>Showing <strong id="visibleRange">1–25</strong> of <strong id="filteredCount">{{ enquiries|length }}</strong> <span id="filterLabel">enquiries</span></span>
+            <div class="pagination" id="pagination"></div>
+        </div>
+        {% endif %}
+    </div>
 </div>
+
+<!-- View Modal -->
+<div class="modal-overlay" id="viewModal" onclick="closeModalOutside(event)">
+    <div class="modal-box">
+        <div class="modal-header">
+            <div class="modal-header-left">
+                <div class="modal-avatar" id="mAvatar">—</div>
+                <div>
+                    <h4 id="mName">—</h4>
+                    <small id="mCourseSub">—</small>
+                </div>
+            </div>
+            <button type="button" class="modal-close" onclick="closeModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-actions-bar">
+                <a href="#" id="mCallBtn" class="modal-action-btn call"><i class="fa-solid fa-phone"></i> Call</a>
+                <a href="#" id="mEmailBtn" class="modal-action-btn email"><i class="fa-solid fa-envelope"></i> Email</a>
+                <a href="#" id="mWaBtn" class="modal-action-btn wa" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+            </div>
+            <div class="modal-meta">
+                <div class="meta-item">
+                    <label>Email</label>
+                    <span id="mEmail">—</span>
+                </div>
+                <div class="meta-item">
+                    <label>Mobile</label>
+                    <span id="mMobile">—</span>
+                </div>
+                <div class="meta-item" style="grid-column:1/-1;">
+                    <label>Submitted On</label>
+                    <span id="mDate">—</span>
+                </div>
+            </div>
+            <span class="modal-message-label">Message</span>
+            <div class="modal-message" id="mMessage">—</div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+(function () {
+    'use strict';
+
+    const state = {
+        sortCol: 'date',
+        sortDir: 'desc',
+        page: 1,
+        perPage: 25,
+        activeCourseChip: ''
+    };
+
+    const $ = id => document.getElementById(id);
+    const rows = () => [...document.querySelectorAll('#tableBody tr[data-id]')];
+
+    /* ---- Init avatars (2-letter initials) ---- */
+    document.querySelectorAll('.avatar[data-initials]').forEach(el => {
+        const parts = el.dataset.initials.trim().split(/\s+/);
+        el.textContent = parts.length >= 2
+            ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+            : (parts[0][0] || '?').toUpperCase();
+    });
+
+    /* ---- Build course filters & chips ---- */
+    function initCourses() {
+        const courses = {};
+        rows().forEach(row => {
+            const c = row.dataset.course;
+            if (c) courses[c] = (courses[c] || 0) + 1;
+        });
+
+        const select = $('courseFilter');
+        const chips = $('courseChips');
+        const sorted = Object.keys(courses).sort();
+
+        sorted.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c;
+            opt.textContent = c.charAt(0).toUpperCase() + c.slice(1);
+            select.appendChild(opt);
+
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.className = 'chip';
+            chip.dataset.course = c;
+            chip.innerHTML = `${c.charAt(0).toUpperCase() + c.slice(1)} <span class="chip-count">${courses[c]}</span>`;
+            chip.onclick = () => setCourseFilter(c, chip);
+            chips.appendChild(chip);
+        });
+
+        $('chipAllCount').textContent = rows().length;
+        $('courseCount').textContent = sorted.length;
+    }
+
+    function setCourseFilter(course, chipEl) {
+        state.activeCourseChip = course;
+        $('courseFilter').value = course;
+        document.querySelectorAll('.filter-chips .chip').forEach(c => c.classList.toggle('active', c === chipEl || (!course && c.dataset.course === '')));
+        state.page = 1;
+        applyFilters();
+    }
+
+    /* ---- Date helpers ---- */
+    function todayStr() {
+        return new Date().toISOString().slice(0, 10);
+    }
+
+    function markNewRows() {
+        const today = todayStr();
+        rows().forEach(row => {
+            const isNew = row.dataset.date === today;
+            row.classList.toggle('is-new', isNew);
+            const badge = row.querySelector('.is-new-label');
+            if (badge) badge.style.display = isNew ? 'inline-flex' : 'none';
+        });
+    }
+
+    function setRelativeDates() {
+        const now = new Date();
+        document.querySelectorAll('.relative[data-date]').forEach(el => {
+            const d = new Date(el.dataset.date + 'T12:00:00');
+            const diff = Math.floor((now - d) / 86400000);
+            if (diff === 0) el.textContent = 'Today';
+            else if (diff === 1) el.textContent = 'Yesterday';
+            else if (diff < 7) el.textContent = diff + ' days ago';
+            else el.textContent = '';
+        });
+    }
+
+    function computeStats() {
+        const today = todayStr();
+        const weekAgo = new Date();
+        weekAgo.setDate(weekAgo.getDate() - 7);
+        let todayCount = 0, weekCount = 0;
+
+        rows().forEach(row => {
+            const d = row.dataset.date;
+            if (!d) return;
+            if (d === today) todayCount++;
+            if (new Date(d) >= weekAgo) weekCount++;
+        });
+
+        $('todayCount').textContent = todayCount;
+        $('weekCount').textContent = weekCount;
+    }
+
+    /* ---- Filtering ---- */
+    function matchesDateFilter(row, filter) {
+        if (filter === 'all') return true;
+        const d = row.dataset.date;
+        if (!d) return false;
+        const date = new Date(d + 'T12:00:00');
+        const now = new Date();
+        if (filter === 'today') return d === todayStr();
+        if (filter === 'week') {
+            const weekAgo = new Date(now);
+            weekAgo.setDate(now.getDate() - 7);
+            return date >= weekAgo;
+        }
+        if (filter === 'month') {
+            return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+        }
+        return true;
+    }
+
+    function getFilteredRows() {
+        const query = $('searchInput').value.toLowerCase().trim();
+        const course = ($('courseFilter').value || state.activeCourseChip).toLowerCase();
+        const dateFilter = $('dateFilter').value;
+
+        return rows().filter(row => {
+            const text = row.textContent.toLowerCase();
+            const matchSearch = !query || text.includes(query);
+            const matchCourse = !course || row.dataset.course === course;
+            const matchDate = matchesDateFilter(row, dateFilter);
+            return matchSearch && matchCourse && matchDate;
+        });
+    }
+
+    function sortRows(list) {
+        const col = state.sortCol;
+        const dir = state.sortDir === 'asc' ? 1 : -1;
+
+        return [...list].sort((a, b) => {
+            let va, vb;
+            if (col === 'id') { va = +a.dataset.id; vb = +b.dataset.id; }
+            else if (col === 'name') { va = a.dataset.name; vb = b.dataset.name; }
+            else if (col === 'course') { va = a.dataset.course; vb = b.dataset.course; }
+            else if (col === 'date') { va = +a.dataset.timestamp; vb = +b.dataset.timestamp; }
+            else return 0;
+
+            if (va < vb) return -1 * dir;
+            if (va > vb) return 1 * dir;
+            return 0;
+        });
+    }
+
+    function applyFilters() {
+        const allRows = rows();
+        allRows.forEach(r => r.classList.add('hidden-row'));
+
+        const filtered = sortRows(getFilteredRows());
+        const perPage = state.perPage;
+        const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
+        if (state.page > totalPages) state.page = totalPages;
+
+        const start = (state.page - 1) * perPage;
+        const pageRows = filtered.slice(start, start + perPage);
+
+        pageRows.forEach(r => r.classList.remove('hidden-row'));
+
+        const tbody = $('tableBody');
+        pageRows.forEach(r => tbody.appendChild(r));
+
+        /* No results */
+        const noResults = $('noResults');
+        const tableWrap = document.querySelector('.table-wrap');
+        if (filtered.length === 0 && allRows.length > 0) {
+            noResults.style.display = 'block';
+            tableWrap.style.display = 'none';
+        } else {
+            noResults.style.display = 'none';
+            tableWrap.style.display = '';
+        }
+
+        /* Footer */
+        const footer = $('tableFooter');
+        if (footer) {
+            const from = filtered.length ? start + 1 : 0;
+            const to = Math.min(start + perPage, filtered.length);
+            $('visibleRange').textContent = filtered.length ? `${from}–${to}` : '0';
+            $('filteredCount').textContent = filtered.length;
+            renderPagination(totalPages);
+        }
+
+        $('searchClear').classList.toggle('visible', !!$('searchInput').value.trim());
+    }
+
+    /* ---- Pagination ---- */
+    function renderPagination(totalPages) {
+        const container = $('pagination');
+        if (!container) return;
+        container.innerHTML = '';
+
+        const prev = document.createElement('button');
+        prev.className = 'page-btn';
+        prev.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
+        prev.disabled = state.page <= 1;
+        prev.onclick = () => { state.page--; applyFilters(); };
+        container.appendChild(prev);
+
+        const maxBtns = 5;
+        let startPage = Math.max(1, state.page - Math.floor(maxBtns / 2));
+        let endPage = Math.min(totalPages, startPage + maxBtns - 1);
+        startPage = Math.max(1, endPage - maxBtns + 1);
+
+        for (let i = startPage; i <= endPage; i++) {
+            const btn = document.createElement('button');
+            btn.className = 'page-btn' + (i === state.page ? ' active' : '');
+            btn.textContent = i;
+            btn.onclick = () => { state.page = i; applyFilters(); };
+            container.appendChild(btn);
+        }
+
+        const next = document.createElement('button');
+        next.className = 'page-btn';
+        next.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+        next.disabled = state.page >= totalPages;
+        next.onclick = () => { state.page++; applyFilters(); };
+        container.appendChild(next);
+    }
+
+    /* ---- Sorting ---- */
+    document.querySelectorAll('.enquiry-table th.sortable').forEach(th => {
+        th.addEventListener('click', () => {
+            const col = th.dataset.sort;
+            if (state.sortCol === col) {
+                state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+            } else {
+                state.sortCol = col;
+                state.sortDir = col === 'date' ? 'desc' : 'asc';
+            }
+
+            document.querySelectorAll('.enquiry-table th.sortable').forEach(h => {
+                h.classList.remove('sort-asc', 'sort-desc');
+                const icon = h.querySelector('.sort-icon');
+                icon.className = 'fa-solid fa-sort sort-icon';
+            });
+
+            th.classList.add(state.sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+            th.querySelector('.sort-icon').className = `fa-solid fa-sort-${state.sortDir === 'asc' ? 'up' : 'down'} sort-icon`;
+
+            state.page = 1;
+            applyFilters();
+        });
+    });
+
+    /* ---- Modal ---- */
+    window.openModalFromRow = function (row) {
+        if (!row || !row.dataset.id) return;
+        const name = row.querySelector('.student-name')?.textContent || '—';
+        const initials = row.querySelector('.avatar')?.textContent || '?';
+        const email = row.dataset.email;
+        const mobile = row.dataset.mobile;
+        const course = row.querySelector('.course-badge')?.textContent || '—';
+        const message = row.dataset.message || 'No message provided.';
+        const date = row.dataset.displayDate;
+
+        $('mAvatar').textContent = initials;
+        $('mName').textContent = name;
+        $('mCourseSub').textContent = course;
+        $('mEmail').textContent = email;
+        $('mMobile').textContent = mobile;
+        $('mMessage').textContent = message;
+        $('mDate').textContent = date;
+
+        $('mCallBtn').href = 'tel:' + mobile;
+        $('mEmailBtn').href = 'mailto:' + email;
+        $('mWaBtn').href = 'https://wa.me/' + mobile.replace(/\D/g, '');
+
+        $('viewModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    };
+
+    window.closeModal = function () {
+        $('viewModal').classList.remove('active');
+        document.body.style.overflow = '';
+    };
+
+    window.closeModalOutside = function (e) {
+        if (e.target === $('viewModal')) closeModal();
+    };
+
+    /* ---- Toast ---- */
+    window.showToast = function (msg, type = 'default') {
+        const toast = document.createElement('div');
+        toast.className = 'toast' + (type !== 'default' ? ' ' + type : '');
+        toast.innerHTML = `<i class="fa-solid fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'circle-xmark' : 'info-circle'}"></i> ${msg}`;
+        $('toastContainer').appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(40px)';
+            toast.style.transition = '0.3s ease';
+            setTimeout(() => toast.remove(), 300);
+        }, 2800);
+    };
+
+    window.copyText = function (text, msg) {
+        navigator.clipboard.writeText(text).then(() => showToast(msg || 'Copied!', 'success')).catch(() => showToast('Copy failed', 'error'));
+    };
+
+    window.copyContact = function (row) {
+        const text = `${row.querySelector('.student-name').textContent}\n${row.dataset.email}\n${row.dataset.mobile}\nCourse: ${row.querySelector('.course-badge').textContent}`;
+        copyText(text, 'Contact copied!');
+    };
+
+    /* ---- Export CSV ---- */
+    window.exportCSV = function () {
+        const filtered = sortRows(getFilteredRows());
+        if (!filtered.length) { showToast('No data to export', 'error'); return; }
+
+        const headers = ['ID', 'Name', 'Email', 'Mobile', 'Course', 'Message', 'Date'];
+        const csvRows = [headers.join(',')];
+
+        filtered.forEach(row => {
+            const cols = [
+                row.dataset.id,
+                `"${row.querySelector('.student-name').textContent.replace(/"/g, '""')}"`,
+                `"${row.dataset.email.replace(/"/g, '""')}"`,
+                row.dataset.mobile,
+                `"${row.querySelector('.course-badge').textContent.replace(/"/g, '""')}"`,
+                `"${(row.dataset.message || '').replace(/"/g, '""')}"`,
+                `"${row.dataset.displayDate}"`
+            ];
+            csvRows.push(cols.join(','));
+        });
+
+        const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `enquiries_${new Date().toISOString().slice(0, 10)}.csv`;
+        link.click();
+        showToast(`Exported ${filtered.length} enquiries`, 'success');
+    };
+
+    /* ---- Clear filters ---- */
+    window.clearSearch = function () {
+        $('searchInput').value = '';
+        state.page = 1;
+        applyFilters();
+    };
+
+    window.clearAllFilters = function () {
+        $('searchInput').value = '';
+        $('courseFilter').value = '';
+        $('dateFilter').value = 'all';
+        state.activeCourseChip = '';
+        state.page = 1;
+        document.querySelectorAll('.filter-chips .chip').forEach(c => c.classList.toggle('active', c.dataset.course === ''));
+        applyFilters();
+    };
+
+    /* ---- Events ---- */
+    $('searchInput')?.addEventListener('input', () => { state.page = 1; applyFilters(); });
+    $('courseFilter')?.addEventListener('change', function () {
+        state.activeCourseChip = this.value;
+        document.querySelectorAll('.filter-chips .chip').forEach(c => c.classList.toggle('active', c.dataset.course === this.value));
+        state.page = 1;
+        applyFilters();
+    });
+    $('dateFilter')?.addEventListener('change', () => { state.page = 1; applyFilters(); });
+    $('perPage')?.addEventListener('change', function () {
+        state.perPage = +this.value;
+        state.page = 1;
+        applyFilters();
+    });
+
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeModal();
+        if (e.key === '/' && !e.target.matches('input, textarea')) {
+            e.preventDefault();
+            $('searchInput')?.focus();
+        }
+    });
+
+    document.querySelector('.filter-chips .chip[data-course=""]')?.addEventListener('click', function () {
+        setCourseFilter('', this);
+    });
+
+    /* ---- Boot ---- */
+    initCourses();
+    markNewRows();
+    setRelativeDates();
+    computeStats();
+    applyFilters();
+})();
+</script>
 
 {% endblock %}

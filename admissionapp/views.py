@@ -15,20 +15,12 @@ def home(request):
     return render(request, 'home.html')
 
 
-def about(request):
-    return render(request, 'about.html')
-
-
 def contact(request):
     return render(request, 'contact.html')
 
 
 def admission(request):
     return render(request, 'admission.html')
-
-
-def courses(request):
-    return render(request, 'courses.html')
 
 
 def admin_login(request):
@@ -101,7 +93,7 @@ def addstu(request):
 
 
 @login_required(login_url='admin_login')
-def dasboard(request):
+def dashboard(request):
     students = Student.objects.all()
     return render(request, 'myadmin/dashboard.html', {'students': students})
 
@@ -116,6 +108,8 @@ def add(request):
 
 
 def enquiry(request):
+    courses = Courses.objects.all()
+
     if request.method == 'POST':
         name = request.POST.get('name')
         email = request.POST.get('email')
@@ -134,25 +128,29 @@ def enquiry(request):
         send_mail(
             subject="Thank You for Your Enquiry",
             message=f"""
-            Dear {name},
+Dear {name},
 
-            Thank you for contacting Sipher Web Academy.
+Thank you for contacting Sipher Web Academy.
 
-            We have successfully received your enquiry regarding "{course}".
+We have successfully received your enquiry regarding "{course}".
 
-            Our team will contact you shortly.
+Our team will contact you shortly.
 
-            Regards,
-            Sipher Web Academy
-            Lucknow
-            """,
+Regards,
+Sipher Web Academy
+Lucknow
+""",
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=[email],
             fail_silently=False,
         )
 
         return redirect('enquiry')
-    return render(request, 'enquiry.html')
+
+    return render(request, "enquiry.html", {
+        "courses": courses,
+    })
+
 
 
 def adminenquiry(request):
@@ -167,11 +165,13 @@ def adminenquiry_delete(request, id):
 
 
 def admincourses(request):
-    return render(request, 'myadmin/admincourses.html', {'courses': Courses.objects.all()})
+    courses = Courses.objects.all().order_by('coursename')
+    return render(request, 'myadmin/admincourses.html', {'courses': courses})
 
 
 def addcourse(request):
     if request.method == 'POST':
+        courseimg = request.FILES.get('courseimg')
         coursename = request.POST.get('coursename')
         session = request.POST.get('session')
         duration = request.POST.get('duration')
@@ -182,10 +182,12 @@ def addcourse(request):
             session=session,
             duration=duration,
             fees=fees,
+            courseimg=courseimg,   
         )
-        return redirect('admincourses')
-    return render(request, 'myadmin/addcourse.html')
 
+        return redirect('admincourses')
+
+    return render(request, 'myadmin/addcourse.html')
 
 def addcourse_delete(request, id):
     course = get_object_or_404(Courses, course_id=id)
@@ -197,6 +199,7 @@ def addcourse_edit(request, id):
     course = get_object_or_404(Courses, course_id=id)
 
     if request.method == "POST":
+        course.courseimg = request.FILES.get("courseimg") 
         course.coursename = request.POST.get("coursename")
         course.session = request.POST.get("session")
         course.duration = request.POST.get("duration")
@@ -283,28 +286,33 @@ def studentapplication(request):
         return redirect("studentlogin")
 
     student = get_object_or_404(Student, email=student_email)
+    courses = Courses.objects.all()
 
     if request.method == "POST":
-      
-        if student.application_status in ['Document Verified', 'Fees Submitted', 'Enrolled']:
-          
-            return redirect('studentapplication')
 
-        student.name = request.POST.get('name')
-        student.dob = request.POST.get('dob')
-        student.age = request.POST.get('age')
-        student.gender = request.POST.get('gender')
-        student.mobile = request.POST.get('mobile')
-        student.blood_group = request.POST.get('blood_group')
-        student.father_name = request.POST.get('father_name')
-        student.father_mobile = request.POST.get('father_mobile')
-        student.class10 = request.POST.get('class10')
-        student.class12 = request.POST.get('class12')
-        student.course = request.POST.get('course')
-        student.aadhaar = request.POST.get('aadhaar')
-        student.address = request.POST.get('address')
-        
-        password = request.POST.get('password')
+        if student.application_status in [
+            "Document Verified",
+            "Fees Submitted",
+            "Enrolled"
+        ]:
+            return redirect("studentapplication")
+
+        student.name = request.POST.get("name")
+        student.dob = request.POST.get("dob")
+        student.age = request.POST.get("age")
+        student.gender = request.POST.get("gender")
+        student.email = request.POST.get("email")
+        student.mobile = request.POST.get("mobile")
+        student.blood_group = request.POST.get("blood_group")
+        student.father_name = request.POST.get("father_name")
+        student.father_mobile = request.POST.get("father_mobile")
+        student.class10 = request.POST.get("class10")
+        student.class12 = request.POST.get("class12")
+        student.course = request.POST.get("course")
+        student.aadhaar = request.POST.get("aadhaar")
+        student.address = request.POST.get("address")
+
+        password = request.POST.get("password")
         if password:
             student.password = password
 
@@ -317,19 +325,23 @@ def studentapplication(request):
 
         for field, label in upload_fields.items():
             uploaded_file = request.FILES.get(field)
-            if uploaded_file:
+
+            if uploaded_file is not None:
                 extension = os.path.splitext(uploaded_file.name)[1]
                 uploaded_file.name = f"{safe_email}_{label}{extension}"
                 setattr(student, field, uploaded_file)
 
-      
         if student.application_status == "Pending":
             student.application_status = "Document Verified"
 
         student.save()
-        return redirect('studentapplication')
 
-    return render(request, 'student/studentapplication.html', {"student": student})
+        return redirect("studentapplication")
+
+    return render(request, "student/studentapplication.html", {
+        "student": student,
+        "courses": courses,
+    })
 
 def adminapplication(request):
     students = Student.objects.all()
@@ -400,3 +412,23 @@ def rejected_payment(request, id):
     student.payment_status = "rejected"
     student.save()
     return redirect("fee_status")
+
+def courses(request):
+    courses = Courses.objects.all().order_by("coursename")
+
+    fee_values = []
+    for c in courses:
+        try:
+            fee_values.append(float(c.fees))
+        except (TypeError, ValueError):
+            pass
+
+    avg_fee = int(sum(fee_values) / len(fee_values)) if fee_values else 0
+
+    return render(request, "courses.html", {
+        "courses": courses,
+        "avg_fee": avg_fee,
+    })
+
+
+    

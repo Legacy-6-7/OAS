@@ -286,17 +286,26 @@
             </thead>
 
             <tbody>
-{% for student in students %}
+                {% for student in students %}
                 <tr>
                     <td>
                         <div class="student-cell">
-                            <div class="profile-photo"><img src="{{ student.student_photo.url }}" alt="{{ student.name }}" style="height: 50px; width: 50px;"></div>
+                            <div class="profile-photo">
+                                {% if student.student_photo %}
+                                <img src="{{ student.student_photo.url }}" alt="{{ student.name }}"
+                                    style="height:50px;width:50px;">
+                                {% else %}
+                                <img src="/static/images/default-user.png" alt="N/A"
+                                    style="height:50px;width:50px;">
+                                {% endif %}
+                            </div>
                             <span class="student-name">{{ student.name }}</span>
                         </div>
                     <td>{{ student.course }}</td>
+                    <td>{{ course.courseimg }}</td>
                     <td><span class="badge bg-success">{{ student.application_status }}</span></td>
                 </tr>
-{% endfor %}
+                {% endfor %}
             </tbody>
 
         </table>
@@ -305,4 +314,4 @@
 
 </div>
 
-{% endblock %}
+{% endblock %}  

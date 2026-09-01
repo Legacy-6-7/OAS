@@ -1,11 +1,294 @@
-<!DOCTYPE html>
-<html lang="en">
+{% include 'navbar.html' %}
+
+{% load static %}
+{% block content %}
+<title>Sipher Web — Course Catalogue</title>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+
+    <!-- Vanta Topology -->
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.topology.min.js"></script>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'admissionapp/style.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<body>
-   <h1>adasdasdasd</h1> 
-</body>
-</html>
+<style>
+  :root{
+    --bg: #12102b;
+    --ink: #f1eeff;
+    --ink-dim: #a29cc9;
+    --line: rgba(255,255,255,.12);
+    --glass: rgba(255,255,255,.06);
+    --accent: #ffc94d;
+    --accent-ink: #241c00;
+    --radius: 18px;
+  }
+
+  *{box-sizing:border-box;}
+  html,
+  body{
+    font-family: 'Segoe UI', ui-sans-serif, -apple-system, system-ui, sans-serif;
+    color:var(--ink);
+    min-height:100vh;
+    background:
+      radial-gradient(1200px 500px at 85% -10%, rgba(255,201,77,0.08), transparent 60%),
+      var(--bg);
+  }
+
+  .wrap{max-width:1180px;margin:0 auto;padding:48px 28px 90px;}
+
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+    color:var(--accent);background:rgba(255,201,77,.1);
+    border:1px solid rgba(255,201,77,.25);
+    padding:6px 14px;border-radius:999px;margin-bottom:16px;
+  }
+
+  .headerRow{margin-bottom:30px;}
+  h1{
+    font-size:40px;line-height:1.05;margin:0 0 10px;
+    font-weight:800;letter-spacing:-0.02em;
+  }
+  .sub{color:var(--ink-dim);font-size:15.5px;max-width:560px;margin:0 0 26px;line-height:1.6;}
+
+  .stats{display:flex;gap:26px;font-size:13px;color:var(--ink-dim);}
+  .stats b{color:var(--ink);font-size:19px;display:block;font-weight:800;}
+
+  /* ---------- Toolbar: search + sort ---------- */
+  .toolbar{
+    display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;
+    margin-bottom:30px;padding:14px 16px;
+    background:var(--glass);
+    backdrop-filter:blur(18px) saturate(140%);
+    -webkit-backdrop-filter:blur(18px) saturate(140%);
+    border:1px solid var(--line);border-radius:16px;
+  }
+  .searchBox{
+    position:relative;flex:1;min-width:220px;
+  }
+  .searchBox i{
+    position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--ink-dim);font-size:14px;
+  }
+  .searchBox input{
+    width:100%;background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--ink);
+    padding:11px 16px 11px 40px;border-radius:999px;font-size:14px;outline:none;
+    transition:border-color .15s ease;
+  }
+  .searchBox input:focus{border-color:var(--accent);}
+  .searchBox input::placeholder{color:var(--ink-dim);}
+
+  .sortRow{display:flex;gap:8px;flex-wrap:wrap;}
+  .sortBtn{
+    background:transparent;border:1px solid var(--line);color:var(--ink-dim);
+    padding:9px 16px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;
+    transition:all .15s ease;white-space:nowrap;
+  }
+  .sortBtn:hover{color:var(--ink);border-color:rgba(255,255,255,.28);}
+  .sortBtn.active{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);}
+
+  /* ---------- Grid + cards ---------- */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(300px,1fr));
+    gap:22px;
+  }
+
+  .card{
+    background:var(--glass);
+    backdrop-filter:blur(18px) saturate(140%);
+    -webkit-backdrop-filter:blur(18px) saturate(140%);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+    transition:border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+    position:relative;
+  }
+  .card:hover{
+    border-color:rgba(255,255,255,.28);
+    transform:translateY(-6px);
+    box-shadow:0 20px 40px -16px rgba(0,0,0,.45);
+  }
+  .card.hidden{display:none;}
+
+  /* Big image banner */
+  .courseImgWrap{
+    position:relative;height:190px;overflow:hidden;
+  }
+  .courseImgWrap img{
+    width:100%;height:100%;object-fit:cover;display:block;
+    transition:transform .4s ease;
+  }
+  .card:hover .courseImgWrap img{transform:scale(1.08);}
+
+  .courseImgWrap.noImg{
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:48px;color:rgba(255,255,255,.92);
+    letter-spacing:-0.02em;
+  }
+  .courseImgWrap.noImg::before{
+    content:"";position:absolute;inset:0;
+    background:radial-gradient(circle at 30% 20%, rgba(255,255,255,.18), transparent 60%);
+  }
+
+  .durationChip{
+    position:absolute;top:12px;right:12px;
+    background:rgba(9,7,26,.65);backdrop-filter:blur(6px);
+    border:1px solid rgba(255,255,255,.18);
+    color:var(--ink);font-size:11.5px;font-weight:700;
+    padding:6px 12px;border-radius:999px;
+    display:flex;align-items:center;gap:5px;
+  }
+
+  .cardBody{padding:18px 20px 20px;}
+  .cardName{
+    font-size:19px;font-weight:800;margin:0 0 14px;letter-spacing:-.01em;
+    color:white;
+  }
+
+  .metaRow{
+    display:flex;justify-content:space-between;align-items:center;
+    padding-top:12px;border-top:1px solid var(--line);
+  }
+  .feesTag{
+    font-size:20px;font-weight:800;color:var(--accent);
+  }
+  .feesTag small{font-size:11px;color:var(--ink-dim);font-weight:600;display:block;margin-top:2px;}
+
+  .enrollBtn{
+    background:transparent;color:var(--accent);border:1px solid rgba(255,201,77,.4);
+    padding:8px 16px;border-radius:999px;font-size:12.5px;font-weight:700;
+    text-decoration:none;display:inline-flex;align-items:center;gap:6px;
+    transition:all .18s ease;
+  }
+  .enrollBtn:hover{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);}
+
+  .empty{
+    text-align:center;color:var(--ink-dim);padding:80px 20px;
+    border:1.5px dashed var(--line);border-radius:var(--radius);font-size:14px;
+    grid-column:1/-1;
+  }
+  .noResults{
+    display:none;text-align:center;color:var(--ink-dim);padding:60px 20px;
+    grid-column:1/-1;font-size:14px;
+  }
+  .noResults.show{display:block;}
+
+  @media (max-width:520px){
+    h1{font-size:28px;}
+    .wrap{padding:32px 16px 70px;}
+    .toolbar{flex-direction:column;align-items:stretch;}
+  }
+</style>
+
+<div class="wrap">
+  <div class="eyebrow"><i class="fa-solid fa-graduation-cap"></i> Course Catalogue</div>
+  <div class="headerRow">
+    <h1>Find your next course</h1>
+    <p class="sub">Browse every course we offer, with duration and fees at a glance — search or sort to find the right fit.</p>
+    <div class="stats">
+      <div><b id="statCount">{{ courses|length }}</b>Courses available</div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="searchBox">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" id="courseSearch" placeholder="Search courses, e.g. Java, HTML...">
+    </div>
+    <div class="sortRow">
+      <button class="sortBtn active" data-sort="default">Default</button>
+      <button class="sortBtn" data-sort="az">A–Z</button>
+      <button class="sortBtn" data-sort="low">Fee: Low to High</button>
+      <button class="sortBtn" data-sort="high">Fee: High to Low</button>
+    </div>
+  </div>
+
+  <div class="grid" id="courseGrid">
+    {% if courses %}
+      {% for course in courses %}
+        {% cycle '#3b7ddd' '#8b5cf6' '#ef4444' '#f59e0b' '#10b981' '#ec4899' '#06b6d4' '#6366f1' as badge_color silent %}
+        <div class="card" data-name="{{ course.coursename|lower }}" data-fees="{{ course.fees|default_if_none:'0'|stringformat:'s' }}">
+          <div class="courseImgWrap{% if not course.courseimg %} noImg{% endif %}" {% if not course.courseimg %}style="background:linear-gradient(135deg,{{ badge_color }},#0b0920)"{% endif %}>
+            {% if course.courseimg %}
+              <img src="{{ course.courseimg.url }}" alt="{{ course.coursename }}">
+            {% else %}
+              {{ course.coursename|slice:":2"|upper }}
+            {% endif %}
+            <span class="durationChip"><i class="fa-regular fa-clock"></i> {{ course.duration }}</span>
+          </div>
+          <div class="cardBody">
+            <p class="cardName">{{ course.coursename }}</p>
+            <div class="metaRow">
+              <span class="feesTag">&#8377;{{ course.fees }}<small>Course fee</small></span>
+              <a href="{% url 'enquiry' %}" class="enrollBtn">Enroll <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty">No courses available right now — check back soon.</div>
+    {% endif %}
+  </div>
+  <div class="noResults" id="noResults">No courses match your search.</div>
+</div>
+
+<script>
+(function(){
+  var grid = document.getElementById('courseGrid');
+  var cards = Array.prototype.slice.call(grid.querySelectorAll('.card'));
+  var searchInput = document.getElementById('courseSearch');
+  var sortBtns = document.querySelectorAll('.sortBtn');
+  var noResults = document.getElementById('noResults');
+
+  function parseFees(val){
+    var n = parseFloat((val || '0').toString().replace(/[^0-9.]/g, ''));
+    return isNaN(n) ? 0 : n;
+  }
+
+  function applyFilter(){
+    var q = (searchInput.value || '').toLowerCase().trim();
+    var visibleCount = 0;
+    cards.forEach(function(card){
+      var match = card.dataset.name.indexOf(q) !== -1;
+      card.classList.toggle('hidden', !match);
+      if(match) visibleCount++;
+    });
+    noResults.classList.toggle('show', visibleCount === 0 && cards.length > 0);
+  }
+
+  function applySort(mode){
+    var sorted = cards.slice();
+    if(mode === 'az'){
+      sorted.sort(function(a,b){ return a.dataset.name.localeCompare(b.dataset.name); });
+    } else if(mode === 'low'){
+      sorted.sort(function(a,b){ return parseFees(a.dataset.fees) - parseFees(b.dataset.fees); });
+    } else if(mode === 'high'){
+      sorted.sort(function(a,b){ return parseFees(b.dataset.fees) - parseFees(a.dataset.fees); });
+    }
+    sorted.forEach(function(card){ grid.appendChild(card); });
+  }
+
+  searchInput.addEventListener('input', applyFilter);
+
+  sortBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      sortBtns.forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      applySort(btn.dataset.sort);
+    });
+  });
+})();
+</script>
+
+{% endblock %}

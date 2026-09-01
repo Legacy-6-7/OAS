@@ -10,6 +10,11 @@
         --danger: #dc2626;
         --danger-soft: #fff1f2;
         --success: #059669;
+        --success-soft: #ecfdf5;
+        --warning: #d97706;
+        --warning-soft: #fffbeb;
+        --info: #0891b2;
+        --info-soft: #ecfeff;
         --text: #1e293b;
         --muted: #64748b;
         --border: #e2e8f0;
@@ -37,12 +42,97 @@
         to   { opacity: 1; transform: translateY(0); }
     }
 
+    /* ---------- Toast ---------- */
+    .toast-stack {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1090;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .toast-item {
+        min-width: 260px;
+        max-width: 340px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-left: 4px solid var(--success);
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+        padding: 12px 16px;
+        font-size: 0.88rem;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        animation: toastIn 0.3s ease both;
+    }
+
+    .toast-item.tag-error { border-left-color: var(--danger); }
+    .toast-item.tag-warning { border-left-color: var(--warning); }
+
+    @keyframes toastIn {
+        from { opacity: 0; transform: translateX(24px); }
+        to   { opacity: 1; transform: translateX(0); }
+    }
+
+    /* ---------- Stats ---------- */
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 24px;
+    }
+
+    .stat-card {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px 18px;
+        background: linear-gradient(180deg, #ffffff, #fbfcfe);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.05rem;
+        flex: 0 0 auto;
+    }
+
+    .stat-icon.i-primary { background: var(--primary-soft); color: var(--primary); }
+    .stat-icon.i-success { background: var(--success-soft); color: var(--success); }
+    .stat-icon.i-warning { background: var(--warning-soft); color: var(--warning); }
+    .stat-icon.i-info { background: var(--info-soft); color: var(--info); }
+
+    .stat-value {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.1;
+    }
+
+    .stat-label {
+        font-size: 0.76rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        margin-top: 2px;
+    }
+
     /* ---------- Header ---------- */
     .table-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 24px;
+        margin-bottom: 18px;
         flex-wrap: wrap;
         gap: 12px;
     }
@@ -63,6 +153,76 @@
         background: var(--primary);
         border-radius: 2px;
         margin-top: 6px;
+    }
+
+    /* ---------- Toolbar ---------- */
+    .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+    }
+
+    .search-box {
+        position: relative;
+        flex: 1 1 240px;
+        min-width: 200px;
+    }
+
+    .search-box i {
+        position: absolute;
+        left: 13px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+        font-size: 0.85rem;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 9px 12px 9px 34px;
+        border-radius: 9px;
+        border: 1.5px solid var(--border);
+        font-size: 0.9rem;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .search-box input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+    }
+
+    .toolbar select {
+        padding: 9px 12px;
+        border-radius: 9px;
+        border: 1.5px solid var(--border);
+        font-size: 0.87rem;
+        color: var(--text);
+        background: #fff;
+    }
+
+    .view-toggle {
+        display: inline-flex;
+        border: 1.5px solid var(--border);
+        border-radius: 9px;
+        overflow: hidden;
+    }
+
+    .view-toggle button {
+        border: none;
+        background: #fff;
+        color: var(--muted);
+        padding: 8px 12px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .view-toggle button.active {
+        background: var(--primary);
+        color: #fff;
     }
 
     /* ---------- Add button ---------- */
@@ -118,8 +278,30 @@
         text-align: left;
     }
 
+    .course-table th.sortable {
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .course-table th.sortable:hover {
+        color: var(--primary);
+    }
+
+    .course-table th.sortable .sort-arrow {
+        display: inline-block;
+        margin-left: 4px;
+        opacity: 0.35;
+        font-size: 0.7rem;
+    }
+
+    .course-table th.sortable.sort-asc .sort-arrow,
+    .course-table th.sortable.sort-desc .sort-arrow {
+        opacity: 1;
+        color: var(--primary);
+    }
+
     .course-table td {
-        padding: 15px 16px;
+        padding: 13px 16px;
         color: var(--text);
         font-size: 0.93rem;
         border-bottom: 1px solid var(--border);
@@ -151,6 +333,33 @@
         background: #f8fafc;
     }
 
+    .course-table tbody tr.is-hidden {
+        display: none;
+    }
+
+    /* Thumbnail */
+    .course-thumb {
+        width: 44px;
+        height: 44px;
+        border-radius: 9px;
+        object-fit: cover;
+        border: 1px solid var(--border);
+        background: var(--bg);
+        display: block;
+    }
+
+    .course-thumb-placeholder {
+        width: 44px;
+        height: 44px;
+        border-radius: 9px;
+        background: var(--primary-soft);
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+    }
+
     /* ID badge */
     .id-badge {
         display: inline-flex;
@@ -165,6 +374,27 @@
         font-size: 0.82rem;
         border-radius: 7px;
     }
+
+    /* Session / duration pills — color encodes program length at a glance */
+    .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .pill-session {
+        background: var(--info-soft);
+        color: var(--info);
+    }
+
+    .pill-duration.dur-short { background: var(--info-soft); color: var(--info); }
+    .pill-duration.dur-medium { background: var(--warning-soft); color: var(--warning); }
+    .pill-duration.dur-long { background: var(--success-soft); color: var(--success); }
 
     /* Fees */
     .fees-cell {
@@ -229,6 +459,83 @@
         margin-bottom: 12px;
         opacity: 0.35;
         display: block;
+    }
+
+    /* ---------- Grid view ---------- */
+    .grid-view {
+        display: none;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 16px;
+    }
+
+    .grid-view.is-active {
+        display: grid;
+    }
+
+    .course-table.is-hidden-view {
+        display: none;
+    }
+
+    .course-card {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        background: #fff;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        animation: rowIn 0.35s ease both;
+    }
+
+    .course-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow);
+    }
+
+    .course-card.is-hidden {
+        display: none;
+    }
+
+    .course-card-img {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+        background: var(--bg);
+        display: block;
+    }
+
+    .course-card-img-placeholder {
+        width: 100%;
+        height: 120px;
+        background: var(--primary-soft);
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+    }
+
+    .course-card-body {
+        padding: 14px 16px;
+    }
+
+    .course-card-body h5 {
+        margin: 0 0 8px;
+        font-size: 0.98rem;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .course-card-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 10px;
+    }
+
+    .course-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 4px;
     }
 
     /* ---------- Modals ---------- */
@@ -321,6 +628,24 @@
         background: linear-gradient(135deg, var(--primary-hover), #4f46e5);
     }
 
+    .btn-danger-solid {
+        background: linear-gradient(135deg, var(--danger), #ef4444);
+        border: none;
+        border-radius: 9px;
+        padding: 9px 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #fff;
+        box-shadow: 0 3px 10px rgba(220, 38, 38, 0.25);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .btn-danger-solid:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 14px rgba(220, 38, 38, 0.35);
+        color: #fff;
+    }
+
     .btn-secondary {
         border-radius: 9px;
         padding: 9px 18px;
@@ -341,6 +666,85 @@
         opacity: 0.4;
     }
 
+    /* Delete confirm modal */
+    .confirm-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: var(--danger-soft);
+        color: var(--danger);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        margin: 0 auto 14px;
+    }
+
+    #confirmDeleteModal .modal-body {
+        text-align: center;
+    }
+
+    #confirmDeleteModal .modal-footer {
+        justify-content: center;
+    }
+
+    /* Image upload drop zone */
+    .drop-zone {
+        border: 1.5px dashed var(--border);
+        border-radius: 10px;
+        padding: 18px;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color 0.15s ease, background 0.15s ease;
+        background: var(--bg);
+    }
+
+    .drop-zone.is-dragover {
+        border-color: var(--primary);
+        background: var(--primary-soft);
+    }
+
+    .drop-zone i {
+        font-size: 1.4rem;
+        color: var(--muted);
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    .drop-zone span {
+        font-size: 0.85rem;
+        color: var(--muted);
+    }
+
+    .drop-zone input[type="file"] {
+        display: none;
+    }
+
+    .image-preview {
+        display: none;
+        margin-top: 12px;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .image-preview.is-active {
+        display: flex;
+    }
+
+    .image-preview img {
+        width: 56px;
+        height: 56px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+    }
+
+    .image-preview .file-name {
+        font-size: 0.85rem;
+        color: var(--text);
+        word-break: break-all;
+    }
+
     /* Reduced motion */
     @media (prefers-reduced-motion: reduce) {
         *,
@@ -352,7 +756,8 @@
         .add-btn:hover,
         .edit-btn:hover,
         .delete-btn:hover,
-        .btn-primary:hover {
+        .btn-primary:hover,
+        .course-card:hover {
             transform: none;
         }
     }
@@ -365,6 +770,10 @@
             padding: 18px 14px;
             border-radius: 0;
             box-shadow: none;
+        }
+
+        .stats-row {
+            grid-template-columns: repeat(2, 1fr);
         }
 
         .course-table {
@@ -380,6 +789,16 @@
     }
 </style>
 
+{% if messages %}
+<div class="toast-stack" id="toastStack">
+    {% for message in messages %}
+    <div class="toast-item {% if message.tags %}tag-{{ message.tags }}{% endif %}">
+        <i class="fa-solid fa-circle-check"></i> {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
 <div class="table-container">
 
     <div class="table-header">
@@ -389,24 +808,90 @@
         </button>
     </div>
 
-    <table class="course-table">
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-icon i-primary"><i class="fa-solid fa-book"></i></div>
+            <div>
+                <div class="stat-value">{{ courses|length }}</div>
+                <div class="stat-label">Total Courses</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon i-success"><i class="fa-solid fa-sack-dollar"></i></div>
+            <div>
+                <div class="stat-value" id="statTotalFees">₹0</div>
+                <div class="stat-label">Total Fees Value</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon i-warning"><i class="fa-solid fa-chart-simple"></i></div>
+            <div>
+                <div class="stat-value" id="statAvgFees">₹0</div>
+                <div class="stat-label">Average Fee</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon i-info"><i class="fa-solid fa-calendar-days"></i></div>
+            <div>
+                <div class="stat-value" id="statSessions">0</div>
+                <div class="stat-label">Active Sessions</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toolbar">
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="courseSearch" placeholder="Search by course, session or duration…">
+        </div>
+        <select id="sessionFilter">
+            <option value="">All Sessions</option>
+        </select>
+        <div class="view-toggle" role="group" aria-label="Switch view">
+            <button type="button" id="viewTableBtn" class="active"><i class="fa-solid fa-list"></i> Table</button>
+            <button type="button" id="viewGridBtn"><i class="fa-solid fa-grip"></i> Grid</button>
+        </div>
+    </div>
+
+    <table class="course-table" id="courseTable">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Course Name</th>
+                <th>Image</th>
+                <th class="sortable" data-sort="id">ID <i class="fa-solid fa-sort sort-arrow"></i></th>
+                <th class="sortable" data-sort="name">Course Name <i class="fa-solid fa-sort sort-arrow"></i></th>
                 <th>Session</th>
                 <th>Duration</th>
-                <th>Fees</th>
+                <th class="sortable" data-sort="fees">Fees <i class="fa-solid fa-sort sort-arrow"></i></th>
                 <th>Action</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="courseTableBody">
             {% for course in courses %}
-            <tr>
+            <tr class="course-row"
+                data-name="{{ course.coursename|lower }}"
+                data-session="{{ course.session }}"
+                data-duration="{{ course.duration|lower }}"
+                data-id="{{ course.course_id }}"
+                data-fees="{{ course.fees }}">
+                <td>
+                    {% if course.courseimg %}
+                    <img src="{{ course.courseimg.url }}" alt="{{ course.coursename }}" class="course-thumb">
+                    {% else %}
+                    <div class="course-thumb-placeholder"><i class="fa-solid fa-image"></i></div>
+                    {% endif %}
+                </td>
                 <td><span class="id-badge">{{ course.course_id }}</span></td>
                 <td><strong>{{ course.coursename }}</strong></td>
-                <td>{{ course.session }}</td>
-                <td>{{ course.duration }}</td>
+                <td><span class="pill pill-session"><i class="fa-solid fa-calendar-days"></i> {{ course.session }}</span></td>
+                <td>
+                    {% if course.duration == "1 Month" or course.duration == "2 Months" %}
+                    <span class="pill pill-duration dur-short"><i class="fa-solid fa-bolt"></i> {{ course.duration }}</span>
+                    {% elif course.duration == "6 Months" or course.duration == "8 Months" %}
+                    <span class="pill pill-duration dur-medium"><i class="fa-solid fa-hourglass-half"></i> {{ course.duration }}</span>
+                    {% else %}
+                    <span class="pill pill-duration dur-long"><i class="fa-solid fa-graduation-cap"></i> {{ course.duration }}</span>
+                    {% endif %}
+                </td>
                 <td class="fees-cell">₹{{ course.fees }}</td>
                 <td>
                     <div class="action-group">
@@ -416,25 +901,80 @@
                                 title="Edit">
                             <i class="fa-solid fa-pen"></i>
                         </button>
-                        <a href="{% url 'addcourse_delete' course.course_id %}"
-                           class="delete-btn"
-                           onclick="return confirm('Delete this course?');"
-                           title="Delete">
+                        <button type="button" class="delete-btn"
+                                data-bs-toggle="modal"
+                                data-bs-target="#confirmDeleteModal"
+                                data-delete-url="{% url 'addcourse_delete' course.course_id %}"
+                                data-course-name="{{ course.coursename }}"
+                                title="Delete">
                             <i class="fa-solid fa-trash"></i>
-                        </a>
+                        </button>
                     </div>
                 </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="6" class="empty-state">
+                <td colspan="7" class="empty-state">
                     <i class="fa-solid fa-book-open"></i>
-                    No courses found. Click “Add Course” to get started.
+                    No courses found. Click "Add Course" to get started.
                 </td>
             </tr>
             {% endfor %}
+            <tr id="noMatchRow" class="is-hidden">
+                <td colspan="7" class="empty-state">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    No courses match your search.
+                </td>
+            </tr>
         </tbody>
     </table>
+
+    <div class="grid-view" id="courseGrid">
+        {% for course in courses %}
+        <div class="course-card"
+             data-name="{{ course.coursename|lower }}"
+             data-session="{{ course.session }}"
+             data-duration="{{ course.duration|lower }}">
+            {% if course.courseimg %}
+            <img src="{{ course.courseimg.url }}" alt="{{ course.coursename }}" class="course-card-img">
+            {% else %}
+            <div class="course-card-img-placeholder"><i class="fa-solid fa-image"></i></div>
+            {% endif %}
+            <div class="course-card-body">
+                <h5>{{ course.coursename }}</h5>
+                <div class="course-card-pills">
+                    <span class="pill pill-session"><i class="fa-solid fa-calendar-days"></i> {{ course.session }}</span>
+                    {% if course.duration == "1 Month" or course.duration == "2 Months" %}
+                    <span class="pill pill-duration dur-short">{{ course.duration }}</span>
+                    {% elif course.duration == "6 Months" or course.duration == "8 Months" %}
+                    <span class="pill pill-duration dur-medium">{{ course.duration }}</span>
+                    {% else %}
+                    <span class="pill pill-duration dur-long">{{ course.duration }}</span>
+                    {% endif %}
+                </div>
+                <div class="course-card-footer">
+                    <span class="fees-cell">₹{{ course.fees }}</span>
+                    <div class="action-group">
+                        <button type="button" class="edit-btn"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editCourseModal{{ course.course_id }}"
+                                title="Edit">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button type="button" class="delete-btn"
+                                data-bs-toggle="modal"
+                                data-bs-target="#confirmDeleteModal"
+                                data-delete-url="{% url 'addcourse_delete' course.course_id %}"
+                                data-course-name="{{ course.coursename }}"
+                                title="Delete">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
 
 <!-- Add Course Modal -->
@@ -445,23 +985,26 @@
                 <h5><i class="fa-solid fa-plus-circle"></i> Add Course</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form method="POST" action="{% url 'addcourse' %}">
+            <!-- enctype belongs on the form, not a div — this was silently breaking image uploads -->
+            <form method="POST" action="{% url 'addcourse' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="modal-body">
                     <div class="mb-3">
+                        <label for="add-courseimg">Course Image</label>
+                        <label class="drop-zone" id="dropZone" for="add-courseimg">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <span>Click to upload, or drag an image here</span>
+                            <input type="file" name="courseimg" id="add-courseimg" accept="image/*" required>
+                        </label>
+                        <div class="image-preview" id="imagePreview">
+                            <img id="previewImg" src="" alt="Preview">
+                            <span class="file-name" id="previewName"></span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
                         <label for="add-coursename">Course Name</label>
-                        <select name="coursename" id="add-coursename" class="form-select" required>
-                            <option value="" selected disabled>Select Course</option>
-                            <option value="Java">Java</option>
-                            <option value="C++">C++</option>
-                            <option value="Python">Python</option>
-                            <option value="JavaScript">JavaScript</option>
-                            <option value="HTML">Full Stack Web Development</option>
-                            <option value="Data Structures">Data Structures</option>
-                            <option value="Algorithms">Algorithms</option>
-                            <option value="Machine Learning">Machine Learning</option>
-                            <option value="Artificial Intelligence">Artificial Intelligence</option>
-                        </select>
+                        <input type="text" name="coursename" id="add-coursename" class="form-control"
+                               placeholder="e.g. Full Stack Web Development" required>
                     </div>
                     <div class="mb-3">
                         <label for="add-session">Session</label>
@@ -482,6 +1025,8 @@
                             <option value="2 Months">2 Months</option>
                             <option value="6 Months">6 Months</option>
                             <option value="8 Months">8 Months</option>
+                            <option value="1 Year">1 Year</option>
+                            <option value="2 Years">2 Years</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -501,6 +1046,33 @@
     </div>
 </div>
 
+<!-- Shared Delete Confirmation Modal -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5><i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i> Delete Course</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="confirm-icon"><i class="fa-solid fa-trash"></i></div>
+                <p style="margin: 0 0 4px; color: var(--text); font-weight: 600;" id="confirmDeleteText">
+                    Delete this course?
+                </p>
+                <p style="margin: 0; color: var(--muted); font-size: 0.87rem;">
+                    This can't be undone. Students already enrolled won't be affected.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a href="#" id="confirmDeleteLink" class="btn-danger-solid" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+                    <i class="fa-solid fa-trash"></i> Delete Course
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Edit Course Modals -->
 {% for course in courses %}
 <div class="modal fade" id="editCourseModal{{ course.course_id }}" tabindex="-1" aria-hidden="true">
@@ -510,26 +1082,30 @@
                 <h5><i class="fa-solid fa-pen-to-square"></i> Edit Course</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form method="POST" action="{% url 'addcourse_edit' course.course_id %}">
+            <form method="POST" action="{% url 'addcourse_edit' course.course_id %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label>Course Name</label>
-                        <select name="coursename" class="form-select" required>
-                            <option value="Java" {% if course.coursename == "Java" %}selected{% endif %}>Java</option>
-                            <option value="C++" {% if course.coursename == "C++" %}selected{% endif %}>C++</option>
-                            <option value="Python" {% if course.coursename == "Python" %}selected{% endif %}>Python</option>
-                            <option value="JavaScript" {% if course.coursename == "JavaScript" %}selected{% endif %}>JavaScript</option>
-                            <option value="HTML" {% if course.coursename == "HTML" %}selected{% endif %}>Full Stack Web Development</option>
-                            <option value="Data Structures" {% if course.coursename == "Data Structures" %}selected{% endif %}>Data Structures</option>
-                            <option value="Algorithms" {% if course.coursename == "Algorithms" %}selected{% endif %}>Algorithms</option>
-                            <option value="Machine Learning" {% if course.coursename == "Machine Learning" %}selected{% endif %}>Machine Learning</option>
-                            <option value="Artificial Intelligence" {% if course.coursename == "Artificial Intelligence" %}selected{% endif %}>Artificial Intelligence</option>
-                        </select>
+                        <label for="edit-courseimg-{{ course.course_id }}">Course Image</label>
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            {% if course.courseimg %}
+                            <img src="{{ course.courseimg.url }}" alt="{{ course.coursename }}" class="course-thumb">
+                            {% else %}
+                            <div class="course-thumb-placeholder"><i class="fa-solid fa-image"></i></div>
+                            {% endif %}
+                            <input type="file" name="courseimg" id="edit-courseimg-{{ course.course_id }}"
+                                   class="form-control" accept="image/*">
+                        </div>
+                        <small style="color: var(--muted); font-size: 0.78rem;">Leave empty to keep the current image.</small>
                     </div>
                     <div class="mb-3">
-                        <label>Session</label>
-                        <select name="session" class="form-select" required>
+                        <label for="edit-coursename-{{ course.course_id }}">Course Name</label>
+                        <input type="text" name="coursename" id="edit-coursename-{{ course.course_id }}"
+                               class="form-control" value="{{ course.coursename }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-session-{{ course.course_id }}">Session</label>
+                        <select name="session" id="edit-session-{{ course.course_id }}" class="form-select" required>
                             <option value="2025-2026" {% if course.session == "2025-2026" %}selected{% endif %}>2025-2026</option>
                             <option value="2026-2027" {% if course.session == "2026-2027" %}selected{% endif %}>2026-2027</option>
                             <option value="2027-2028" {% if course.session == "2027-2028" %}selected{% endif %}>2027-2028</option>
@@ -538,8 +1114,8 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label>Duration</label>
-                        <select name="duration" class="form-select" required>
+                        <label for="edit-duration-{{ course.course_id }}">Duration</label>
+                        <select name="duration" id="edit-duration-{{ course.course_id }}" class="form-select" required>
                             <option value="1 Month" {% if course.duration == "1 Month" %}selected{% endif %}>1 Month</option>
                             <option value="2 Months" {% if course.duration == "2 Months" %}selected{% endif %}>2 Months</option>
                             <option value="6 Months" {% if course.duration == "6 Months" %}selected{% endif %}>6 Months</option>
@@ -549,8 +1125,9 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label>Fees (₹)</label>
-                        <input type="number" name="fees" class="form-control" value="{{ course.fees }}" min="0" required>
+                        <label for="edit-fees-{{ course.course_id }}">Fees (₹)</label>
+                        <input type="number" name="fees" id="edit-fees-{{ course.course_id }}"
+                               class="form-control" value="{{ course.fees }}" min="0" required>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -564,5 +1141,203 @@
     </div>
 </div>
 {% endfor %}
+
+<script>
+(function () {
+    var rows = Array.prototype.slice.call(document.querySelectorAll('.course-row'));
+    var cards = Array.prototype.slice.call(document.querySelectorAll('.course-card'));
+    var noMatchRow = document.getElementById('noMatchRow');
+
+    /* ---------- Stats ---------- */
+    var totalFees = 0;
+    var sessions = {};
+    rows.forEach(function (row) {
+        totalFees += parseFloat(row.getAttribute('data-fees')) || 0;
+        var s = row.getAttribute('data-session');
+        if (s) sessions[s] = true;
+    });
+    var sessionList = Object.keys(sessions).sort();
+    var avgFees = rows.length ? totalFees / rows.length : 0;
+
+    var statTotal = document.getElementById('statTotalFees');
+    var statAvg = document.getElementById('statAvgFees');
+    var statSessions = document.getElementById('statSessions');
+    if (statTotal) statTotal.textContent = '₹' + totalFees.toLocaleString('en-IN');
+    if (statAvg) statAvg.textContent = '₹' + Math.round(avgFees).toLocaleString('en-IN');
+    if (statSessions) statSessions.textContent = sessionList.length;
+
+    var sessionFilter = document.getElementById('sessionFilter');
+    if (sessionFilter) {
+        sessionList.forEach(function (s) {
+            var opt = document.createElement('option');
+            opt.value = s;
+            opt.textContent = s;
+            sessionFilter.appendChild(opt);
+        });
+    }
+
+    /* ---------- Search + filter ---------- */
+    var searchInput = document.getElementById('courseSearch');
+
+    function applyFilter() {
+        var q = (searchInput.value || '').trim().toLowerCase();
+        var sessionVal = sessionFilter.value;
+        var visibleCount = 0;
+
+        rows.forEach(function (row) {
+            var matchesText = !q ||
+                row.getAttribute('data-name').indexOf(q) !== -1 ||
+                row.getAttribute('data-session').toLowerCase().indexOf(q) !== -1 ||
+                row.getAttribute('data-duration').indexOf(q) !== -1;
+            var matchesSession = !sessionVal || row.getAttribute('data-session') === sessionVal;
+            var show = matchesText && matchesSession;
+            row.classList.toggle('is-hidden', !show);
+            if (show) visibleCount++;
+        });
+
+        cards.forEach(function (card) {
+            var matchesText = !q ||
+                card.getAttribute('data-name').indexOf(q) !== -1 ||
+                card.getAttribute('data-session').toLowerCase().indexOf(q) !== -1 ||
+                card.getAttribute('data-duration').indexOf(q) !== -1;
+            var matchesSession = !sessionVal || card.getAttribute('data-session') === sessionVal;
+            card.classList.toggle('is-hidden', !(matchesText && matchesSession));
+        });
+
+        if (noMatchRow) {
+            noMatchRow.classList.toggle('is-hidden', visibleCount !== 0 || rows.length === 0);
+        }
+    }
+
+    if (searchInput) searchInput.addEventListener('input', applyFilter);
+    if (sessionFilter) sessionFilter.addEventListener('change', applyFilter);
+
+    /* ---------- Sorting ---------- */
+    var tbody = document.getElementById('courseTableBody');
+    var sortState = { key: null, dir: 1 };
+
+    document.querySelectorAll('.course-table th.sortable').forEach(function (th) {
+        th.addEventListener('click', function () {
+            var key = th.getAttribute('data-sort');
+            document.querySelectorAll('.course-table th.sortable').forEach(function (h) {
+                h.classList.remove('sort-asc', 'sort-desc');
+            });
+
+            sortState.dir = (sortState.key === key) ? -sortState.dir : 1;
+            sortState.key = key;
+            th.classList.add(sortState.dir === 1 ? 'sort-asc' : 'sort-desc');
+
+            var current = Array.prototype.slice.call(document.querySelectorAll('.course-row'));
+            current.sort(function (a, b) {
+                var av, bv;
+                if (key === 'fees') {
+                    av = parseFloat(a.getAttribute('data-fees')) || 0;
+                    bv = parseFloat(b.getAttribute('data-fees')) || 0;
+                } else if (key === 'id') {
+                    av = parseInt(a.getAttribute('data-id'), 10) || 0;
+                    bv = parseInt(b.getAttribute('data-id'), 10) || 0;
+                } else {
+                    av = a.getAttribute('data-name');
+                    bv = b.getAttribute('data-name');
+                }
+                if (av < bv) return -1 * sortState.dir;
+                if (av > bv) return 1 * sortState.dir;
+                return 0;
+            });
+
+            current.forEach(function (row) { tbody.appendChild(row); });
+            if (noMatchRow) tbody.appendChild(noMatchRow);
+        });
+    });
+
+    /* ---------- View toggle ---------- */
+    var tableEl = document.getElementById('courseTable');
+    var gridEl = document.getElementById('courseGrid');
+    var viewTableBtn = document.getElementById('viewTableBtn');
+    var viewGridBtn = document.getElementById('viewGridBtn');
+
+    function setView(view) {
+        var isGrid = view === 'grid';
+        gridEl.classList.toggle('is-active', isGrid);
+        tableEl.classList.toggle('is-hidden-view', isGrid);
+        viewGridBtn.classList.toggle('active', isGrid);
+        viewTableBtn.classList.toggle('active', !isGrid);
+    }
+
+    if (viewTableBtn) viewTableBtn.addEventListener('click', function () { setView('table'); });
+    if (viewGridBtn) viewGridBtn.addEventListener('click', function () { setView('grid'); });
+
+    /* ---------- Delete confirm modal wiring ---------- */
+    var confirmModal = document.getElementById('confirmDeleteModal');
+    if (confirmModal) {
+        confirmModal.addEventListener('show.bs.modal', function (event) {
+            var trigger = event.relatedTarget;
+            if (!trigger) return;
+            var url = trigger.getAttribute('data-delete-url');
+            var name = trigger.getAttribute('data-course-name');
+            document.getElementById('confirmDeleteLink').setAttribute('href', url);
+            document.getElementById('confirmDeleteText').textContent = 'Delete "' + name + '"?';
+        });
+    }
+
+    /* ---------- Add-course image preview + drag & drop ---------- */
+    var dropZone = document.getElementById('dropZone');
+    var fileInput = document.getElementById('add-courseimg');
+    var preview = document.getElementById('imagePreview');
+    var previewImg = document.getElementById('previewImg');
+    var previewName = document.getElementById('previewName');
+
+    function showPreview(file) {
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            previewImg.src = e.target.result;
+            previewName.textContent = file.name;
+            preview.classList.add('is-active');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    if (fileInput) {
+        fileInput.addEventListener('change', function () {
+            if (fileInput.files && fileInput.files[0]) showPreview(fileInput.files[0]);
+        });
+    }
+
+    if (dropZone) {
+        ['dragenter', 'dragover'].forEach(function (evt) {
+            dropZone.addEventListener(evt, function (e) {
+                e.preventDefault();
+                dropZone.classList.add('is-dragover');
+            });
+        });
+        ['dragleave', 'drop'].forEach(function (evt) {
+            dropZone.addEventListener(evt, function (e) {
+                e.preventDefault();
+                dropZone.classList.remove('is-dragover');
+            });
+        });
+        dropZone.addEventListener('drop', function (e) {
+            var file = e.dataTransfer.files && e.dataTransfer.files[0];
+            if (file) {
+                fileInput.files = e.dataTransfer.files;
+                showPreview(file);
+            }
+        });
+    }
+
+    /* ---------- Toast auto-dismiss ---------- */
+    var toastStack = document.getElementById('toastStack');
+    if (toastStack) {
+        setTimeout(function () {
+            toastStack.querySelectorAll('.toast-item').forEach(function (t) {
+                t.style.transition = 'opacity 0.3s ease';
+                t.style.opacity = '0';
+            });
+            setTimeout(function () { toastStack.style.display = 'none'; }, 320);
+        }, 4000);
+    }
+})();
+</script>
 
 {% endblock %}

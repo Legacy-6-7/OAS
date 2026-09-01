@@ -5,29 +5,202 @@
 
 <style>
     :root {
-        --primary: #4f46e5;
-        --primary-hover: #4338ca;
+        --primary: #6366f1;
+        --primary-hover: #4f46e5;
         --primary-soft: #eef2ff;
-        --danger: #dc2626;
+        --primary-glow: rgba(99, 102, 241, 0.16);
+        --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 55%, #a855f7 100%);
+        --danger: #ef4444;
         --danger-soft: #fef2f2;
-        --text: #1e293b;
+        --success: #10b981;
+        --success-soft: #ecfdf5;
+        --warning: #f59e0b;
+        --warning-soft: #fffbeb;
+        --info: #0ea5e9;
+        --info-soft: #f0f9ff;
+        --text: #0f172a;
+        --text-secondary: #334155;
         --muted: #64748b;
         --border: #e2e8f0;
+        --border-light: #f1f5f9;
         --bg: #f8fafc;
         --card: #ffffff;
-        --radius: 14px;
-        --shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+        --radius: 18px;
+        --radius-sm: 12px;
+        --shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 8px 32px rgba(15, 23, 42, 0.06);
+        --shadow-hover: 0 12px 48px rgba(15, 23, 42, 0.11);
+        --transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .records-page {
         max-width: 100%;
-        margin: 28px 20px;
+        margin: 0 auto;
+        padding: 28px 20px 48px;
+        animation: pageIn 0.45s ease both;
+    }
+
+    @keyframes pageIn {
+        from { opacity: 0; transform: translateY(18px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .page-hero {
+        position: relative;
+        border-radius: var(--radius);
+        padding: 26px 30px;
+        margin-bottom: 22px;
+        background: var(--primary-gradient);
+        color: #fff;
+        overflow: hidden;
+        box-shadow: 0 16px 48px rgba(99, 102, 241, 0.26);
+    }
+
+    .page-hero::before {
+        content: '';
+        position: absolute;
+        width: 260px;
+        height: 260px;
+        top: -100px;
+        right: -40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        pointer-events: none;
+    }
+
+    .hero-inner {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 18px;
+    }
+
+    .hero-text h2 {
+        margin: 0 0 6px;
+        font-size: 1.65rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .hero-text p {
+        margin: 0;
+        opacity: 0.88;
+        font-size: 0.93rem;
+    }
+
+    .hero-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn-hero {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 18px;
+        border-radius: var(--radius-sm);
+        font-size: 0.87rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        transition: var(--transition);
+    }
+
+    .btn-hero-solid {
+        background: #fff;
+        color: var(--primary-hover);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .btn-hero-solid:hover {
+        transform: translateY(-2px);
+        color: var(--primary-hover);
+    }
+
+    .btn-hero-light {
+        background: rgba(255, 255, 255, 0.18);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.28);
+        backdrop-filter: blur(8px);
+    }
+
+    .btn-hero-light:hover {
+        background: rgba(255, 255, 255, 0.28);
+        color: #fff;
+        transform: translateY(-2px);
+    }
+
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 22px;
+    }
+
+    .stat-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 18px 20px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        transition: transform var(--transition), box-shadow var(--transition);
         animation: fadeUp 0.4s ease both;
     }
 
+    .stat-card:nth-child(1) { animation-delay: 0.05s; }
+    .stat-card:nth-child(2) { animation-delay: 0.1s; }
+    .stat-card:nth-child(3) { animation-delay: 0.15s; }
+    .stat-card:nth-child(4) { animation-delay: 0.2s; }
+
     @keyframes fadeUp {
-        from { opacity: 0; transform: translateY(14px); }
+        from { opacity: 0; transform: translateY(12px); }
         to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-hover);
+    }
+
+    .stat-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+    }
+
+    .stat-icon.total   { background: var(--primary-soft); color: var(--primary); }
+    .stat-icon.male    { background: var(--info-soft); color: var(--info); }
+    .stat-icon.female  { background: #fdf2f8; color: #db2777; }
+    .stat-icon.courses { background: var(--success-soft); color: var(--success); }
+
+    .stat-info h4 {
+        margin: 0;
+        font-size: 1.45rem;
+        font-weight: 800;
+        color: var(--text);
+        line-height: 1.1;
+    }
+
+    .stat-info span {
+        font-size: 0.74rem;
+        color: var(--muted);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
     }
 
     .records-card {
@@ -38,70 +211,212 @@
         overflow: hidden;
     }
 
-    /* Header */
-    .records-header {
-        background: linear-gradient(135deg, var(--primary), #6366f1);
-        color: #fff;
-        padding: 18px 26px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 12px;
+    .toolbar {
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--border);
+        background: linear-gradient(180deg, #fafbfc, #f8fafc);
     }
 
-    .records-header h3 {
-        margin: 0;
-        font-size: 1.3rem;
-        font-weight: 700;
+    .toolbar-row {
         display: flex;
         align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .toolbar-row:last-child { margin-bottom: 0; }
+
+    .search-box {
+        position: relative;
+        flex: 1;
+        min-width: 220px;
+        max-width: 380px;
+    }
+
+    .search-box i {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+        font-size: 0.88rem;
+        pointer-events: none;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 10px 38px 10px 40px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        font-size: 0.88rem;
+        outline: none;
+        transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .search-box input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px var(--primary-glow);
+    }
+
+    .search-clear {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 26px;
+        height: 26px;
+        border: none;
+        border-radius: 8px;
+        background: var(--border-light);
+        color: var(--muted);
+        cursor: pointer;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.72rem;
+    }
+
+    .search-clear.visible { display: flex; }
+
+    .toolbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .filter-select, .per-page-select {
+        padding: 9px 32px 9px 12px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        font-size: 0.85rem;
+        background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E") no-repeat right 10px center;
+        appearance: none;
+        cursor: pointer;
+        outline: none;
+    }
+
+    .btn-tool {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 14px;
+        border-radius: var(--radius-sm);
+        font-size: 0.84rem;
+        font-weight: 600;
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: var(--transition);
+        text-decoration: none;
+    }
+
+    .btn-tool:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    .btn-tool.primary {
+        background: var(--primary-soft);
+        border-color: transparent;
+        color: var(--primary);
+    }
+
+    .btn-tool.primary:hover {
+        background: var(--primary);
+        color: #fff;
+    }
+
+    .filter-chips {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .filter-chips-label {
+        font-size: 0.76rem;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .chip {
+        padding: 5px 12px;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .chip:hover { border-color: var(--primary); color: var(--primary); }
+
+    .chip.active {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: #fff;
+    }
+
+    .chip .chip-count {
+        margin-left: 5px;
+        padding: 1px 6px;
+        border-radius: 999px;
+        font-size: 0.7rem;
+        background: rgba(0, 0, 0, 0.07);
+    }
+
+    .chip.active .chip-count { background: rgba(255, 255, 255, 0.22); }
+
+    .col-toggle-panel {
+        display: none;
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--border);
+        background: #fafbfc;
+        flex-wrap: wrap;
         gap: 10px;
     }
 
-    .records-header h3 i {
-        opacity: 0.9;
+    .col-toggle-panel.open { display: flex; }
+
+    .col-toggle-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.82rem;
+        color: var(--text-secondary);
+        cursor: pointer;
+        padding: 6px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: #fff;
+        transition: var(--transition);
     }
 
-    .count-badge {
-        background: rgba(255, 255, 255, 0.2);
-        padding: 7px 14px;
-        border-radius: 999px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        border: 1px solid rgba(255, 255, 255, 0.25);
-    }
+    .col-toggle-item:hover { border-color: var(--primary); }
+    .col-toggle-item input { accent-color: var(--primary); }
 
-    /* Scroll container */
     .table-scroll {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
-        padding: 0;
     }
 
-    .table-scroll::-webkit-scrollbar {
-        height: 8px;
-    }
-
-    .table-scroll::-webkit-scrollbar-track {
-        background: #f1f5f9;
-    }
-
+    .table-scroll::-webkit-scrollbar { height: 8px; }
+    .table-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
     .table-scroll::-webkit-scrollbar-thumb {
         background: #c7d2fe;
         border-radius: 8px;
     }
 
-    .table-scroll::-webkit-scrollbar-thumb:hover {
-        background: var(--primary);
-    }
+    .table-scroll::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-    .table-scroll {
-        scrollbar-width: thin;
-        scrollbar-color: #c7d2fe #f1f5f9;
-    }
-
-    /* Table */
     .student-table {
         width: 100%;
         min-width: 1700px;
@@ -110,276 +425,878 @@
     }
 
     .student-table thead {
-        background: linear-gradient(180deg, #f1f5f9, #e8eef5);
+        background: linear-gradient(180deg, #f8fafc, #f1f5f9);
+        position: sticky;
+        top: 0;
+        z-index: 2;
     }
 
     .student-table th {
         padding: 13px 14px;
-        font-size: 0.72rem;
+        font-size: 0.7rem;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.04em;
+        letter-spacing: 0.05em;
         color: var(--muted);
         border-bottom: 1px solid var(--border);
         white-space: nowrap;
         text-align: left;
+        user-select: none;
     }
+
+    .student-table th.sortable { cursor: pointer; }
+    .student-table th.sortable:hover { color: var(--primary); }
+
+    .student-table th .sort-icon {
+        margin-left: 3px;
+        opacity: 0.35;
+        font-size: 0.62rem;
+    }
+
+    .student-table th.sort-asc .sort-icon,
+    .student-table th.sort-desc .sort-icon {
+        opacity: 1;
+        color: var(--primary);
+    }
+
+    .student-table th.col-hidden,
+    .student-table td.col-hidden { display: none; }
 
     .student-table td {
         padding: 13px 14px;
-        font-size: 0.88rem;
-        color: var(--text);
-        border-bottom: 1px solid var(--border);
+        font-size: 0.87rem;
+        color: var(--text-secondary);
+        border-bottom: 1px solid var(--border-light);
         white-space: nowrap;
         vertical-align: middle;
+        transition: background var(--transition);
     }
 
     .student-table tbody tr {
-        transition: background 0.12s ease;
-        animation: rowIn 0.35s ease both;
+        transition: background var(--transition);
+        animation: rowIn 0.32s ease both;
     }
 
-    .student-table tbody tr:nth-child(1) { animation-delay: 0.03s; }
-    .student-table tbody tr:nth-child(2) { animation-delay: 0.06s; }
-    .student-table tbody tr:nth-child(3) { animation-delay: 0.09s; }
-    .student-table tbody tr:nth-child(4) { animation-delay: 0.12s; }
-    .student-table tbody tr:nth-child(5) { animation-delay: 0.15s; }
+    .student-table tbody tr:nth-child(1) { animation-delay: 0.02s; }
+    .student-table tbody tr:nth-child(2) { animation-delay: 0.04s; }
+    .student-table tbody tr:nth-child(3) { animation-delay: 0.06s; }
 
     @keyframes rowIn {
-        from { opacity: 0; transform: translateY(6px); }
+        from { opacity: 0; transform: translateY(5px); }
         to   { opacity: 1; transform: translateY(0); }
     }
 
-    .student-table tbody tr:last-child td {
-        border-bottom: none;
+    .student-table tbody tr:last-child td { border-bottom: none; }
+
+    .student-table tbody tr.hidden-row { display: none; }
+
+    .student-cell {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 160px;
     }
 
-    .student-table tbody tr:hover td {
-        background: #f8fafc;
+    .avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: var(--primary-gradient);
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.78rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        text-transform: uppercase;
+        overflow: hidden;
     }
 
-    /* Cells */
+    .avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
     .name-cell {
         font-weight: 700;
         color: var(--text);
+        display: block;
+        line-height: 1.25;
     }
 
-    .muted-cell {
+    .sub-cell {
+        font-size: 0.78rem;
         color: var(--muted);
-        font-size: 0.85rem;
     }
+
+    .muted-cell { color: var(--muted); font-size: 0.84rem; }
 
     .course-badge {
         display: inline-block;
         background: var(--primary-soft);
         color: var(--primary);
-        font-size: 0.78rem;
+        font-size: 0.76rem;
         font-weight: 600;
-        padding: 4px 10px;
+        padding: 5px 11px;
         border-radius: 999px;
     }
 
-    .percent-cell {
+    .gender-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.78rem;
         font-weight: 600;
-        color: #059669;
     }
 
-    /* Images */
+    .gender-badge.male   { background: var(--info-soft); color: var(--info); }
+    .gender-badge.female { background: #fdf2f8; color: #db2777; }
+    .gender-badge.other  { background: var(--border-light); color: var(--muted); }
+
+    .percent-cell {
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .percent-cell.high { color: var(--success); }
+    .percent-cell.mid  { color: var(--warning); }
+    .percent-cell.low  { color: var(--danger); }
+
+    .percent-bar-wrap {
+        width: 52px;
+        height: 5px;
+        background: var(--border-light);
+        border-radius: 999px;
+        margin-top: 4px;
+        overflow: hidden;
+    }
+
+    .percent-bar {
+        height: 100%;
+        border-radius: 999px;
+        background: var(--success);
+    }
+
+    .pwd-cell {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .pwd-mask {
+        font-family: monospace;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+    }
+
+    .pwd-toggle {
+        width: 28px;
+        height: 28px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--muted);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.72rem;
+        transition: var(--transition);
+    }
+
+    .pwd-toggle:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
     .doc-thumb {
-        width: 56px;
-        height: 56px;
+        width: 52px;
+        height: 52px;
         object-fit: cover;
         border-radius: 10px;
         border: 2px solid var(--border);
-        transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
-        cursor: pointer;
+        transition: var(--transition);
+        cursor: zoom-in;
     }
 
     .doc-thumb:hover {
         border-color: var(--primary);
-        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
-        transform: scale(1.06);
+        box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
+        transform: scale(1.05);
     }
 
     .no-img {
-        font-size: 0.8rem;
-        color: var(--muted);
-    }
-
-    /* Delete button */
-    .btn-delete {
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        width: 52px;
+        height: 52px;
+        border-radius: 10px;
+        background: var(--border-light);
+        color: var(--muted);
+        font-size: 0.72rem;
+    }
+
+    .address-cell {
+        max-width: 180px;
+        white-space: normal !important;
+        line-height: 1.4;
+        font-size: 0.82rem;
+        color: var(--muted);
+    }
+
+    .actions-cell {
+        display: flex;
         gap: 6px;
-        padding: 7px 14px;
+        align-items: center;
+    }
+
+    .btn-icon {
+        width: 34px;
+        height: 34px;
         border-radius: 9px;
-        font-size: 0.8rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.82rem;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        transition: var(--transition);
+    }
+
+    .btn-view {
+        background: var(--primary-soft);
+        color: var(--primary);
+    }
+
+    .btn-view:hover {
+        background: var(--primary);
+        color: #fff;
+        transform: translateY(-2px);
+    }
+
+    .btn-copy {
+        background: var(--info-soft);
+        color: var(--info);
+    }
+
+    .btn-copy:hover {
+        background: var(--info);
+        color: #fff;
+        transform: translateY(-2px);
+    }
+
+    .btn-delete {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 7px 12px;
+        border-radius: 9px;
+        font-size: 0.78rem;
         font-weight: 600;
         text-decoration: none;
         background: var(--danger-soft);
         color: var(--danger);
         border: none;
-        transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
+        transition: var(--transition);
     }
 
     .btn-delete:hover {
         background: var(--danger);
         color: #fff;
         transform: translateY(-2px);
-        box-shadow: 0 5px 12px rgba(220, 38, 38, 0.28);
+        box-shadow: 0 5px 14px rgba(239, 68, 68, 0.28);
     }
 
-    /* Empty */
     .empty-state {
         text-align: center;
-        padding: 56px 20px !important;
+        padding: 64px 20px !important;
         color: var(--muted);
         white-space: normal !important;
     }
 
     .empty-state i {
-        font-size: 2.2rem;
+        font-size: 2.5rem;
         margin-bottom: 12px;
         opacity: 0.35;
         display: block;
     }
 
-    /* Reduced motion */
+    .no-results-wrap {
+        display: none;
+        text-align: center;
+        padding: 64px 24px;
+        color: var(--muted);
+    }
+
+    .no-results-wrap.visible { display: block; }
+
+    .table-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 14px 22px;
+        border-top: 1px solid var(--border);
+        background: #fafbfc;
+        font-size: 0.84rem;
+        color: var(--muted);
+    }
+
+    .table-footer strong { color: var(--text); }
+
+    .pagination {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .page-btn {
+        min-width: 34px;
+        height: 34px;
+        padding: 0 8px;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        background: #fff;
+        color: var(--text-secondary);
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .page-btn:hover:not(:disabled) {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    .page-btn.active {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: #fff;
+    }
+
+    .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .lightbox {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.82);
+        backdrop-filter: blur(6px);
+        z-index: 1100;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        animation: fadeIn 0.2s ease;
+    }
+
+    .lightbox.active { display: flex; }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+    .lightbox img {
+        max-width: min(90vw, 720px);
+        max-height: 85vh;
+        border-radius: 14px;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
+        animation: zoomIn 0.28s ease;
+    }
+
+    @keyframes zoomIn {
+        from { opacity: 0; transform: scale(0.92); }
+        to   { opacity: 1; transform: scale(1); }
+    }
+
+    .lightbox-close {
+        position: absolute;
+        top: 20px;
+        right: 24px;
+        width: 42px;
+        height: 42px;
+        border: none;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .lightbox-close:hover { background: rgba(255, 255, 255, 0.28); }
+
+    .lightbox-caption {
+        position: absolute;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #fff;
+        font-size: 0.9rem;
+        font-weight: 600;
+        background: rgba(0, 0, 0, 0.45);
+        padding: 8px 16px;
+        border-radius: 999px;
+    }
+
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.5);
+        backdrop-filter: blur(5px);
+        z-index: 1050;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-box {
+        background: #fff;
+        border-radius: var(--radius);
+        width: 100%;
+        max-width: 640px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 32px 80px rgba(0, 0, 0, 0.2);
+        animation: modalUp 0.3s ease;
+    }
+
+    @keyframes modalUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--border);
+        background: #f8fafc;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+
+    .modal-header-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .modal-avatar {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        background: var(--primary-gradient);
+        color: #fff;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    .modal-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .modal-header h4 {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .modal-header h4 small {
+        display: block;
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: var(--muted);
+        margin-top: 2px;
+    }
+
+    .modal-close {
+        width: 34px;
+        height: 34px;
+        border: none;
+        border-radius: 10px;
+        background: transparent;
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 1.05rem;
+    }
+
+    .modal-close:hover { background: var(--danger-soft); color: var(--danger); }
+
+    .modal-body { padding: 22px; }
+
+    .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    .detail-item label {
+        display: block;
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--muted);
+        font-weight: 600;
+        margin-bottom: 3px;
+    }
+
+    .detail-item span {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text);
+        word-break: break-word;
+    }
+
+    .detail-item.full { grid-column: 1 / -1; }
+
+    .detail-photos {
+        display: flex;
+        gap: 12px;
+        margin-top: 16px;
+        flex-wrap: wrap;
+    }
+
+    .detail-photo { text-align: center; }
+
+    .detail-photo img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 2px solid var(--border);
+        cursor: zoom-in;
+    }
+
+    .detail-photo span {
+        display: block;
+        margin-top: 6px;
+        font-size: 0.75rem;
+        color: var(--muted);
+    }
+
+    .toast-container {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 2000;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .toast {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 13px 17px;
+        background: var(--text);
+        color: #fff;
+        border-radius: var(--radius-sm);
+        font-size: 0.86rem;
+        font-weight: 500;
+        box-shadow: 0 10px 36px rgba(0, 0, 0, 0.18);
+        animation: toastIn 0.3s ease;
+    }
+
+    .toast.success { background: var(--success); }
+
+    @keyframes toastIn {
+        from { opacity: 0; transform: translateX(30px); }
+        to   { opacity: 1; transform: translateX(0); }
+    }
+
+    @media (max-width: 1024px) {
+        .stats-row { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+        .records-page { padding: 14px 0 36px; }
+        .page-hero { border-radius: 0; margin-bottom: 16px; }
+        .stats-row { grid-template-columns: 1fr; padding: 0 14px; }
+        .records-card { border-radius: 0; border-left: none; border-right: none; }
+        .detail-grid { grid-template-columns: 1fr; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after {
             animation-duration: 0.01ms !important;
             transition-duration: 0.01ms !important;
         }
-        .btn-delete:hover,
-        .doc-thumb:hover {
-            transform: none;
-        }
+        .doc-thumb:hover, .btn-delete:hover, .btn-icon:hover { transform: none; }
     }
 
-    @media (max-width: 768px) {
-        .records-page {
-            margin: 12px 0;
-        }
-
-        .records-card {
-            border-radius: 0;
-            border-left: none;
-            border-right: none;
-        }
-
-        .records-header {
-            padding: 14px 18px;
-        }
-
-        .records-header h3 {
-            font-size: 1.15rem;
-        }
+    @media print {
+        .toolbar, .hero-actions, .actions-cell, .pagination, .toast-container, .page-hero { display: none !important; }
+        .student-table th.col-hidden, .student-table td.col-hidden { display: none !important; }
+        .pwd-real { display: inline !important; }
+        .pwd-mask, .pwd-toggle { display: none !important; }
     }
 </style>
 
 <div class="records-page">
+
+    <div class="page-hero">
+        <div class="hero-inner">
+            <div class="hero-text">
+                <h2><i class="fa-solid fa-users"></i> Student Records</h2>
+                <p>Manage registrations, documents, and student application data.</p>
+            </div>
+            <div class="hero-actions">
+                <button type="button" class="btn-hero btn-hero-solid" onclick="exportCSV()">
+                    <i class="fa-solid fa-file-export"></i> Export CSV
+                </button>
+                <button type="button" class="btn-hero btn-hero-light" onclick="window.print()">
+                    <i class="fa-solid fa-print"></i> Print
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-icon total"><i class="fa-solid fa-user-graduate"></i></div>
+            <div class="stat-info">
+                <h4 id="statTotal">{{ students|length }}</h4>
+                <span>Total Students</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon male"><i class="fa-solid fa-mars"></i></div>
+            <div class="stat-info">
+                <h4 id="statMale">—</h4>
+                <span>Male</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon female"><i class="fa-solid fa-venus"></i></div>
+            <div class="stat-info">
+                <h4 id="statFemale">—</h4>
+                <span>Female</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon courses"><i class="fa-solid fa-book"></i></div>
+            <div class="stat-info">
+                <h4 id="statCourses">—</h4>
+                <span>Courses</span>
+            </div>
+        </div>
+    </div>
+
     <div class="records-card">
 
-        <div class="records-header">
-            <h3>
-                <i class="fa-solid fa-users"></i>
-                Student Records
-            </h3>
-            <span class="count-badge">
-                Total: {{ students|length }}
-            </span>
+        <div class="toolbar">
+            <div class="toolbar-row">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="searchInput" placeholder="Search name, email, mobile, course, aadhaar..." autocomplete="off">
+                    <button type="button" class="search-clear" id="searchClear" onclick="clearSearch()">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="toolbar-actions">
+                    <select class="filter-select" id="genderFilter">
+                        <option value="">All Genders</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                    <select class="filter-select" id="courseFilter">
+                        <option value="">All Courses</option>
+                    </select>
+                    <select class="per-page-select" id="perPage">
+                        <option value="10">10 / page</option>
+                        <option value="25" selected>25 / page</option>
+                        <option value="50">50 / page</option>
+                        <option value="9999">Show all</option>
+                    </select>
+                    <button type="button" class="btn-tool" onclick="toggleColPanel()" title="Show/hide columns">
+                        <i class="fa-solid fa-table-columns"></i> Columns
+                    </button>
+                    <button type="button" class="btn-tool" onclick="clearAllFilters()">
+                        <i class="fa-solid fa-filter-circle-xmark"></i> Clear
+                    </button>
+                </div>
+            </div>
+            <div class="toolbar-row">
+                <div class="filter-chips" id="courseChips">
+                    <span class="filter-chips-label">Course:</span>
+                    <button type="button" class="chip active" data-course="">All <span class="chip-count" id="chipAllCount">0</span></button>
+                </div>
+            </div>
         </div>
 
-        <div class="table-scroll">
-            <table class="student-table">
+        <div class="col-toggle-panel" id="colPanel"></div>
+
+        <div class="table-scroll" id="tableWrap">
+            <table class="student-table" id="studentTable">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Password</th>
-                        <th>Date of Birth</th>
-                        <th>Age</th>
-                        <th>Gender</th>
-                        <th>Email</th>
-                        <th>Mobile</th>
-                        <th>Blood Group</th>
-                        <th>Father's Name</th>
-                        <th>Father's Mobile</th>
-                        <th>Class 10th %</th>
-                        <th>Class 12th %</th>
-                        <th>Course</th>
-                        <th>Aadhaar No.</th>
-                        <th>Aadhaar Card</th>
-                        <th>Student Photo</th>
-                        <th>Address</th>
-                        <th>Action</th>
+                        <th class="sortable col-name" data-col="name" data-sort="name">Student <i class="fa-solid fa-sort sort-icon"></i></th>
+                        <th class="col-password" data-col="password">Password</th>
+                        <th class="sortable col-dob" data-col="dob" data-sort="dob">DOB <i class="fa-solid fa-sort sort-icon"></i></th>
+                        <th class="col-age" data-col="age">Age</th>
+                        <th class="sortable col-gender" data-col="gender" data-sort="gender">Gender <i class="fa-solid fa-sort sort-icon"></i></th>
+                        <th class="col-email" data-col="email">Email</th>
+                        <th class="col-mobile" data-col="mobile">Mobile</th>
+                        <th class="col-blood" data-col="blood">Blood</th>
+                        <th class="col-father" data-col="father">Father</th>
+                        <th class="col-father-mobile" data-col="father-mobile">Father Mob.</th>
+                        <th class="sortable col-class10" data-col="class10" data-sort="class10">10th % <i class="fa-solid fa-sort sort-icon"></i></th>
+                        <th class="sortable col-class12" data-col="class12" data-sort="class12">12th % <i class="fa-solid fa-sort sort-icon"></i></th>
+                        <th class="sortable col-course" data-col="course" data-sort="course">Course <i class="fa-solid fa-sort sort-icon"></i></th>
+                        <th class="col-aadhaar" data-col="aadhaar">Aadhaar</th>
+                        <th class="col-aadhaar-photo" data-col="aadhaar-photo">Aadhaar Card</th>
+                        <th class="col-photo" data-col="photo">Photo</th>
+                        <th class="col-address" data-col="address">Address</th>
+                        <th data-col="action">Action</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="tableBody">
                     {% for student in students %}
-                    <tr>
-                        <td class="name-cell">{{ student.name }}</td>
-                        <td class="muted-cell">{{ student.password }}</td>
-                        <td>{{ student.dob }}</td>
-                        <td>{{ student.age }}</td>
-                        <td>{{ student.gender }}</td>
-                        <td class="muted-cell">{{ student.email }}</td>
-                        <td>{{ student.mobile }}</td>
-                        <td>{{ student.blood_group }}</td>
-                        <td>{{ student.father_name }}</td>
-                        <td>{{ student.father_mobile }}</td>
-                        <td class="percent-cell">{{ student.class10 }}%</td>
-                        <td class="percent-cell">{{ student.class12 }}%</td>
-                        <td>
+                    <tr data-id="{{ student.student_id }}"
+                        data-name="{{ student.name|lower }}"
+                        data-gender="{{ student.gender|lower }}"
+                        data-course="{{ student.course|lower }}"
+                        data-dob="{{ student.dob }}"
+                        data-age="{{ student.age }}"
+                        data-class10="{{ student.class10 }}"
+                        data-class12="{{ student.class12 }}"
+                        data-email="{{ student.email|escapejs }}"
+                        data-mobile="{{ student.mobile|escapejs }}"
+                        data-password="{{ student.password|escapejs }}"
+                        data-blood="{{ student.blood_group|escapejs }}"
+                        data-father="{{ student.father_name|escapejs }}"
+                        data-father-mobile="{{ student.father_mobile|escapejs }}"
+                        data-aadhaar="{{ student.aadhaar|escapejs }}"
+                        data-address="{{ student.address|escapejs }}"
+                        data-aadhaar-url="{% if student.aadhaar_photo %}{{ student.aadhaar_photo.url }}{% endif %}"
+                        data-photo-url="{% if student.student_photo %}{{ student.student_photo.url }}{% endif %}">
+
+                        <td class="col-name">
+                            <div class="student-cell">
+                                <div class="avatar">
+                                    {% if student.student_photo %}
+                                    <img src="{{ student.student_photo.url }}" alt="">
+                                    {% else %}
+                                    {{ student.name|make_list|first }}
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <span class="name-cell">{{ student.name }}</span>
+                                    <span class="sub-cell">ID: {{ student.student_id }}</span>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td class="col-password">
+                            <div class="pwd-cell">
+                                <span class="pwd-mask">••••••••</span>
+                                <span class="pwd-real" style="display:none;">{{ student.password }}</span>
+                                <button type="button" class="pwd-toggle" onclick="togglePwd(this)" title="Show/hide password">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+
+                        <td class="col-dob">{{ student.dob }}</td>
+                        <td class="col-age">{{ student.age }}</td>
+
+                        <td class="col-gender">
+                            {% with g=student.gender|lower %}
+                            <span class="gender-badge {% if 'male' in g and 'female' not in g %}male{% elif 'female' in g %}female{% else %}other{% endif %}">
+                                <i class="fa-solid fa-{% if 'female' in g %}venus{% elif 'male' in g %}mars{% else %}genderless{% endif %}"></i>
+                                {{ student.gender }}
+                            </span>
+                            {% endwith %}
+                        </td>
+
+                        <td class="col-email muted-cell">{{ student.email }}</td>
+                        <td class="col-mobile">{{ student.mobile }}</td>
+                        <td class="col-blood">{{ student.blood_group }}</td>
+                        <td class="col-father">{{ student.father_name }}</td>
+                        <td class="col-father-mobile">{{ student.father_mobile }}</td>
+
+                        <td class="col-class10">
+                            <span class="percent-cell" data-val="{{ student.class10 }}">{{ student.class10 }}%</span>
+                            <div class="percent-bar-wrap"><div class="percent-bar"></div></div>
+                        </td>
+
+                        <td class="col-class12">
+                            <span class="percent-cell" data-val="{{ student.class12 }}">{{ student.class12 }}%</span>
+                            <div class="percent-bar-wrap"><div class="percent-bar"></div></div>
+                        </td>
+
+                        <td class="col-course">
                             <span class="course-badge">{{ student.course }}</span>
                         </td>
-                        <td>{{ student.aadhaar }}</td>
 
-                        <td>
+                        <td class="col-aadhaar">{{ student.aadhaar }}</td>
+
+                        <td class="col-aadhaar-photo">
                             {% if student.aadhaar_photo %}
-                            <a href="{{ student.aadhaar_photo.url }}" target="_blank" rel="noopener">
-                                <img src="{{ student.aadhaar_photo.url }}"
-                                     alt="Aadhaar"
-                                     class="doc-thumb"
-                                     width="56" height="56"
-                                     loading="lazy">
-                            </a>
+                            <img src="{{ student.aadhaar_photo.url }}"
+                                 alt="Aadhaar"
+                                 class="doc-thumb"
+                                 onclick="openLightbox('{{ student.aadhaar_photo.url }}', 'Aadhaar — {{ student.name|escapejs }}')"
+                                 loading="lazy">
                             {% else %}
-                            <span class="no-img">No image</span>
+                            <span class="no-img"><i class="fa-solid fa-id-card"></i></span>
                             {% endif %}
                         </td>
 
-                        <td>
+                        <td class="col-photo">
                             {% if student.student_photo %}
-                            <a href="{{ student.student_photo.url }}" target="_blank" rel="noopener">
-                                <img src="{{ student.student_photo.url }}"
-                                     alt="{{ student.name }}"
-                                     class="doc-thumb"
-                                     width="56" height="56"
-                                     loading="lazy">
-                            </a>
+                            <img src="{{ student.student_photo.url }}"
+                                 alt="{{ student.name }}"
+                                 class="doc-thumb"
+                                 onclick="openLightbox('{{ student.student_photo.url }}', '{{ student.name|escapejs }}')"
+                                 loading="lazy">
                             {% else %}
-                            <span class="no-img">No image</span>
+                            <span class="no-img"><i class="fa-solid fa-user"></i></span>
                             {% endif %}
                         </td>
 
-                        <td class="muted-cell" style="max-width:180px; white-space:normal; line-height:1.4;">
-                            {{ student.address }}
-                        </td>
+                        <td class="col-address address-cell">{{ student.address }}</td>
 
                         <td>
-                            <a href="{% url 'adminapplication_delete' student.student_id %}"
-                               class="btn-delete"
-                               onclick="return confirm('Delete this student record?');">
-                                <i class="fa-solid fa-trash"></i> Delete
-                            </a>
+                            <div class="actions-cell">
+                                <button type="button" class="btn-icon btn-view" title="View details" onclick="openDetailModal(this.closest('tr'))">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                                <button type="button" class="btn-icon btn-copy" title="Copy contact" onclick="copyStudent(this.closest('tr'))">
+                                    <i class="fa-solid fa-copy"></i>
+                                </button>
+                                <a href="{% url 'adminapplication_delete' student.student_id %}"
+                                   class="btn-delete"
+                                   onclick="return confirm('Delete record for {{ student.name|escapejs }}?');">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     {% empty %}
-                    <tr>
+                    <tr id="emptyRow">
                         <td colspan="18" class="empty-state">
                             <i class="fa-solid fa-user-slash"></i>
-                            No students found.
+                            <h4 style="margin:0 0 6px;color:var(--text);font-weight:700;">No students found</h4>
+                            <p style="margin:0;">Registered students will appear here.</p>
                         </td>
                     </tr>
                     {% endfor %}
@@ -387,7 +1304,394 @@
             </table>
         </div>
 
+        <div class="no-results-wrap" id="noResults">
+            <i class="fa-solid fa-magnifying-glass" style="font-size:2.5rem;opacity:0.35;display:block;margin-bottom:12px;"></i>
+            <h4 style="margin:0 0 6px;color:var(--text);">No matching students</h4>
+            <p style="margin:0 0 14px;">Try different search terms or filters.</p>
+            <button type="button" class="btn-tool primary" onclick="clearAllFilters()">Clear filters</button>
+        </div>
+
+        {% if students %}
+        <div class="table-footer" id="tableFooter">
+            <span>Showing <strong id="visibleRange">1–25</strong> of <strong id="filteredCount">{{ students|length }}</strong> students</span>
+            <div class="pagination" id="pagination"></div>
+        </div>
+        {% endif %}
     </div>
 </div>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+    <button type="button" class="lightbox-close" onclick="closeLightbox()"><i class="fa-solid fa-xmark"></i></button>
+    <img id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+</div>
+
+<div class="modal-overlay" id="detailModal" onclick="closeDetailOutside(event)">
+    <div class="modal-box">
+        <div class="modal-header">
+            <div class="modal-header-left">
+                <div class="modal-avatar" id="dAvatar">—</div>
+                <div>
+                    <h4 id="dName">—</h4>
+                    <small id="dCourse">—</small>
+                </div>
+            </div>
+            <button type="button" class="modal-close" onclick="closeDetailModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+            <div class="detail-grid" id="dGrid"></div>
+            <div class="detail-photos" id="dPhotos"></div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+(function () {
+    'use strict';
+
+    const state = { sortCol: 'name', sortDir: 'asc', page: 1, perPage: 25, courseChip: '' };
+    const $ = id => document.getElementById(id);
+    const rows = () => [...document.querySelectorAll('#tableBody tr[data-id]')];
+
+    const COLS = [
+        { key: 'password', label: 'Password' },
+        { key: 'dob', label: 'DOB' },
+        { key: 'age', label: 'Age' },
+        { key: 'gender', label: 'Gender' },
+        { key: 'email', label: 'Email' },
+        { key: 'mobile', label: 'Mobile' },
+        { key: 'blood', label: 'Blood Group' },
+        { key: 'father', label: "Father's Name" },
+        { key: 'father-mobile', label: "Father's Mobile" },
+        { key: 'class10', label: '10th %' },
+        { key: 'class12', label: '12th %' },
+        { key: 'aadhaar', label: 'Aadhaar' },
+        { key: 'aadhaar-photo', label: 'Aadhaar Photo' },
+        { key: 'photo', label: 'Student Photo' },
+        { key: 'address', label: 'Address' }
+    ];
+
+    const hiddenCols = new Set(['password']);
+
+    function initPercentBars() {
+        document.querySelectorAll('.percent-cell[data-val]').forEach(el => {
+            const v = parseFloat(el.dataset.val) || 0;
+            el.classList.add(v >= 75 ? 'high' : v >= 60 ? 'mid' : 'low');
+            const bar = el.parentElement.querySelector('.percent-bar');
+            if (bar) {
+                bar.style.width = Math.min(v, 100) + '%';
+                bar.style.background = v >= 75 ? 'var(--success)' : v >= 60 ? 'var(--warning)' : 'var(--danger)';
+            }
+        });
+    }
+
+    function buildColPanel() {
+        const panel = $('colPanel');
+        COLS.forEach(col => {
+            const label = document.createElement('label');
+            label.className = 'col-toggle-item';
+            const checked = !hiddenCols.has(col.key);
+            label.innerHTML = `<input type="checkbox" ${checked ? 'checked' : ''} data-col="${col.key}"> ${col.label}`;
+            label.querySelector('input').addEventListener('change', e => {
+                if (e.target.checked) hiddenCols.delete(col.key);
+                else hiddenCols.add(col.key);
+                applyColVisibility();
+            });
+            panel.appendChild(label);
+        });
+    }
+
+    function applyColVisibility() {
+        COLS.forEach(col => {
+            const hide = hiddenCols.has(col.key);
+            document.querySelectorAll(`.col-${col.key}`).forEach(el => el.classList.toggle('col-hidden', hide));
+        });
+    }
+
+    window.toggleColPanel = () => $('colPanel').classList.toggle('open');
+
+    function initStats() {
+        const courses = {};
+        let male = 0, female = 0;
+
+        rows().forEach(row => {
+            const g = row.dataset.gender || '';
+            const c = row.dataset.course || '';
+            if (c) courses[c] = (courses[c] || 0) + 1;
+            if (g.includes('female')) female++;
+            else if (g.includes('male')) male++;
+        });
+
+        $('statMale').textContent = male;
+        $('statFemale').textContent = female;
+        $('statCourses').textContent = Object.keys(courses).length;
+        $('chipAllCount').textContent = rows().length;
+
+        const select = $('courseFilter');
+        const chips = $('courseChips');
+        Object.keys(courses).sort().forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c;
+            opt.textContent = c.charAt(0).toUpperCase() + c.slice(1);
+            select.appendChild(opt);
+
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.className = 'chip';
+            chip.dataset.course = c;
+            chip.innerHTML = `${c.charAt(0).toUpperCase() + c.slice(1)} <span class="chip-count">${courses[c]}</span>`;
+            chip.onclick = () => setCourse(c, chip);
+            chips.appendChild(chip);
+        });
+
+        document.querySelector('.chip[data-course=""]')?.addEventListener('click', function () {
+            setCourse('', this);
+        });
+    }
+
+    function setCourse(course, chipEl) {
+        state.courseChip = course;
+        $('courseFilter').value = course;
+        document.querySelectorAll('#courseChips .chip').forEach(c =>
+            c.classList.toggle('active', c === chipEl || (!course && c.dataset.course === ''))
+        );
+        state.page = 1;
+        applyFilters();
+    }
+
+    function getFiltered() {
+        const q = $('searchInput').value.toLowerCase().trim();
+        const gender = $('genderFilter').value.toLowerCase();
+        const course = ($('courseFilter').value || state.courseChip).toLowerCase();
+
+        return rows().filter(row => {
+            const matchQ = !q || row.textContent.toLowerCase().includes(q);
+            const matchG = !gender || (row.dataset.gender || '').includes(gender);
+            const matchC = !course || row.dataset.course === course;
+            return matchQ && matchG && matchC;
+        });
+    }
+
+    function sortList(list) {
+        const col = state.sortCol;
+        const dir = state.sortDir === 'asc' ? 1 : -1;
+        return [...list].sort((a, b) => {
+            let va, vb;
+            if (col === 'name')    { va = a.dataset.name; vb = b.dataset.name; }
+            else if (col === 'dob') { va = a.dataset.dob; vb = b.dataset.dob; }
+            else if (col === 'gender') { va = a.dataset.gender; vb = b.dataset.gender; }
+            else if (col === 'course') { va = a.dataset.course; vb = b.dataset.course; }
+            else if (col === 'class10') { va = +a.dataset.class10; vb = +b.dataset.class10; }
+            else if (col === 'class12') { va = +a.dataset.class12; vb = +b.dataset.class12; }
+            else return 0;
+            if (va < vb) return -1 * dir;
+            if (va > vb) return 1 * dir;
+            return 0;
+        });
+    }
+
+    function applyFilters() {
+        const all = rows();
+        all.forEach(r => r.classList.add('hidden-row'));
+
+        const filtered = sortList(getFiltered());
+        const perPage = state.perPage;
+        const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
+        if (state.page > totalPages) state.page = totalPages;
+
+        const start = (state.page - 1) * perPage;
+        const pageRows = filtered.slice(start, start + perPage);
+        pageRows.forEach(r => { r.classList.remove('hidden-row'); $('tableBody').appendChild(r); });
+
+        const hasData = all.length > 0;
+        const noMatch = filtered.length === 0 && hasData;
+        $('noResults').classList.toggle('visible', noMatch);
+        $('tableWrap').style.display = noMatch ? 'none' : '';
+
+        if ($('tableFooter')) {
+            const from = filtered.length ? start + 1 : 0;
+            const to = Math.min(start + perPage, filtered.length);
+            $('visibleRange').textContent = filtered.length ? `${from}–${to}` : '0';
+            $('filteredCount').textContent = filtered.length;
+            renderPagination(totalPages);
+        }
+
+        $('searchClear').classList.toggle('visible', !!$('searchInput').value.trim());
+    }
+
+    function renderPagination(total) {
+        const c = $('pagination');
+        c.innerHTML = '';
+        const mk = (label, page, dis) => {
+            const b = document.createElement('button');
+            b.className = 'page-btn' + (page === state.page ? ' active' : '');
+            b.innerHTML = label;
+            b.disabled = dis;
+            b.onclick = () => { state.page = page; applyFilters(); };
+            c.appendChild(b);
+        };
+        mk('<i class="fa-solid fa-chevron-left"></i>', state.page - 1, state.page <= 1);
+        const s = Math.max(1, state.page - 2), e = Math.min(total, s + 4);
+        for (let i = s; i <= e; i++) mk(i, i, false);
+        mk('<i class="fa-solid fa-chevron-right"></i>', state.page + 1, state.page >= total);
+    }
+
+    document.querySelectorAll('.student-table th.sortable').forEach(th => {
+        th.addEventListener('click', () => {
+            const col = th.dataset.sort;
+            state.sortDir = state.sortCol === col ? (state.sortDir === 'asc' ? 'desc' : 'asc') : 'asc';
+            state.sortCol = col;
+            document.querySelectorAll('.student-table th.sortable').forEach(h => {
+                h.classList.remove('sort-asc', 'sort-desc');
+                h.querySelector('.sort-icon').className = 'fa-solid fa-sort sort-icon';
+            });
+            th.classList.add(state.sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+            th.querySelector('.sort-icon').className = `fa-solid fa-sort-${state.sortDir === 'asc' ? 'up' : 'down'} sort-icon`;
+            state.page = 1;
+            applyFilters();
+        });
+    });
+
+    window.togglePwd = function (btn) {
+        const cell = btn.closest('.pwd-cell');
+        const show = cell.querySelector('.pwd-real').style.display !== 'none';
+        cell.querySelector('.pwd-mask').style.display = show ? '' : 'none';
+        cell.querySelector('.pwd-real').style.display = show ? 'none' : '';
+        btn.querySelector('i').className = show ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash';
+    };
+
+    window.openLightbox = function (src, caption) {
+        $('lightboxImg').src = src;
+        $('lightboxCaption').textContent = caption || '';
+        $('lightbox').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    };
+
+    window.closeLightbox = function (e) {
+        if (e && e.target !== $('lightbox') && e.target !== $('lightboxImg')) return;
+        $('lightbox').classList.remove('active');
+        document.body.style.overflow = '';
+    };
+
+    window.openDetailModal = function (row) {
+        if (!row) return;
+        const name = row.querySelector('.name-cell')?.textContent || '—';
+        const photoUrl = row.dataset.photoUrl;
+        const av = $('dAvatar');
+        av.innerHTML = photoUrl ? `<img src="${photoUrl}" alt="">` : name.charAt(0).toUpperCase();
+
+        $('dName').textContent = name;
+        $('dCourse').textContent = row.querySelector('.course-badge')?.textContent || '—';
+
+        const fields = [
+            ['Email', row.dataset.email], ['Mobile', row.dataset.mobile],
+            ['DOB', row.dataset.dob], ['Age', row.dataset.age],
+            ['Gender', row.dataset.gender], ['Blood Group', row.dataset.blood],
+            ["Father's Name", row.dataset.father], ["Father's Mobile", row.dataset.fatherMobile],
+            ['10th %', row.dataset.class10 + '%'], ['12th %', row.dataset.class12 + '%'],
+            ['Aadhaar', row.dataset.aadhaar], ['Address', row.dataset.address]
+        ];
+
+        $('dGrid').innerHTML = fields.map(([l, v]) =>
+            `<div class="detail-item${l === 'Address' ? ' full' : ''}"><label>${l}</label><span>${v || '—'}</span></div>`
+        ).join('');
+
+        const photos = $('dPhotos');
+        photos.innerHTML = '';
+        if (row.dataset.photoUrl) {
+            photos.innerHTML += `<div class="detail-photo"><img src="${row.dataset.photoUrl}" onclick="openLightbox('${row.dataset.photoUrl}','${name}')"><span>Student Photo</span></div>`;
+        }
+        if (row.dataset.aadhaarUrl) {
+            photos.innerHTML += `<div class="detail-photo"><img src="${row.dataset.aadhaarUrl}" onclick="openLightbox('${row.dataset.aadhaarUrl}','Aadhaar — ${name}')"><span>Aadhaar Card</span></div>`;
+        }
+
+        $('detailModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    };
+
+    window.closeDetailModal = function () {
+        $('detailModal').classList.remove('active');
+        document.body.style.overflow = '';
+    };
+
+    window.closeDetailOutside = function (e) {
+        if (e.target === $('detailModal')) closeDetailModal();
+    };
+
+    window.showToast = function (msg) {
+        const t = document.createElement('div');
+        t.className = 'toast success';
+        t.innerHTML = `<i class="fa-solid fa-check-circle"></i> ${msg}`;
+        $('toastContainer').appendChild(t);
+        setTimeout(() => t.remove(), 2600);
+    };
+
+    window.copyStudent = function (row) {
+        const text = [
+            row.querySelector('.name-cell').textContent,
+            row.dataset.email, row.dataset.mobile,
+            'Course: ' + row.querySelector('.course-badge').textContent,
+            'Aadhaar: ' + row.dataset.aadhaar
+        ].join('\n');
+        navigator.clipboard.writeText(text).then(() => showToast('Contact copied!'));
+    };
+
+    window.exportCSV = function () {
+        const filtered = sortList(getFiltered());
+        if (!filtered.length) return;
+        const headers = ['ID','Name','Email','Mobile','DOB','Age','Gender','Course','10th%','12th%','Aadhaar','Address'];
+        const lines = [headers.join(',')];
+        filtered.forEach(r => {
+            lines.push([
+                r.dataset.id,
+                `"${r.querySelector('.name-cell').textContent.replace(/"/g,'""')}"`,
+                `"${r.dataset.email}"`, r.dataset.mobile, r.dataset.dob, r.dataset.age,
+                `"${r.dataset.gender}"`, `"${r.querySelector('.course-badge').textContent.replace(/"/g,'""')}"`,
+                r.dataset.class10, r.dataset.class12, r.dataset.aadhaar,
+                `"${(r.dataset.address||'').replace(/"/g,'""')}"`
+            ].join(','));
+        });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([lines.join('\n')], { type: 'text/csv' }));
+        a.download = `students_${new Date().toISOString().slice(0,10)}.csv`;
+        a.click();
+        showToast(`Exported ${filtered.length} records`);
+    };
+
+    window.clearSearch = () => { $('searchInput').value = ''; state.page = 1; applyFilters(); };
+
+    window.clearAllFilters = () => {
+        $('searchInput').value = '';
+        $('genderFilter').value = '';
+        $('courseFilter').value = '';
+        state.courseChip = '';
+        document.querySelectorAll('#courseChips .chip').forEach(c => c.classList.toggle('active', c.dataset.course === ''));
+        state.page = 1;
+        applyFilters();
+    };
+
+    $('searchInput')?.addEventListener('input', () => { state.page = 1; applyFilters(); });
+    $('genderFilter')?.addEventListener('change', () => { state.page = 1; applyFilters(); });
+    $('courseFilter')?.addEventListener('change', function () {
+        state.courseChip = this.value;
+        document.querySelectorAll('#courseChips .chip').forEach(c => c.classList.toggle('active', c.dataset.course === this.value));
+        state.page = 1; applyFilters();
+    });
+    $('perPage')?.addEventListener('change', function () { state.perPage = +this.value; state.page = 1; applyFilters(); });
+
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') { closeLightbox(); closeDetailModal(); }
+        if (e.key === '/' && !e.target.matches('input')) { e.preventDefault(); $('searchInput')?.focus(); }
+    });
+
+    buildColPanel();
+    applyColVisibility();
+    initPercentBars();
+    initStats();
+    applyFilters();
+})();
+</script>
 
 {% endblock %}
