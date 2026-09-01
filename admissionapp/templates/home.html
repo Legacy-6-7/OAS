@@ -23,8 +23,6 @@
         --shadow-md: 0 14px 36px rgba(0, 0, 0, .35);
     }
 
-    /* Flat solid background — no fixed attachment needed, it only forces
-       extra repaint work on scroll for a color with no parallax effect. */
     body {
         background: #09071A;
         color: var(--ink);
@@ -33,18 +31,12 @@
         -webkit-font-smoothing: antialiased;
     }
 
-    /* Cheap glass – no blur, safe to use anywhere */
     .glass {
         background: var(--glass-bg);
         border: 1px solid var(--glass-border);
     }
 
     /* ---------- Hero ---------- */
-    /* NOTE: backdrop-filter blur intentionally removed here. This panel
-       directly wraps the auto-sliding carousel, and a blurred backdrop
-       forces the browser to recompute the blur region on every carousel
-       transition — that was the main source of the lag near the carousel.
-       The gradient + border still reads as "glass" without the repaint cost. */
     .hero-panel {
         background: linear-gradient(135deg, rgba(255, 255, 255, .10), rgba(255, 255, 255, .04));
         box-shadow: var(--shadow-md);
@@ -435,12 +427,6 @@
         line-height: 1.4;
     }
 
-    @media (max-width: 991px) {
-        .why-flank {
-            display: none;
-        }
-    }
-
     /* ---------- Feature cards ---------- */
     .feature-card {
         border-radius: var(--radius-md);
@@ -538,9 +524,8 @@
         transform: translateY(-2px);
     }
 
-    /* Reduced motion – prevents lag / discomfort */
+    /* Reduced motion */
     @media (prefers-reduced-motion: reduce) {
-
         *,
         *::before,
         *::after {
@@ -561,9 +546,6 @@
         }
     }
 
-    /* Content visibility for below-the-fold sections. Sized per-section
-       instead of one flat 800px guess, to cut down on layout jumps as
-       each section resolves into view. */
     .section-panel {
         content-visibility: auto;
         contain-intrinsic-size: 1300px;
@@ -582,6 +564,327 @@
     .site-footer {
         content-visibility: auto;
         contain-intrinsic-size: 480px;
+    }
+
+    /* =====================================================
+       TABLET (≤ 991px)
+    ===================================================== */
+    @media (max-width: 991px) {
+        .why-flank {
+            display: none !important;
+        }
+
+        .hero-panel {
+            border-radius: 20px !important;
+        }
+
+        .section-title {
+            font-size: 2.1rem;
+        }
+
+        .image-container {
+            height: 320px;
+        }
+    }
+
+    /* =====================================================
+       PHONES (≤ 767px)
+    ===================================================== */
+    @media (max-width: 767px) {
+
+        /* Hero */
+        .hero-panel {
+            border-radius: 18px !important;
+            margin: 0 4px;
+        }
+
+        .hero-panel > .col-lg-7 {
+            padding: 28px 20px 20px !important;
+        }
+
+        .hero-panel > .col-lg-5 {
+            padding: 0 16px 20px !important;
+        }
+
+        .hero-title.display-3 {
+            font-size: 2.35rem !important;
+            line-height: 1.15 !important;
+        }
+
+        .eyebrow-badge {
+            font-size: 12px;
+            padding: 6px 12px !important;
+        }
+
+        .hero-panel p.fs-5 {
+            font-size: 0.95rem !important;
+            line-height: 1.65 !important;
+            margin-top: 1rem !important;
+        }
+
+        .tech-pill {
+            font-size: 0.78rem;
+            padding: 0.35rem 0.7rem;
+        }
+
+        .btn-primary-glass,
+        .btn-outline-glass {
+            width: 100%;
+            text-align: center;
+            padding: 12px 20px !important;
+            font-size: 1rem !important;
+        }
+
+        .mt-5.d-flex.gap-3 {
+            gap: 10px !important;
+            margin-top: 1.5rem !important;
+        }
+
+        /* Stats */
+        .stat-block {
+            padding: 12px 6px;
+        }
+
+        .stat-num {
+            font-size: 1.5rem;
+        }
+
+        .stat-block small {
+            font-size: 0.7rem;
+        }
+
+        /* Carousel */
+        .carousel-frame {
+            height: 280px !important;
+            border-radius: 16px !important;
+        }
+
+        .carousel-frame .carousel,
+        .carousel-frame .carousel-inner,
+        .carousel-frame .carousel-item {
+            height: 100% !important;
+        }
+
+        /* Steps */
+        .step-row {
+            margin-top: 1.5rem !important;
+            padding: 0 8px;
+        }
+
+        .step-row::before {
+            display: none; /* hide connecting line on mobile */
+        }
+
+        .step-item {
+            margin-top: 0.5rem !important;
+            padding-top: 0.5rem !important;
+        }
+
+        .step-circle {
+            width: 52px;
+            height: 52px;
+            font-size: 1.1rem;
+        }
+
+        .step-label {
+            font-size: 0.8rem;
+            margin-top: 8px;
+        }
+
+        /* Modes section */
+        .row.m-0.p-5.mt-4 {
+            padding: 1.5rem 12px !important;
+            margin-top: 1rem !important;
+        }
+
+        .section-panel {
+            padding: 28px 16px !important;
+            border-radius: 18px !important;
+        }
+
+        .section-title {
+            font-size: 1.75rem !important;
+        }
+
+        .section-title .underline {
+            width: 56px;
+            margin-top: 10px;
+        }
+
+        .section-kicker {
+            font-size: 0.68rem;
+            padding: 4px 12px;
+        }
+
+        .image-card {
+            margin-bottom: 1.25rem;
+        }
+
+        .image-container {
+            height: 240px;
+        }
+
+        .overlay {
+            padding: 16px;
+        }
+
+        .overlay h2 {
+            font-size: 1.5rem;
+        }
+
+        .overlay .tagline {
+            font-size: 0.72rem;
+        }
+
+        .para {
+            padding: 14px 16px 18px;
+            font-size: 0.88rem;
+            line-height: 1.6;
+        }
+
+        /* Why Choose */
+        .why-wrap {
+            width: 200px;
+            height: 200px;
+        }
+
+        #whyBtn {
+            width: 170px;
+            height: 170px;
+        }
+
+        #whyBtn p {
+            font-size: 0.85rem;
+            line-height: 1.3;
+        }
+
+        .logo-wrapper {
+            width: 70px;
+            height: 70px;
+        }
+
+        #bag .container {
+            padding-top: 1.5rem !important;
+            margin-top: 1.5rem !important;
+        }
+
+        /* Feature cards */
+        .feature-card {
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-icon-box {
+            height: 110px;
+        }
+
+        .feature-icon-box i {
+            font-size: 2.4rem !important;
+        }
+
+        .feature-card .card-title {
+            font-size: 1.05rem;
+        }
+
+        .feature-card .card-text {
+            font-size: 0.85rem;
+        }
+
+        /* CTA */
+        .cta-strip {
+            padding: 28px 18px !important;
+            border-radius: 18px !important;
+            margin: 0 4px;
+        }
+
+        .cta-strip h3 {
+            font-size: 1.35rem;
+            line-height: 1.35;
+        }
+
+        .cta-strip p {
+            font-size: 0.9rem;
+            margin-bottom: 1.25rem !important;
+        }
+
+        .cta-strip .btn-gold {
+            width: 100%;
+            padding: 12px 20px !important;
+        }
+
+        /* Footer */
+        .site-footer {
+            border-radius: 18px 18px 0 0;
+            padding-top: 2rem !important;
+        }
+
+        .site-footer .col-lg-4 {
+            margin-bottom: 1.75rem !important;
+        }
+
+        .site-footer h4 {
+            font-size: 1.25rem;
+        }
+
+        .site-footer h5 {
+            font-size: 1.05rem;
+            margin-bottom: 1rem !important;
+        }
+
+        .site-footer p,
+        .site-footer span {
+            font-size: 0.9rem;
+        }
+
+        .social-btn {
+            width: 40px;
+            height: 40px;
+        }
+    }
+
+    /* =====================================================
+       SMALL PHONES (≤ 400px)
+    ===================================================== */
+    @media (max-width: 400px) {
+        .hero-title.display-3 {
+            font-size: 2rem !important;
+        }
+
+        .hero-panel > .col-lg-7 {
+            padding: 22px 14px 16px !important;
+        }
+
+        .carousel-frame {
+            height: 240px !important;
+        }
+
+        .step-circle {
+            width: 46px;
+            height: 46px;
+            font-size: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.55rem !important;
+        }
+
+        .image-container {
+            height: 200px;
+        }
+
+        .why-wrap {
+            width: 170px;
+            height: 170px;
+        }
+
+        #whyBtn {
+            width: 150px;
+            height: 150px;
+        }
+
+        .logo-wrapper {
+            width: 60px;
+            height: 60px;
+        }
     }
 </style>
 
@@ -682,15 +985,15 @@
 
     <!-- Steps -->
     <div class="row mx-auto g-4 mt-4 step-row" style="justify-content:center; align-items:start;">
-        <div class="col-sm-3 d-flex flex-column align-items-center step-item pt-5">
+        <div class="col-4 col-sm-3 d-flex flex-column align-items-center step-item pt-5">
             <div class="step-circle">1</div>
             <div class="step-label">Enroll &amp; Onboard</div>
         </div>
-        <div class="col-sm-3 d-flex flex-column align-items-center step-item pt-5">
+        <div class="col-4 col-sm-3 d-flex flex-column align-items-center step-item pt-5">
             <div class="step-circle">2</div>
             <div class="step-label">Learn &amp; Build</div>
         </div>
-        <div class="col-sm-3 d-flex flex-column align-items-center step-item pt-5">
+        <div class="col-4 col-sm-3 d-flex flex-column align-items-center step-item pt-5">
             <div class="step-circle">3</div>
             <div class="step-label">Get Hired</div>
         </div>
@@ -706,7 +1009,7 @@
             </span>
 
             <div class="row text-center pt-5 g-4">
-                <div class="col-sm-6">
+                <div class="col-12 col-sm-6">
                     <div class="image-card">
                         <div class="image-container">
                             <img src="{% static 'admissionapp/offline.png' %}" class="img-fluid" alt="Offline training"
@@ -726,7 +1029,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-12 col-sm-6">
                     <div class="image-card">
                         <div class="image-container">
                             <img src="{% static 'admissionapp/online.png' %}" class="img-fluid" alt="Online training"
@@ -809,7 +1112,7 @@
 
             <div class="collapse mt-4" id="courseCards">
                 <div class="row justify-content-center pt-4 g-4">
-                    <div class="col-sm-6 col-lg-4">
+                    <div class="col-12 col-sm-6 col-lg-4">
                         <div class="card feature-card h-100">
                             <div class="feature-icon-box">
                                 <i class="fa-solid fa-user-tie fa-3x" style="color:var(--accent-blue);"></i>
@@ -823,7 +1126,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-lg-4">
+                    <div class="col-12 col-sm-6 col-lg-4">
                         <div class="card feature-card h-100">
                             <div class="feature-icon-box">
                                 <i class="fa-solid fa-laptop-code fa-3x" style="color:var(--accent-blue);"></i>
@@ -837,7 +1140,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-lg-4">
+                    <div class="col-12 col-sm-6 col-lg-4">
                         <div class="card feature-card h-100">
                             <div class="feature-icon-box">
                                 <i class="fa-solid fa-briefcase fa-3x" style="color:var(--accent-blue);"></i>
@@ -851,7 +1154,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-lg-4">
+                    <div class="col-12 col-sm-6 col-lg-4">
                         <div class="card feature-card h-100">
                             <div class="feature-icon-box">
                                 <i class="fa-solid fa-book-open fa-3x" style="color:var(--accent-blue);"></i>
@@ -865,7 +1168,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-lg-4">
+                    <div class="col-12 col-sm-6 col-lg-4">
                         <div class="card feature-card h-100">
                             <div class="feature-icon-box">
                                 <i class="fa-solid fa-headset fa-3x" style="color:var(--accent-blue);"></i>
@@ -879,7 +1182,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-lg-4">
+                    <div class="col-12 col-sm-6 col-lg-4">
                         <div class="card feature-card h-100">
                             <div class="feature-icon-box">
                                 <i class="fa-solid fa-network-wired fa-3x" style="color:var(--accent-blue);"></i>

@@ -1,5 +1,4 @@
 from pathlib import Path
-import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -9,23 +8,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+import os
 
-
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
+SECRET_KEY = os.environ.get("fb!5nuk7x94a4)xttn@yd_q3#n-_2ob=fim-alpimk2_dls#^_")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = ALLOWED_HOSTS = [
-    'oas-1.onrender.com',
+    '*',
+    '127.0.0.1','localhost',
     '127.0.0.1',
     'localhost',
     'Legacy67.pythonanywhere.com',
     'OAS.onrender.com',
-]
-
-CSRF_TRUSTED_ORIGINS = [
-    "https://oas-1.onrender.com",
 ]
 
 MEDIA_URL = '/'
@@ -133,3 +129,4 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'legaciee4@gmail.com'
 EMAIL_HOST_PASSWORD = 'rjwjtqtghazlnxbl'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER   
+
