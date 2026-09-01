@@ -24,6 +24,10 @@ ALLOWED_HOSTS = ALLOWED_HOSTS = [
     'OAS.onrender.com',
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://oas-1.onrender.com",
+]
+
 MEDIA_URL = '/'
 MEDIA_ROOT = BASE_DIR / ''
 
