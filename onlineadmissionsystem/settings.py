@@ -17,6 +17,7 @@ SECRET_KEY = os.environ.get('fb!5nuk7x94a4)xttn@yd_q3#n-_2ob=fim-alpimk2_dls#^_'
 DEBUG = False
 
 ALLOWED_HOSTS = ALLOWED_HOSTS = [
+    'oas-1.onrender.com',
     '127.0.0.1',
     'localhost',
     'Legacy67.pythonanywhere.com',
