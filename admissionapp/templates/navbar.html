@@ -2,12 +2,16 @@
 
 <style>
     :root {
-        --nav-bg: rgba(20, 15, 45, 0.72);
-        --nav-border: rgba(255, 255, 255, 0.12);
-        --nav-ink: #F5F5FA;
-        --nav-ink-muted: rgba(245, 245, 250, 0.68);
-        --nav-accent: #FFE401;
-        --nav-purple: #1a0a4a;
+        --nav-ink: #F2F4FA;
+        --nav-ink-muted: rgba(242, 244, 250, .68);
+        --nav-accent-gold: #FFE401;
+        --nav-accent-gold-soft: rgba(255, 228, 1, .12);
+        --nav-accent-navy: #100563;
+        --nav-accent-blue: #8EA0F0;
+        --nav-accent-blue-soft: rgba(142, 160, 240, .14);
+        --nav-glass-bg: rgba(255, 255, 255, .07);
+        --nav-glass-bg-strong: rgba(255, 255, 255, .11);
+        --nav-glass-border: rgba(255, 255, 255, .14);
     }
 
     /* =========================
@@ -19,16 +23,16 @@
         width: auto;
         max-width: 1300px;
         margin: 20px auto 0;           /* horizontal auto centers it */
-        padding: 6px 10px !important;
+        padding: 20px 100px !important;
 
-        border: 1px solid var(--nav-border);
+        border: 1px solid var(--nav-glass-border);
         border-radius: 50px;
 
         background: linear-gradient(
             135deg,
-            rgba(255,255,255,0.09),
-            rgba(255,255,255,0.035)
-        );
+            rgba(255,255,255,0.10),
+            rgba(255,255,255,0.04)
+        ), rgba(9, 7, 26, 0.62);
 
         backdrop-filter: blur(18px) saturate(150%);
         -webkit-backdrop-filter: blur(18px) saturate(150%);
@@ -41,10 +45,10 @@
     }
 
     .navbar-wrap:hover {
-        border-color: rgba(255,228,1,0.22);
+        border-color: rgba(255,228,1,0.24);
         box-shadow:
             0 15px 40px rgba(0,0,0,0.35),
-            0 0 25px rgba(255,228,1,0.04);
+            0 0 25px rgba(255,228,1,0.06);
     }
 
     /* Outer wrapper that centers the pill */
@@ -111,13 +115,13 @@
 
     .navbar-nav .nav-link:hover {
         color: var(--nav-ink) !important;
-        background: rgba(255,255,255,0.07);
+        background: var(--nav-accent-blue-soft);
         transform: translateY(-1px);
     }
 
     .navbar-nav .nav-link.active {
         color: var(--nav-ink) !important;
-        background: rgba(255,228,1,0.10);
+        background: var(--nav-accent-gold-soft);
     }
 
     .navbar-nav .nav-link::after {
@@ -127,7 +131,7 @@
         right: 13px;
         bottom: 2px;
         height: 2px;
-        background: var(--nav-accent);
+        background: var(--nav-accent-gold);
         border-radius: 10px;
         transform: scaleX(0);
         transform-origin: center;
@@ -150,15 +154,15 @@
         gap: 7px;
         margin-left: 6px !important;
         padding: 7px 15px !important;
-        color: #F5F5FA !important;
-        background: linear-gradient(135deg, #1a0a4a, #29127a);
+        color: #fff !important;
+        background: linear-gradient(135deg, var(--nav-accent-navy), #2A1690);
         border: 1px solid rgba(255,255,255,0.14);
         border-radius: 30px;
         font-size: 14px !important;
         font-weight: 700 !important;
         box-shadow:
             inset 0 1px 0 rgba(255,255,255,0.08),
-            0 5px 15px rgba(0,0,0,0.18);
+            0 5px 15px rgba(16, 5, 99, 0.35);
         transition:
             background .25s ease,
             transform .2s ease,
@@ -167,11 +171,11 @@
 
     .nav-login-btn:hover {
         color: #fff !important;
-        background: linear-gradient(135deg, #29127a, #3920a0);
+        background: linear-gradient(135deg, #1a0a7a, #3218a8);
         transform: translateY(-1px);
         box-shadow:
-            0 7px 18px rgba(0,0,0,0.25),
-            0 0 15px rgba(255,228,1,0.08);
+            0 7px 18px rgba(16, 5, 99, 0.45),
+            0 0 15px rgba(255,228,1,0.10);
     }
 
     .nav-login-btn::after {
@@ -180,6 +184,7 @@
 
     .nav-login-btn i {
         font-size: 14px;
+        color: var(--nav-accent-gold);
     }
 
     /* =========================
@@ -187,10 +192,10 @@
     ========================== */
 
     .navbar-toggler {
-        border: 1px solid rgba(255,255,255,0.25) !important;
+        border: 1px solid var(--nav-glass-border) !important;
         border-radius: 12px !important;
         padding: 6px 10px !important;
-        background: rgba(255,255,255,0.06);
+        background: var(--nav-glass-bg);
     }
 
     .navbar-toggler:focus {
@@ -198,7 +203,7 @@
     }
 
     .navbar-toggler-icon {
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(245, 245, 250, 0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(242, 244, 250, 0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
     }
 
     /* =========================
